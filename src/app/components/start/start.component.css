@@ -10,7 +10,6 @@
 
 .card {
   transition: transform 0.3s ease-in-out;
-  height: 80%;
 }
 
 .card:hover {
@@ -21,14 +20,4 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-}
-
-@media (max-width: 768px) {
-  .card-container {
-    height: auto;
-  }
-
-  .card {
-    margin-bottom: 50px;
-  }
 }
