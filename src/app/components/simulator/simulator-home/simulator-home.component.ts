@@ -6,8 +6,8 @@ import Konva from 'konva';
   selector: 'app-simulator-home',
   templateUrl: './simulator-home.component.html',
   styleUrls: ['./simulator-home.component.css'],
-  standalone: true,  // Mark this component as standalone
-  imports: [CommonModule]  // Import necessary modules
+  standalone: true,
+  imports: [CommonModule]
 })
 export class SimulatorHomeComponent implements OnInit {
   @ViewChild('stageContainer', { static: true }) stageContainer!: ElementRef<HTMLDivElement>;
@@ -19,7 +19,7 @@ export class SimulatorHomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeKonva();
-    this.createGridBackground(); // Add this line
+    this.createGridBackground();
     this.createToolbarContainer();
   }
 
@@ -30,20 +30,17 @@ export class SimulatorHomeComponent implements OnInit {
       height: 600,
     });
 
-    // Add this line to set the background color
     this.stage.container().style.backgroundColor = '#f0f0f0';
-
     this.layer = new Konva.Layer();
     this.stage.add(this.layer);
   }
 
   createGridBackground(): void {
     const gridLayer = new Konva.Layer();
-    const gridSize = 20; // Size of each grid cell
+    const gridSize = 20;
     const stageWidth = this.stage.width();
     const stageHeight = this.stage.height();
 
-    // Create vertical lines
     for (let x = 0; x <= stageWidth; x += gridSize) {
       const line = new Konva.Line({
         points: [x, 0, x, stageHeight],
@@ -53,7 +50,6 @@ export class SimulatorHomeComponent implements OnInit {
       gridLayer.add(line);
     }
 
-    // Create horizontal lines
     for (let y = 0; y <= stageHeight; y += gridSize) {
       const line = new Konva.Line({
         points: [0, y, stageWidth, y],
@@ -63,21 +59,17 @@ export class SimulatorHomeComponent implements OnInit {
       gridLayer.add(line);
     }
 
-    // Add the grid layer to the stage
     this.stage.add(gridLayer);
-
-    // Move the grid layer to the bottom
     gridLayer.moveToBottom();
   }
 
   createToolbarContainer(): void {
-    // Creates the toolbar container at the bottom of the stage
     const toolbarLayer = new Konva.Layer();
 
-    const containerWidth = 400;
-    const containerHeight = 70;
     const stageWidth = this.stage.width();
     const stageHeight = this.stage.height();
+    const containerWidth = stageWidth * 0.7; // Set the toolbar width to 70% of the stage width
+    const containerHeight = 100;
 
     const toolbarRect = new Konva.Rect({
       x: (stageWidth - containerWidth) / 2,
@@ -85,6 +77,7 @@ export class SimulatorHomeComponent implements OnInit {
       width: containerWidth,
       height: containerHeight,
       fill: 'white',
+      stroke: 'black',
       strokeWidth: 2,
       cornerRadius: 10,
       shadowColor: 'black',
@@ -96,47 +89,88 @@ export class SimulatorHomeComponent implements OnInit {
     toolbarLayer.add(toolbarRect);
     this.stage.add(toolbarLayer);
 
-    this.createToolbar(toolbarRect.x(), toolbarRect.y(), toolbarLayer);
+    this.createToolbar(toolbarRect.x(), toolbarRect.y(), toolbarLayer, containerWidth);
   }
 
-  createToolbar(containerX: number, containerY: number, toolbarLayer: Konva.Layer): void {
-    const containerWidth = 400; // Width of the toolbar container
-    const containerHeight = 80; // Height of the toolbar container
+  createToolbar(containerX: number, containerY: number, toolbarLayer: Konva.Layer, containerWidth: number): void {
+    const containerHeight = 100;
     const gateY = containerY + containerHeight / 2; // Vertical center of the toolbar
     const resetButtonSize = 50; // Size of the reset button
-    const leftPadding = 50; // Padding from the left edge for the AND gate
-    const rightPadding = 70; // Padding from the right edge for the RESET button
+    const elementPadding = 20; // Padding on both sides of the toolbar
 
-    // Calculate the available width for gates
-    const availableWidth = containerWidth - leftPadding - rightPadding;
+    // Define the sizes of each element
+    const elementSizes = {
+      AND: 50,
+      OR: 50,
+      NOT: 50,
+      LightBulb: 50,
+      One: 50,
+      Zero: 50,
+      Reset: resetButtonSize
+    };
 
-    // Calculate spacing between gates (for 3 gates, we need 2 spaces)
-    const gateSpacing = availableWidth / 3;
+    // Calculate the total width of all elements combined
+    const totalElementWidth = elementSizes.AND + elementSizes.OR + elementSizes.NOT +
+      elementSizes.LightBulb + elementSizes.One + elementSizes.Zero;
 
-    // Create gate icons
-    this.createGateIcon('AND', containerX + leftPadding, gateY, toolbarLayer);
-    this.createGateIcon('OR', containerX + leftPadding + gateSpacing, gateY, toolbarLayer);
-    this.createGateIcon('NOT', containerX + leftPadding + 2 * gateSpacing, gateY, toolbarLayer);
+    // Calculate the available width for spacing between elements
+    const availableWidth = containerWidth - 2 * elementPadding - totalElementWidth - elementSizes.Reset;
 
-    // Position the reset button on the right side of the toolbar
-    const resetX = containerX + containerWidth - resetButtonSize - 10; // 10px padding from right
-    const resetY = containerY + (containerHeight - resetButtonSize) / 2; // Center vertically
+    // Calculate spacing between elements
+    const elementSpacing = availableWidth / 6; // We have 6 gaps between the 7 elements
 
-    this.createResetButton(resetX, resetY, "public/images/reset.png", toolbarLayer);
+    // Starting position for the first element
+    let currentX = containerX + elementPadding;
+
+    // Create and position each gate and bulb icon
+    this.createGateIcon('AND', currentX, gateY, toolbarLayer);
+    currentX += elementSizes.AND + elementSpacing;
+
+    this.createGateIcon('OR', currentX, gateY, toolbarLayer);
+    currentX += elementSizes.OR + elementSpacing;
+
+    this.createGateIcon('NOT', currentX, gateY, toolbarLayer);
+    currentX += elementSizes.NOT + elementSpacing;
+
+    this.createGateIcon('LightBulb', currentX, gateY, toolbarLayer);
+    currentX += elementSizes.LightBulb + elementSpacing;
+
+    this.createGateIcon('One', currentX, gateY, toolbarLayer);
+    currentX += elementSizes.One + elementSpacing;
+
+    this.createGateIcon('Zero', currentX, gateY, toolbarLayer);
+    currentX += elementSizes.Zero + elementSpacing;
+
+    // Position the reset button at the right end of the toolbar
+    this.createResetButton(currentX, gateY - resetButtonSize / 2, "public/images/reset.png", toolbarLayer);
+
     toolbarLayer.draw();
   }
 
   createGateIcon(type: string, x: number, y: number, toolbarLayer: Konva.Layer): void {
     let gate: Konva.Group;
 
-    if (type === 'AND') {
-      gate = this.createAndGate(0, 0);
-    } else if (type === 'OR') {
-      gate = this.createOrGate(0, 0);
-    } else if (type === 'NOT') {
-      gate = this.createNotGate(0, 0);
-    } else {
-      throw new Error(`Unknown gate type: ${type}`);
+    switch (type) {
+      case 'AND':
+        gate = this.createAndGate(0, 0);
+        break;
+      case 'OR':
+        gate = this.createOrGate(0, 0);
+        break;
+      case 'NOT':
+        gate = this.createNotGate(0, 0);
+        break;
+      case 'LightBulb':
+        gate = this.createLightBulbIcon(0, 0);
+        break;
+      case 'One':
+        gate = this.createOneIcon(0, 0);
+        break;
+      case 'Zero':
+        gate = this.createZeroIcon(0, 0);
+        break;
+      default:
+        throw new Error(`Unknown gate type: ${type}`);
     }
 
     // Center the gate vertically
@@ -161,6 +195,8 @@ export class SimulatorHomeComponent implements OnInit {
       }
     });
 
+    // gate.find('Circle').forEach(circle => this.addCircleClickEvents(circle as Konva.Circle));
+
     toolbarLayer.add(gate);
   }
 
@@ -181,20 +217,20 @@ export class SimulatorHomeComponent implements OnInit {
       },
       fill: 'white',
       stroke: 'black',
-      strokeWidth: 1.5
+      strokeWidth: 2
     });
 
     // Input lines
     const inputLine1 = new Konva.Line({
       points: [-18, 6, 0, 6],  // Y adjusted to separate inputs
       stroke: 'black',
-      strokeWidth: 1.5
+      strokeWidth: 2
     });
 
     const inputLine2 = new Konva.Line({
       points: [-18, 18, 0, 18],  // Y adjusted to separate inputs
       stroke: 'black',
-      strokeWidth: 1.5
+      strokeWidth: 2
     });
 
     // Input circles (separated vertically)
@@ -203,7 +239,7 @@ export class SimulatorHomeComponent implements OnInit {
       y: 6,  // Adjusted to separate from the other input
       radius: 4,
       stroke: 'black',
-      strokeWidth: 1.5,
+      strokeWidth: 2,
       fill: 'white'
     });
 
@@ -220,7 +256,7 @@ export class SimulatorHomeComponent implements OnInit {
     const outputLine = new Konva.Line({
       points: [29, 12, 47, 12],  // X adjusted for reduced body length
       stroke: 'black',
-      strokeWidth: 1.5
+      strokeWidth: 2
     });
 
     // Output circle
@@ -229,12 +265,11 @@ export class SimulatorHomeComponent implements OnInit {
       y: 12,
       radius: 4,
       stroke: 'black',
-      strokeWidth: 1.5,
+      strokeWidth: 2,
       fill: 'white'
     });
 
     group.add(body, inputLine1, inputLine2, inputCircle1, inputCircle2, outputLine, outputCircle);
-
     return group;
   }
 
@@ -364,36 +399,166 @@ export class SimulatorHomeComponent implements OnInit {
     return group;
   }
 
+  createLightBulbIcon(x: number, y: number): Konva.Group {
+    const group = new Konva.Group({ x, y });
+
+    const offsetY = -15; // Move the bulb up slightly
+    const scale = 0.7;   // Further scale down to fit the toolbar
+
+    const bulbOutline = new Konva.Path({
+      data: 'M15,0 Q30,0 30,25 Q30,35 25,45 L25,55 Q25,60 15,60 Q5,60 5,55 L5,45 Q0,35 0,25 Q0,0 15,0 Z',
+      fill: 'white',
+      stroke: 'black',
+      strokeWidth: 2,
+      scaleX: scale, // Scale down to fit within the toolbar
+      scaleY: scale,  // Scale down to fit within the toolbar
+      y: offsetY
+    });
+
+    const filament = new Konva.Line({
+      points: [10, 35, 15, 30, 20, 35, 25, 30],
+      stroke: 'red',
+      strokeWidth: 2,
+      tension: 0.5,
+      scaleX: scale,
+      scaleY: scale,
+      y: offsetY
+    });
+
+    const base = new Konva.Rect({
+      x: 10 * scale,
+      y: (45 + offsetY) * scale,
+      width: 10 * scale,
+      height: 10 * scale,
+      fill: 'black'
+    });
+
+    const inputLine = new Konva.Line({
+      points: [15 * scale, (55 + offsetY) * scale, 15 * scale, (70 + offsetY) * scale],
+      stroke: 'black',
+      strokeWidth: 2
+    });
+
+    const inputCircle = new Konva.Circle({
+      x: 15 * scale,
+      y: (70 + offsetY) * scale,
+      radius: 5 * scale,
+      fill: 'white',
+      stroke: 'black',
+      strokeWidth: 2
+    });
+
+    group.add(bulbOutline, filament, base, inputLine, inputCircle);
+    return group;
+  }
+
+  createOneIcon(x: number, y: number): Konva.Group {
+    const group = new Konva.Group({ x, y });
+
+    const boxSize = 35; // Ensure the box is a perfect square
+
+    const box = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: boxSize,
+      height: boxSize, // Same as width for a perfect square
+      fill: 'white',
+      stroke: 'black',
+      strokeWidth: 2
+    });
+
+    const text = new Konva.Text({
+      x: boxSize / 2 - 6, // Center the text horizontally
+      y: boxSize / 2 - 10, // Center the text vertically
+      text: '1',
+      fontSize: 20,
+      fontFamily: 'Calibri',
+      fontStyle: 'bold',
+      fill: 'black'
+    });
+
+    const outputLine = new Konva.Line({
+      points: [boxSize, boxSize / 2, boxSize + 20, boxSize / 2], // Start from the middle of the right edge of the box
+      stroke: 'black',
+      strokeWidth: 3
+    });
+
+    const outputCircle = new Konva.Circle({
+      x: boxSize + 20,
+      y: boxSize / 2,
+      radius: 6,
+      stroke: 'black',
+      strokeWidth: 3,
+      fill: 'white'
+    });
+
+    group.add(box, text, outputLine, outputCircle);
+
+    return group;
+  }
+
+  createZeroIcon(x: number, y: number): Konva.Group {
+    const group = new Konva.Group({ x, y });
+
+    const boxSize = 35; // Ensure the box is a perfect square
+
+    const box = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: boxSize,
+      height: boxSize, // Same as width for a perfect square
+      fill: 'white',
+      stroke: 'black',
+      strokeWidth: 2
+    });
+
+    const text = new Konva.Text({
+      x: boxSize / 2 - 6, // Center the text horizontally
+      y: boxSize / 2 - 10, // Center the text vertically
+      text: '0',
+      fontSize: 20,
+      fontFamily: 'Calibri',
+      fontStyle: 'bold',
+      fill: 'black'
+    });
+
+    const outputLine = new Konva.Line({
+      points: [boxSize, boxSize / 2, boxSize + 20, boxSize / 2], // Start from the middle of the right edge of the box
+      stroke: 'black',
+      strokeWidth: 3
+    });
+
+    const outputCircle = new Konva.Circle({
+      x: boxSize + 20,
+      y: boxSize / 2,
+      radius: 6,
+      stroke: 'black',
+      strokeWidth: 3,
+      fill: 'white'
+    });
+
+    group.add(box, text, outputLine, outputCircle);
+
+    return group;
+  }
+
   cloneAndDragGate(gate: Konva.Group): void {
-    // Clone the gate from the toolbar and add it to the canvas
     const clonedGate = gate.clone({
       x: gate.x(),
       y: gate.y(),
       draggable: true,
-      id: `cloned-${Date.now()}-${Math.random()}`, // Ensure the cloned gate has a unique ID
+      id: `cloned-${Date.now()}-${Math.random()}`,
     });
 
-    // Mark this image as no longer a toolbar icon
     clonedGate.setAttr('isToolbarIcon', false);
-
-    // Remove any existing click handlers that might have been copied over during cloning
     clonedGate.off('click');
 
-    // Move the cloned image to the main layer and bring it to the top
     this.layer.add(clonedGate);
-    clonedGate.moveToTop(); // Ensure the cloned image is on top
+    clonedGate.moveToTop();
     this.stage.draw();
 
-    // Stop event propagation for the cloned image
-    clonedGate.on('click', (event: Konva.KonvaEventObject<Event>) => {
-      event.cancelBubble = true;
-      console.log(`Clicked cloned imageNode at position: (${clonedGate.x()}, ${clonedGate.y()})`);
-    });
-
-    // Start dragging the cloned image
     clonedGate.startDrag();
 
-    // Add drag behavior specific to canvas gates
     this.handleCanvasGate(clonedGate);
   }
 
