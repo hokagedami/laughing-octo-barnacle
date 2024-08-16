@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import Konva from 'konva';  // Import Konva
+import Konva from 'konva';
 
 @Component({
   selector: 'app-simulator-home',
@@ -157,7 +157,7 @@ export class SimulatorHomeComponent implements OnInit {
     gate.on('click', (event: Konva.KonvaEventObject<Event>) => {
       event.cancelBubble = true;
       if (gate.getAttr('isToolbarIcon')) {
-        this.cloneAndDragGate(gate, toolbarLayer);
+        this.cloneAndDragGate(gate);
       }
     });
 
@@ -364,7 +364,7 @@ export class SimulatorHomeComponent implements OnInit {
     return group;
   }
 
-  cloneAndDragGate(gate: Konva.Group, toolbarLayer: Konva.Layer): void {
+  cloneAndDragGate(gate: Konva.Group): void {
     // Clone the gate from the toolbar and add it to the canvas
     const clonedGate = gate.clone({
       x: gate.x(),
