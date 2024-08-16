@@ -19,20 +19,55 @@ export class SimulatorHomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeKonva();
+    this.createGridBackground(); // Add this line
     this.createToolbarContainer();
-    // this.createToolbar();
   }
 
   initializeKonva(): void {
-    // Initializes the Konva stage and the layer
     this.stage = new Konva.Stage({
       container: this.stageContainer.nativeElement,
       width: 800,
       height: 600,
     });
 
+    // Add this line to set the background color
+    this.stage.container().style.backgroundColor = '#f0f0f0';
+
     this.layer = new Konva.Layer();
     this.stage.add(this.layer);
+  }
+
+  createGridBackground(): void {
+    const gridLayer = new Konva.Layer();
+    const gridSize = 20; // Size of each grid cell
+    const stageWidth = this.stage.width();
+    const stageHeight = this.stage.height();
+
+    // Create vertical lines
+    for (let x = 0; x <= stageWidth; x += gridSize) {
+      const line = new Konva.Line({
+        points: [x, 0, x, stageHeight],
+        stroke: '#ddd',
+        strokeWidth: 0.5
+      });
+      gridLayer.add(line);
+    }
+
+    // Create horizontal lines
+    for (let y = 0; y <= stageHeight; y += gridSize) {
+      const line = new Konva.Line({
+        points: [0, y, stageWidth, y],
+        stroke: '#ddd',
+        strokeWidth: 0.5
+      });
+      gridLayer.add(line);
+    }
+
+    // Add the grid layer to the stage
+    this.stage.add(gridLayer);
+
+    // Move the grid layer to the bottom
+    gridLayer.moveToBottom();
   }
 
   createToolbarContainer(): void {
@@ -50,7 +85,6 @@ export class SimulatorHomeComponent implements OnInit {
       width: containerWidth,
       height: containerHeight,
       fill: 'white',
-      stroke: 'black',
       strokeWidth: 2,
       cornerRadius: 10,
       shadowColor: 'black',
