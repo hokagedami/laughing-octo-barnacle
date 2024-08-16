@@ -19,13 +19,10 @@
   align-items: center;
   margin-top: 20px;
   padding: 10px;
-  width: 100%;
+  width: 800px;
   background-color: #e0e0e0;
   border: 1px solid #ccc;
   border-radius: 5px;
-}
-
-.toolbar {
-  display: flex;
-  gap: 20px;
+  position: absolute;
+  bottom: 0;
 }
