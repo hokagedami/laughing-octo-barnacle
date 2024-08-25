@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Konva from 'konva';
+import {KonvaEventObject} from "konva/lib/Node";
 
 @Component({
   selector: 'app-simulator-home',
@@ -16,12 +17,20 @@ export class SimulatorHomeComponent implements OnInit {
   stage!: Konva.Stage;
   layer!: Konva.Layer;
 
+  toolbarStage!: Konva.Stage;
+  toolbarLayer!: Konva.Layer;
+
+  draggedGate: Konva.Group | null = null;
+
+  canvasGates: Konva.Group[] = [];
+
   constructor() {}
 
   ngOnInit(): void {
     this.initializeKonva();
     this.createGridBackground();
     this.createToolbar();
+    this.setupCanvasDragListeners();
   }
 
   initializeKonva(): void {
@@ -70,14 +79,14 @@ export class SimulatorHomeComponent implements OnInit {
     const elementPadding = 30;
     const gateY = toolbarHeight / 2;
 
-    const toolbarStage = new Konva.Stage({
+    this.toolbarStage = new Konva.Stage({
       container: this.toolbarContainer.nativeElement,
       width: toolbarWidth,
       height: toolbarHeight,
     });
 
-    const toolbarLayer = new Konva.Layer();
-    toolbarStage.add(toolbarLayer);
+    this.toolbarLayer = new Konva.Layer();
+    this.toolbarStage.add(this.toolbarLayer);
 
     const elementSizes = {
       AND: 50,
@@ -95,27 +104,27 @@ export class SimulatorHomeComponent implements OnInit {
 
     let currentX = elementPadding;
 
-    this.createGateIcon('AND', currentX, gateY, toolbarLayer);
+    this.createGateIcon('AND', currentX, gateY, this.toolbarLayer);
     currentX += elementSizes.AND + elementSpacing;
 
-    this.createGateIcon('OR', currentX, gateY, toolbarLayer);
+    this.createGateIcon('OR', currentX, gateY, this.toolbarLayer);
     currentX += elementSizes.OR + elementSpacing;
 
-    this.createGateIcon('NOT', currentX, gateY, toolbarLayer);
+    this.createGateIcon('NOT', currentX, gateY, this.toolbarLayer);
     currentX += elementSizes.NOT + elementSpacing;
 
-    this.createGateIcon('LightBulb', currentX, gateY, toolbarLayer);
+    this.createGateIcon('LightBulb', currentX, gateY, this.toolbarLayer);
     currentX += elementSizes.LightBulb + elementSpacing;
 
-    this.createGateIcon('One', currentX, gateY, toolbarLayer);
+    this.createGateIcon('One', currentX, gateY, this.toolbarLayer);
     currentX += elementSizes.One + elementSpacing;
 
-    this.createGateIcon('Zero', currentX, gateY, toolbarLayer);
+    this.createGateIcon('Zero', currentX, gateY, this.toolbarLayer);
     currentX += elementSizes.Zero + elementSpacing;
 
-    this.createResetButton(currentX, gateY - elementSizes.Reset / 2, "public/images/reset.png", toolbarLayer);
+    this.createResetButton(currentX, gateY - elementSizes.Reset / 2, "public/images/reset.png", this.toolbarLayer);
 
-    toolbarLayer.draw();
+    this.toolbarLayer.draw();
   }
 
   createGateIcon(type: string, x: number, y: number, toolbarLayer: Konva.Layer): void {
@@ -145,15 +154,71 @@ export class SimulatorHomeComponent implements OnInit {
     }
 
     gate.setAttrs({
-      draggable: false,
+      draggable: true,
       id: `gate-${Date.now()}-${Math.random()}`,
-      isToolbarIcon: true
+      isToolbarIcon: true,
+      name: type
     });
 
-    gate.on('click', () => {
-      if (gate.getAttr('isToolbarIcon')) {
-        this.cloneAndDragGate(gate);
+    gate.on('dragstart', (e) => {
+      e.cancelBubble = true;
+      const isToolbarIcon = gate.getAttr('isToolbarIcon');
+      if (isToolbarIcon) {
+        const clone = gate.clone({
+          draggable: true,
+          id: `cloned-${Date.now()}-${Math.random()}`,
+          isToolbarIcon: false
+        });
+
+        this.draggedGate = clone;
+
+        const pointerPos = this.toolbarStage.getPointerPosition();
+        if (pointerPos) {
+          clone.position({
+            x: pointerPos.x,
+            y: pointerPos.y
+          });
+        }
+        this.layer.add(clone);
+        this.stage.draw();
+      } else {
+        this.draggedGate = gate;
       }
+    });
+
+    gate.on('dragmove', (e) => {
+      e.cancelBubble = true;
+      if (this.draggedGate) {
+        const pointerPos = this.stage.getPointerPosition();
+        if (pointerPos) {
+          this.draggedGate.position({
+            x: pointerPos.x,
+            y: pointerPos.y
+          });
+          this.stage.batchDraw();
+        }
+      }
+    });
+
+    gate.on('dragend', (e) => {
+      e.cancelBubble = true;
+      if (gate.getAttr('isToolbarIcon')) {
+        gate.position({ x, y });
+        this.toolbarLayer.draw();
+      }
+
+      if (this.draggedGate) {
+        if (!this.canvasGates.includes(this.draggedGate)) {
+          this.canvasGates.push(this.draggedGate);
+        }
+        this.handleCanvasGate(this.draggedGate);
+        this.draggedGate = null;
+      }
+    });
+
+    gate.on('click', (e) => {
+      e.cancelBubble = true;
+      console.log(`Clicked on ${type} ${gate.getAttr('isToolbarIcon') ? 'toolbar icon' : 'canvas gate'} with id ${gate.id()}`);
     });
 
     toolbarLayer.add(gate);
@@ -481,42 +546,42 @@ export class SimulatorHomeComponent implements OnInit {
     return group;
   }
 
-  cloneAndDragGate(gate: Konva.Group): void {
-    const clonedGate = gate.clone({
-      draggable: true,
-      id: `cloned-${Date.now()}-${Math.random()}`,
+  handleCanvasGate(gate: Konva.Group): void {
+    gate.draggable(true);
+    gate.setAttr('isToolbarIcon', false);
+    gate.off('dragend');
+    gate.on('dragend', () => {
+      const gridSize = 20;
+      const snappedX = Math.round(gate.x() / gridSize) * gridSize;
+      const snappedY = Math.round(gate.y() / gridSize) * gridSize;
+
+      gate.position({ x: snappedX, y: snappedY });
+      this.stage.batchDraw();
     });
-
-    clonedGate.setAttr('isToolbarIcon', false);
-    clonedGate.off('click');
-
-    // Position the cloned gate at the center of the main stage
-    clonedGate.position({
-      x: this.stage.width() / 2,
-      y: this.stage.height() / 2
+    gate.off('dragstart');
+    gate.on('dragstart', (e: KonvaEventObject<DragEvent>) => {
+      e.cancelBubble = true;
+      this.draggedGate = gate;
     });
-
-    this.layer.add(clonedGate);
-    clonedGate.moveToTop();
-    this.stage.draw();
-
-    clonedGate.startDrag();
-
-    this.handleCanvasGate(clonedGate);
   }
 
-  handleCanvasGate(clonedGate: Konva.Group): void {
-    clonedGate.on('dragmove', () => {
-      // Handle specific behavior during dragging on the canvas, if needed
+  setupCanvasDragListeners(): void {
+    this.stage.on('dragover', (e) => {
+      e.evt.preventDefault();
     });
 
-    clonedGate.on('dragend', () => {
-      const gridSize = 20;
-      const snappedX = Math.round(clonedGate.x() / gridSize) * gridSize;
-      const snappedY = Math.round(clonedGate.y() / gridSize) * gridSize;
-
-      clonedGate.position({ x: snappedX, y: snappedY });
-      this.stage.draw();
+    this.stage.on('drop', (e) => {
+      e.evt.preventDefault();
+      const pointerPos = this.stage.getPointerPosition();
+      if (this.draggedGate && pointerPos) {
+        this.draggedGate.position({
+          x: pointerPos.x,
+          y: pointerPos.y
+        });
+        this.handleCanvasGate(this.draggedGate);
+        this.draggedGate = null;
+        this.stage.batchDraw();
+      }
     });
   }
 
