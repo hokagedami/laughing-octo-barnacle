@@ -572,93 +572,7 @@ export class SimulatorHomeComponent implements OnInit {
     circle.setAttr('circleType', type);
 
     circle.on('click', (e) => {
-      if (this.selectedTool === 'connect' && this.isCircleInsideCanvas(circle)) {
-        const parent = circle.getParent() as Konva.Group;
-        const circleType = circle.getAttr('circleType');
-
-        if (!this.currentConnection) {
-          // Start a new connection
-          if(circle.getAttr('HasConnection')) {
-            alert('Please start a fresh connection');
-            return;
-          }
-          this.currentConnection = {
-            start: parent,
-            end: null,
-            inputCircle: circleType === 'input' ? circle : null,
-            outputCircle: circleType === 'output' ? circle : null
-          };
-          this.isDrawingConnection = true;
-          circle.setAttr('HasConnection', true);
-          console.log(`Started connection from ${parent.getAttr('name')}`);
-        } else {
-          // Attempt to close the connection
-          if (
-            parent !== this.currentConnection.start &&
-            circleType !== this.currentConnection.inputCircle?.getAttr('circleType') &&
-            circleType !== this.currentConnection.outputCircle?.getAttr('circleType') &&
-            !circle.getAttr('HasConnection')
-          ) {
-            // Valid connection
-            if (circleType === 'input') {
-              this.currentConnection.inputCircle = circle;
-              this.currentConnection.end = parent;
-            } else if (circleType === 'output') {
-              this.currentConnection.outputCircle = circle;
-              this.currentConnection.end = parent;
-            }
-
-            // Ensure we have both input and output circles
-            if (this.currentConnection.inputCircle && this.currentConnection.outputCircle
-              && this.currentConnection.start && this.currentConnection.end
-              && this.currentConnection.start !== this.currentConnection.end
-              && this.currentConnection.inputCircle.getAttr('circleType') !== this.currentConnection.outputCircle.getAttr('circleType')) {
-              this.connections.push(this.currentConnection);
-
-
-              const lineStartPosition = this.currentConnection.inputCircle.getAbsolutePosition();
-              const lineEndPosition = this.currentConnection.outputCircle.getAbsolutePosition();
-
-              // Calculate control points for S shape
-              const width = lineEndPosition.x - lineStartPosition.x;
-              const height = lineEndPosition.y - lineStartPosition.y;
-              const ctrlPoint1 = { x: lineStartPosition.x + width * 0.25, y: lineStartPosition.y + height * 0.75 };
-              const ctrlPoint2 = { x: lineStartPosition.x + width * 0.75, y: lineStartPosition.y + height * 0.25 };
-
-              // Create S shape
-              const sShape = new Konva.Shape({
-                sceneFunc: (context, shape) => {
-                  context.beginPath();
-                  context.moveTo(lineStartPosition.x, lineStartPosition.y);
-                  context.bezierCurveTo(
-                    ctrlPoint1.x, ctrlPoint1.y,
-                    ctrlPoint2.x, ctrlPoint2.y,
-                    lineEndPosition.x, lineEndPosition.y
-                  );
-                  context.strokeShape(shape);
-                },
-                stroke: 'blue',
-                strokeWidth: 5,
-                name: 's-shape',
-                draggable: true
-              });
-
-              this.canvasLayer.add(sShape);
-              this.canvasLayer.batchDraw();
-
-              this.currentConnection.start.setAttr('draggable', false);
-              this.currentConnection.end.setAttr('draggable', false);
-              this.currentConnection = null;
-              this.isDrawingConnection = false;
-              console.log(`Connection completed: ${parent.getAttr('name')}`);
-            }
-          } else {
-            console.log("Invalid connection attempt");
-            alert('Invalid connection attempt');
-            this.currentConnection = null;
-          }
-        }
-      }
+      this.processCircleClick(circle);
     });
 
     return circle;
@@ -706,5 +620,98 @@ export class SimulatorHomeComponent implements OnInit {
 
     gate.setAttrs(attributes);
     return gate;
+  }
+
+  processCircleClick(circle: Konva.Circle): void {
+    if (this.selectedTool === 'connect' && this.isCircleInsideCanvas(circle)) {
+      const parent = circle.getParent() as Konva.Group;
+      const circleType = circle.getAttr('circleType');
+
+      if (!this.currentConnection) {
+        // Start a new connection
+        if(circle.getAttr('HasConnection')) {
+          alert('Please start a fresh connection');
+          return;
+        }
+        this.currentConnection = {
+          start: parent,
+          end: null,
+          inputCircle: circleType === 'input' ? circle : null,
+          outputCircle: circleType === 'output' ? circle : null
+        };
+        this.isDrawingConnection = true;
+        circle.setAttr('HasConnection', true);
+        console.log(`Started connection from ${parent.getAttr('name')}`);
+      } else {
+        // Attempt to close the connection
+        if (
+          parent !== this.currentConnection.start &&
+          circleType !== this.currentConnection.inputCircle?.getAttr('circleType') &&
+          circleType !== this.currentConnection.outputCircle?.getAttr('circleType') &&
+          !circle.getAttr('HasConnection')
+        ) {
+          // Valid connection
+          if (circleType === 'input') {
+            this.currentConnection.inputCircle = circle;
+            this.currentConnection.end = parent;
+          } else if (circleType === 'output') {
+            this.currentConnection.outputCircle = circle;
+            this.currentConnection.end = parent;
+          }
+
+          // Ensure we have both input and output circles
+          if (this.currentConnection.inputCircle && this.currentConnection.outputCircle
+            && this.currentConnection.start && this.currentConnection.end
+            && this.currentConnection.start !== this.currentConnection.end
+            && this.currentConnection.inputCircle.getAttr('circleType') !== this.currentConnection.outputCircle.getAttr('circleType')) {
+            this.connections.push(this.currentConnection);
+
+
+            const lineStartPosition = this.currentConnection.inputCircle.getAbsolutePosition();
+            const lineEndPosition = this.currentConnection.outputCircle.getAbsolutePosition();
+
+            // Calculate control points for S shape
+            const width = lineEndPosition.x - lineStartPosition.x;
+            const height = lineEndPosition.y - lineStartPosition.y;
+            const ctrlPoint1 = { x: lineStartPosition.x + width * 0.25, y: lineStartPosition.y + height * 0.75 };
+            const ctrlPoint2 = { x: lineStartPosition.x + width * 0.75, y: lineStartPosition.y + height * 0.25 };
+
+            // Create S shape
+            const sShape = new Konva.Shape({
+              sceneFunc: (context, shape) => {
+                context.beginPath();
+                context.moveTo(lineStartPosition.x, lineStartPosition.y);
+                context.bezierCurveTo(
+                  ctrlPoint1.x, ctrlPoint1.y,
+                  ctrlPoint2.x, ctrlPoint2.y,
+                  lineEndPosition.x, lineEndPosition.y
+                );
+                context.strokeShape(shape);
+              },
+              stroke: 'blue',
+              strokeWidth: 5,
+              name: 's-shape',
+              draggable: true
+            });
+
+            this.canvasLayer.add(sShape);
+            this.canvasLayer.batchDraw();
+
+            this.currentConnection.start.setAttr('draggable', false);
+            this.currentConnection.end.setAttr('draggable', false);
+            // set the color of the circles to green
+            this.currentConnection.inputCircle.fill('green');
+            this.currentConnection.outputCircle.fill('green');
+            this.currentConnection = null;
+            this.isDrawingConnection = false;
+            console.log(`Connection completed: ${parent.getAttr('name')}`);
+          }
+        } else {
+          console.log("Invalid connection attempt");
+          alert('Invalid connection attempt');
+          this.currentConnection = null;
+        }
+      }
+    }
   }
 }
