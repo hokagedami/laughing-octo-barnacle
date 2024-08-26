@@ -3,6 +3,13 @@ import { CommonModule } from '@angular/common';
 import Konva from 'konva';
 import {KonvaEventObject} from "konva/lib/Node";
 
+interface Connection {
+  start: Konva.Group | null;
+  end: Konva.Group | null;
+  inputCircle: Konva.Circle | null;
+  outputCircle: Konva.Circle | null;
+}
+
 @Component({
   selector: 'app-simulator-home',
   templateUrl: './simulator-home.component.html',
@@ -14,15 +21,19 @@ export class SimulatorHomeComponent implements OnInit {
   @ViewChild('stageContainer', { static: true }) stageContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('toolbarContainer', { static: true }) toolbarContainer!: ElementRef<HTMLDivElement>;
 
-  stage!: Konva.Stage;
-  layer!: Konva.Layer;
+  canvasStage!: Konva.Stage;
+  canvasLayer!: Konva.Layer;
 
   toolbarStage!: Konva.Stage;
   toolbarLayer!: Konva.Layer;
 
   draggedGate: Konva.Group | null = null;
 
-  canvasGates: Konva.Group[] = [];
+  selectedTool: 'select' | 'connect' = 'select';
+  isDrawingConnection: boolean = false;
+
+  connections: Connection [] = [];
+  currentConnection: Connection | null = null;
 
   constructor() {}
 
@@ -31,25 +42,27 @@ export class SimulatorHomeComponent implements OnInit {
     this.createGridBackground();
     this.createToolbar();
     this.setupCanvasDragListeners();
+    this.setupLayerWatchers();
   }
 
   initializeKonva(): void {
-    this.stage = new Konva.Stage({
+    this.canvasStage = new Konva.Stage({
       container: this.stageContainer.nativeElement,
       width: 800,
       height: 600,
     });
 
-    this.stage.container().style.backgroundColor = '#f0f0f0';
-    this.layer = new Konva.Layer();
-    this.stage.add(this.layer);
+    this.canvasStage.container().style.backgroundColor = '#f0f0f0';
+    this.canvasLayer = new Konva.Layer();
+    this.canvasLayer.setAttr('type', 'canvasLayer');
+    this.canvasStage.add(this.canvasLayer);
   }
 
   createGridBackground(): void {
     const gridLayer = new Konva.Layer();
     const gridSize = 20;
-    const stageWidth = this.stage.width();
-    const stageHeight = this.stage.height();
+    const stageWidth = this.canvasStage.width();
+    const stageHeight = this.canvasStage.height();
 
     for (let x = 0; x <= stageWidth; x += gridSize) {
       const line = new Konva.Line({
@@ -69,7 +82,9 @@ export class SimulatorHomeComponent implements OnInit {
       gridLayer.add(line);
     }
 
-    this.stage.add(gridLayer);
+    gridLayer.setAttr('type', 'gridLayer');
+
+    this.canvasStage.add(gridLayer);
     gridLayer.moveToBottom();
   }
 
@@ -95,7 +110,8 @@ export class SimulatorHomeComponent implements OnInit {
       LightBulb: 50,
       One: 50,
       Zero: 50,
-      Reset: 50
+      Reset: 50,
+      Connector: 50
     };
 
     const totalElementWidth = Object.values(elementSizes).reduce((a, b) => a + b, 0);
@@ -122,107 +138,76 @@ export class SimulatorHomeComponent implements OnInit {
     this.createGateIcon('Zero', currentX, gateY, this.toolbarLayer);
     currentX += elementSizes.Zero + elementSpacing;
 
+    this.createConnectorTool(currentX, gateY, this.toolbarLayer);
+    currentX += elementSizes.Connector + elementSpacing;
+
     this.createResetButton(currentX, gateY - elementSizes.Reset / 2, "public/images/reset.png", this.toolbarLayer);
 
     this.toolbarLayer.draw();
   }
 
   createGateIcon(type: string, x: number, y: number, toolbarLayer: Konva.Layer): void {
-    let gate: Konva.Group;
-
-    switch (type) {
-      case 'AND':
-        gate = this.createAndGate(x, y);
-        break;
-      case 'OR':
-        gate = this.createOrGate(x, y);
-        break;
-      case 'NOT':
-        gate = this.createNotGate(x, y);
-        break;
-      case 'LightBulb':
-        gate = this.createLightBulbIcon(x, y);
-        break;
-      case 'One':
-        gate = this.createOneIcon(x, y);
-        break;
-      case 'Zero':
-        gate = this.createZeroIcon(x, y);
-        break;
-      default:
-        throw new Error(`Unknown gate type: ${type}`);
-    }
-
-    gate.setAttrs({
-      draggable: true,
+    const properties = {
+      draggable: false,
       id: `gate-${Date.now()}-${Math.random()}`,
       isToolbarIcon: true,
       name: type
-    });
+    };
+    let gate = this.createIconByType(type, x, y, properties);
 
-    gate.on('dragstart', (e) => {
-      e.cancelBubble = true;
-      const isToolbarIcon = gate.getAttr('isToolbarIcon');
-      if (isToolbarIcon) {
-        const clone = gate.clone({
-          draggable: true,
-          id: `cloned-${Date.now()}-${Math.random()}`,
-          isToolbarIcon: false
-        });
-
-        this.draggedGate = clone;
-
-        const pointerPos = this.toolbarStage.getPointerPosition();
-        if (pointerPos) {
-          clone.position({
-            x: pointerPos.x,
-            y: pointerPos.y
-          });
-        }
-        this.layer.add(clone);
-        this.stage.draw();
-      } else {
-        this.draggedGate = gate;
-      }
-    });
-
-    gate.on('dragmove', (e) => {
-      e.cancelBubble = true;
-      if (this.draggedGate) {
-        const pointerPos = this.stage.getPointerPosition();
-        if (pointerPos) {
-          this.draggedGate.position({
-            x: pointerPos.x,
-            y: pointerPos.y
-          });
-          this.stage.batchDraw();
-        }
-      }
-    });
-
-    gate.on('dragend', (e) => {
-      e.cancelBubble = true;
-      if (gate.getAttr('isToolbarIcon')) {
-        gate.position({ x, y });
-        this.toolbarLayer.draw();
-      }
-
-      if (this.draggedGate) {
-        if (!this.canvasGates.includes(this.draggedGate)) {
-          this.canvasGates.push(this.draggedGate);
-        }
-        this.handleCanvasGate(this.draggedGate);
-        this.draggedGate = null;
-      }
-    });
 
     gate.on('click', (e) => {
-      e.cancelBubble = true;
-      console.log(`Clicked on ${type} ${gate.getAttr('isToolbarIcon') ? 'toolbar icon' : 'canvas gate'} with id ${gate.id()}`);
+      if (this.selectedTool === 'connect' || this.isDrawingConnection) {
+        return;
+      }
+
+      // Find a position close to the center that is not occupied
+      const canvasCenterX = this.canvasStage.width() / 2;
+      const canvasCenterY = this.canvasStage.height() / 2;
+      let positionFound = false;
+      let posX = canvasCenterX;
+      let posY = canvasCenterY;
+
+      while (!positionFound) {
+        if (this.isPositionFree(posX, posY)) {
+          positionFound = true;
+        }
+        else {
+          // tell the user that the center is not free
+          alert('The center of the canvas is not free. Please move other elements to make space.');
+          return;
+        }
+      }
+
+      const clonedProperties = {
+        draggable: true,
+        id: `cloned-${Date.now()}-${Math.random()}`,
+        isToolbarIcon: false,
+        name: type
+      };
+      const cloned = this.createIconByType(gate.getAttr('name'), posX, posY, clonedProperties);
+
+      this.canvasLayer.add(cloned);
+      this.handleCanvasGate(cloned);
+      this.canvasStage.batchDraw();
+      this.canvasLayer.fire('add', { target: cloned });
     });
 
     toolbarLayer.add(gate);
   }
+
+  isPositionFree(x: number, y: number): boolean {
+    const stageChildren = this.canvasLayer.getChildren();
+    for (const child of stageChildren) {
+
+      const gatePos = child.position();
+
+      if (x == gatePos.x && y == gatePos.y) {
+        return false;
+      }
+    }
+    return true;
+}
 
   createAndGate(x: number, y: number): Konva.Group {
     const group = new Konva.Group({ x, y });
@@ -248,47 +233,23 @@ export class SimulatorHomeComponent implements OnInit {
       stroke: 'black',
       strokeWidth: 2
     });
-
     const inputLine2 = new Konva.Line({
       points: [-18, 18, 0, 18],
       stroke: 'black',
       strokeWidth: 2
     });
-
-    const inputCircle1 = new Konva.Circle({
-      x: -18,
-      y: 6,
-      radius: 4,
-      stroke: 'black',
-      strokeWidth: 2,
-      fill: 'white'
-    });
-
-    const inputCircle2 = new Konva.Circle({
-      x: -18,
-      y: 18,
-      radius: 4,
-      stroke: 'black',
-      strokeWidth: 1.5,
-      fill: 'white'
-    });
-
     const outputLine = new Konva.Line({
       points: [29, 12, 47, 12],
       stroke: 'black',
       strokeWidth: 2
     });
 
-    const outputCircle = new Konva.Circle({
-      x: 47,
-      y: 12,
-      radius: 4,
-      stroke: 'black',
-      strokeWidth: 2,
-      fill: 'white'
-    });
+    const inputCircleOne = this.createCircle(-18, 6, 'input');
+    const inputCircleTwo = this.createCircle(-18, 18, 'input');
+    const outputCircleOne = this.createCircle(47, 12, 'output');
 
-    group.add(body, inputLine1, inputLine2, inputCircle1, inputCircle2, outputLine, outputCircle);
+
+    group.add(body, inputLine1, inputLine2, inputCircleOne, inputCircleTwo, outputLine, outputCircleOne);
     return group;
   }
 
@@ -320,32 +281,11 @@ export class SimulatorHomeComponent implements OnInit {
       strokeWidth: 1.5
     });
 
-    const inputCircle1 = new Konva.Circle({
-      x: -18,
-      y: 6,
-      radius: 4,
-      stroke: 'black',
-      strokeWidth: 1.5,
-      fill: 'white'
-    });
+    const inputCircle1 = this.createCircle(-18, 6, 'input');
 
-    const inputCircle2 = new Konva.Circle({
-      x: -18,
-      y: 18,
-      radius: 4,
-      stroke: 'black',
-      strokeWidth: 1.5,
-      fill: 'white'
-    });
+    const inputCircle2 = this.createCircle(-18, 18, 'input');
 
-    const outputCircle = new Konva.Circle({
-      x: 47,
-      y: 12,
-      radius: 4,
-      stroke: 'black',
-      strokeWidth: 1.5,
-      fill: 'white'
-    });
+    const outputCircle = this.createCircle(47, 12, 'output');
 
     group.add(body, inputLine1, inputLine2, outputLine, inputCircle1, inputCircle2, outputCircle);
     return group;
@@ -362,14 +302,7 @@ export class SimulatorHomeComponent implements OnInit {
       strokeWidth: 1.5
     });
 
-    const outputDot = new Konva.Circle({
-      x: 31,
-      y: 12,
-      radius: 2,
-      fill: 'black',
-      stroke: 'black',
-      strokeWidth: 1.5
-    });
+    const outputDot = this.createCircle(31, 12, 'outputDot');
 
     const inputLine = new Konva.Line({
       points: [-18, 12, 0, 12],
@@ -383,23 +316,9 @@ export class SimulatorHomeComponent implements OnInit {
       strokeWidth: 1.5
     });
 
-    const inputCircle = new Konva.Circle({
-      x: -18,
-      y: 12,
-      radius: 4,
-      stroke: 'black',
-      strokeWidth: 1.5,
-      fill: 'white'
-    });
+    const inputCircle = this.createCircle(-18, 12, 'input');
 
-    const outputCircle = new Konva.Circle({
-      x: 47,
-      y: 12,
-      radius: 4,
-      stroke: 'black',
-      strokeWidth: 1.5,
-      fill: 'white'
-    });
+    const outputCircle = this.createCircle(47, 12, 'output');
 
     group.add(body, outputDot, inputLine, outputLine, inputCircle, outputCircle);
     return group;
@@ -445,14 +364,7 @@ export class SimulatorHomeComponent implements OnInit {
       strokeWidth: 2
     });
 
-    const inputCircle = new Konva.Circle({
-      x: 15 * scale,
-      y: (70 + offsetY) * scale,
-      radius: 5 * scale,
-      fill: 'white',
-      stroke: 'black',
-      strokeWidth: 2
-    });
+    const inputCircle = this.createCircle(15 * scale, (70 + offsetY) * scale, 'input');
 
     group.add(bulbOutline, filament, base, inputLine, inputCircle);
     return group;
@@ -489,14 +401,7 @@ export class SimulatorHomeComponent implements OnInit {
       strokeWidth: 1.5
     });
 
-    const outputCircle = new Konva.Circle({
-      x: boxSize + 20,
-      y: boxSize / 2,
-      radius: 5,
-      stroke: 'black',
-      strokeWidth: 1.5,
-      fill: 'white'
-    });
+    const outputCircle = this.createCircle(boxSize + 20, boxSize / 2, 'output');
 
     group.add(box, text, outputLine, outputCircle);
     return group;
@@ -533,46 +438,96 @@ export class SimulatorHomeComponent implements OnInit {
       strokeWidth: 1.5
     });
 
-    const outputCircle = new Konva.Circle({
-      x: boxSize + 20,
-      y: boxSize / 2,
-      radius: 5,
-      stroke: 'black',
-      strokeWidth: 1.5,
-      fill: 'white'
-    });
+    const outputCircle = this.createCircle(boxSize + 20, boxSize / 2, 'output');
 
     group.add(box, text, outputLine, outputCircle);
     return group;
   }
 
+  createConnectorTool(x: number, y: number, toolbarLayer: Konva.Layer): void {
+    const connectorIcon = new Konva.Rect({
+      x: x,
+      y: y - 20,
+      width: 40,
+      height: 40,
+      fill: 'lightgray',
+      stroke: 'black',
+      strokeWidth: 2
+    });
+
+    const connectorLine = new Konva.Line({
+      points: [x + 5, y, x + 35, y],
+      stroke: 'black',
+      strokeWidth: 2
+    });
+
+    const connectorGroup = new Konva.Group();
+    connectorGroup.add(connectorIcon, connectorLine);
+
+    connectorGroup.on('click', () => {
+      this.selectedTool = this.selectedTool === 'connect' ? 'select' : 'connect';
+      connectorIcon.fill(this.selectedTool === 'connect' ? 'yellow' : 'lightgray');
+      if (this.selectedTool === 'select') {
+        this.isDrawingConnection = false;
+        this.currentConnection = null;
+      }
+      this.toolbarLayer.draw();
+    });
+
+    toolbarLayer.add(connectorGroup);
+  }
+
   handleCanvasGate(gate: Konva.Group): void {
-    gate.draggable(true);
-    gate.setAttr('isToolbarIcon', false);
-    gate.off('dragend');
+    gate.off('click');
+
+    gate.on('dragstart', (e: KonvaEventObject<DragEvent>) => {
+      if (this.selectedTool === 'connect' || this.isDrawingConnection) {
+        return;
+      }
+      e.cancelBubble = true;
+      this.draggedGate = gate;
+    });
+
     gate.on('dragend', () => {
+      if (this.selectedTool === 'connect' || this.isDrawingConnection) {
+        return;
+      }
       const gridSize = 20;
       const snappedX = Math.round(gate.x() / gridSize) * gridSize;
       const snappedY = Math.round(gate.y() / gridSize) * gridSize;
 
       gate.position({ x: snappedX, y: snappedY });
-      this.stage.batchDraw();
+      this.canvasStage.batchDraw();
     });
-    gate.off('dragstart');
-    gate.on('dragstart', (e: KonvaEventObject<DragEvent>) => {
-      e.cancelBubble = true;
-      this.draggedGate = gate;
-    });
+
+    // Check if the gate is inside the canvas bounds
+    const updateDraggable = () => {
+      if (this.selectedTool === 'connect' || this.isDrawingConnection) {
+        return;
+      }
+      const pos = gate.absolutePosition();
+      const isInside = pos.x >= 0 && pos.y >= 0 &&
+        pos.x <= this.canvasStage.width() &&
+        pos.y <= this.canvasStage.height();
+      gate.draggable(isInside);
+    };
+
+    // Update draggable state on drag and dragend
+    gate.on('dragmove', updateDraggable);
+    gate.on('dragend', updateDraggable);
+
+    // Initial check
+    updateDraggable();
   }
 
   setupCanvasDragListeners(): void {
-    this.stage.on('dragover', (e) => {
+    this.canvasStage.on('dragover', (e) => {
       e.evt.preventDefault();
     });
 
-    this.stage.on('drop', (e) => {
+    this.canvasStage.on('drop', (e) => {
       e.evt.preventDefault();
-      const pointerPos = this.stage.getPointerPosition();
+      const pointerPos = this.canvasStage.getPointerPosition();
       if (this.draggedGate && pointerPos) {
         this.draggedGate.position({
           x: pointerPos.x,
@@ -580,7 +535,7 @@ export class SimulatorHomeComponent implements OnInit {
         });
         this.handleCanvasGate(this.draggedGate);
         this.draggedGate = null;
-        this.stage.batchDraw();
+        this.canvasStage.batchDraw();
       }
     });
   }
@@ -596,11 +551,160 @@ export class SimulatorHomeComponent implements OnInit {
       });
 
       imageNode.on('click', () => {
-        this.layer.destroyChildren();
-        this.layer.draw();
+        this.canvasLayer.destroyChildren();
+        this.canvasLayer.draw();
       });
 
       toolbarLayer.add(imageNode);
     });
+  }
+
+  createCircle(x: number, y: number, type: string): Konva.Circle {
+    const circle = new Konva.Circle({
+      x,
+      y,
+      radius: type === 'outputDot' ? 3 : 4,
+      stroke: 'black',
+      strokeWidth: type === 'outputDot' ? 1.5 : 2,
+      fill: type === 'outputDot' ? 'black' : 'white'
+    });
+
+    circle.setAttr('circleType', type);
+
+    circle.on('click', (e) => {
+      if (this.selectedTool === 'connect' && this.isCircleInsideCanvas(circle)) {
+        const parent = circle.getParent() as Konva.Group;
+        const circleType = circle.getAttr('circleType');
+
+        if (!this.currentConnection) {
+          // Start a new connection
+          if(circle.getAttr('HasConnection')) {
+            alert('Please start a fresh connection');
+            return;
+          }
+          this.currentConnection = {
+            start: parent,
+            end: null,
+            inputCircle: circleType === 'input' ? circle : null,
+            outputCircle: circleType === 'output' ? circle : null
+          };
+          this.isDrawingConnection = true;
+          circle.setAttr('HasConnection', true);
+          console.log(`Started connection from ${parent.getAttr('name')}`);
+        } else {
+          // Attempt to close the connection
+          if (
+            parent !== this.currentConnection.start &&
+            circleType !== this.currentConnection.inputCircle?.getAttr('circleType') &&
+            circleType !== this.currentConnection.outputCircle?.getAttr('circleType') &&
+            !circle.getAttr('HasConnection')
+          ) {
+            // Valid connection
+            if (circleType === 'input') {
+              this.currentConnection.inputCircle = circle;
+              this.currentConnection.end = parent;
+            } else if (circleType === 'output') {
+              this.currentConnection.outputCircle = circle;
+              this.currentConnection.end = parent;
+            }
+
+            // Ensure we have both input and output circles
+            if (this.currentConnection.inputCircle && this.currentConnection.outputCircle
+              && this.currentConnection.start && this.currentConnection.end
+              && this.currentConnection.start !== this.currentConnection.end
+              && this.currentConnection.inputCircle.getAttr('circleType') !== this.currentConnection.outputCircle.getAttr('circleType')) {
+              this.connections.push(this.currentConnection);
+
+
+              const lineStartPosition = this.currentConnection.inputCircle.getAbsolutePosition();
+              const lineEndPosition = this.currentConnection.outputCircle.getAbsolutePosition();
+
+              // Calculate control points for S shape
+              const width = lineEndPosition.x - lineStartPosition.x;
+              const height = lineEndPosition.y - lineStartPosition.y;
+              const ctrlPoint1 = { x: lineStartPosition.x + width * 0.25, y: lineStartPosition.y + height * 0.75 };
+              const ctrlPoint2 = { x: lineStartPosition.x + width * 0.75, y: lineStartPosition.y + height * 0.25 };
+
+              // Create S shape
+              const sShape = new Konva.Shape({
+                sceneFunc: (context, shape) => {
+                  context.beginPath();
+                  context.moveTo(lineStartPosition.x, lineStartPosition.y);
+                  context.bezierCurveTo(
+                    ctrlPoint1.x, ctrlPoint1.y,
+                    ctrlPoint2.x, ctrlPoint2.y,
+                    lineEndPosition.x, lineEndPosition.y
+                  );
+                  context.strokeShape(shape);
+                },
+                stroke: 'blue',
+                strokeWidth: 5,
+                name: 's-shape',
+                draggable: true
+              });
+
+              this.canvasLayer.add(sShape);
+              this.canvasLayer.batchDraw();
+
+              this.currentConnection.start.setAttr('draggable', false);
+              this.currentConnection.end.setAttr('draggable', false);
+              this.currentConnection = null;
+              this.isDrawingConnection = false;
+              console.log(`Connection completed: ${parent.getAttr('name')}`);
+            }
+          } else {
+            console.log("Invalid connection attempt");
+            alert('Invalid connection attempt');
+            this.currentConnection = null;
+          }
+        }
+      }
+    });
+
+    return circle;
+  }
+
+  isCircleInsideCanvas(circle: Konva.Circle): boolean {
+    const circleParent = circle.getParent();
+    return !circleParent?.getAttr('isToolbarIcon');
+  }
+
+  private setupLayerWatchers() {
+    this.canvasLayer.on('add', (e) => {
+      const shape = e.target;
+      if (shape instanceof Konva.Group) {
+        shape.setAttr('isToolbarIcon', false);
+      }
+    });
+  }
+
+  private createIconByType(type: string, x: number, y: number, attributes: object): Konva.Group {
+    let gate: Konva.Group;
+
+    switch (type) {
+      case 'AND':
+        gate = this.createAndGate(x, y);
+        break;
+      case 'OR':
+        gate = this.createOrGate(x, y);
+        break;
+      case 'NOT':
+        gate = this.createNotGate(x, y);
+        break;
+      case 'LightBulb':
+        gate = this.createLightBulbIcon(x, y);
+        break;
+      case 'One':
+        gate = this.createOneIcon(x, y);
+        break;
+      case 'Zero':
+        gate = this.createZeroIcon(x, y);
+        break;
+      default:
+        throw new Error(`Unknown gate type: ${type}`);
+    }
+
+    gate.setAttrs(attributes);
+    return gate;
   }
 }
