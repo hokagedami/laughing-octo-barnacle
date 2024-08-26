@@ -1,2 +1,22 @@
-<div class="canvas-container" #stageContainer></div>
-<div class="toolbar-container" #toolbarContainer></div>
+<div class="d-flex">
+  <div class="bg-dark text-white p-3" style="width: 30%; height: 100vh; overflow-y: auto;">
+    <h3>Guide</h3>
+    <ul class="list-group lessons">
+      <li class="list-group-item bg-dark text-white border-light">
+        The toolbar contains the gates and inputs that can be used to build a circuit.
+      </li>
+      <li class="list-group-item bg-dark text-white border-light">
+        Click on a gate to add it to the center canvas. Ensure the center of the canvas does not have any gates.
+      </li>
+      <li class="list-group-item bg-dark text-white border-light">
+        The gates are draggable and can be connected to other gates when on the canvas.
+      </li>
+      <li class="list-group-item bg-dark text-white border-light">
+        The inputs can be connected to gates by dragging a line from the input/output circle of one gate to the input/output of another gate.
+      </li>
+    </ul>
+  </div>
+  <div class="container-fluid">
+    <app-simulator-canvas/>
+  </div>
+</div>
