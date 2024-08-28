@@ -1,1 +1,12 @@
-<p>multiple-choice works!</p>
+<div *ngIf="question">
+  <h3>{{ question.content }}</h3>
+  <ul>
+    <li *ngFor="let option of question.options">
+      <label>
+        <input type="radio" name="option" [value]="option" (change)="selectOption(option)">
+        {{ option }}
+      </label>
+    </li>
+  </ul>
+  <button (click)="submitAnswer()">Submit Answer</button>
+</div>

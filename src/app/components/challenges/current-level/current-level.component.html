@@ -6,8 +6,9 @@
 </div>
 
 <div *ngIf="challengeStarted">
-  <ng-container *ngComponentOutlet="getComponentForQuestionType(questions[currentQuestionIndex].type)"></ng-container>
-
+  <app-multiple-choice *ngIf="currentQuestionType === 'multiple-choice'" [question]="currentQuestion"></app-multiple-choice>
+  <app-text-answer *ngIf="currentQuestionType === 'text-answer'"></app-text-answer>
+  <app-canvas-task *ngIf="currentQuestionType === 'canvas-task'"></app-canvas-task>
   <div class="navigation-buttons">
     <button (click)="previousQuestion()" [disabled]="currentQuestionIndex === 0">Previous</button>
     <button (click)="nextQuestion()" [disabled]="currentQuestionIndex === questions.length - 1">Next</button>
