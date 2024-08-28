@@ -22,6 +22,9 @@
           <li class="nav-item">
             <a class="nav-link" routerLink="/simulator">Simulator</a>
           </li>
+          <li class="nav-item" *ngIf="isLoggedIn && isOnChallengesPage">
+            <button class="btn logout-btn" (click)="logout()">Logout</button>
+          </li>
         </ul>
       </div>
     </div>

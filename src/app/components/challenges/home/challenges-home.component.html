@@ -1,1 +1,6 @@
-<p>challenge home works!</p>
+<div *ngIf="questions.length > 0">
+  <ng-container *ngComponentOutlet="getComponentForQuestionType(questions[currentQuestionIndex].type)"></ng-container>
+</div>
+<div *ngIf="questions.length === 0">
+  <p>No questions available.</p>
+</div>
