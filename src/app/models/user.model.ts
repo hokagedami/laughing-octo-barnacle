@@ -5,4 +5,5 @@ export interface User {
   level: 'easy' | 'medium' | 'hard';
   progress: { easy: number, medium: number, hard: number };
   questionsAnswered: number[];
+  challengeCompleted: boolean;
 }

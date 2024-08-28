@@ -1,1 +1,16 @@
-<p>current-level works!</p>
+<div *ngIf="!challengeStarted">
+  <h2>Current Level: {{ currentLevel | titlecase }}</h2>
+  <button (click)="startChallenge()">
+    {{ hasProgress ? 'Continue Challenge' : 'Start Challenge' }}
+  </button>
+</div>
+
+<div *ngIf="challengeStarted">
+  <ng-container *ngComponentOutlet="getComponentForQuestionType(questions[currentQuestionIndex].type)"></ng-container>
+
+  <div class="navigation-buttons">
+    <button (click)="previousQuestion()" [disabled]="currentQuestionIndex === 0">Previous</button>
+    <button (click)="nextQuestion()" [disabled]="currentQuestionIndex === questions.length - 1">Next</button>
+    <button (click)="submitChallenge()">Submit</button>
+  </div>
+</div>
