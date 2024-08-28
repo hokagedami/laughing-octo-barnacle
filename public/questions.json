@@ -1,0 +1,737 @@
+[
+  {
+    "id": 1,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "Which logic gate outputs TRUE only when all inputs are TRUE?",
+    "options": ["AND", "OR", "NOT", "XOR"],
+    "answer": "AND"
+  },
+  {
+    "id": 2,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "What is the output of an OR gate when at least one input is TRUE?",
+    "options": ["TRUE", "FALSE", "UNDEFINED", "ERROR"],
+    "answer": "TRUE"
+  },
+  {
+    "id": 3,
+    "level": "easy",
+    "type": "text-answer",
+    "content": "What is the symbol used to represent a NOT gate?",
+    "answer": "triangle with a circle"
+  },
+  {
+    "id": 4,
+    "level": "medium",
+    "type": "multiple-choice",
+    "content": "Which gate is known as the 'universal gate' because it can be used to create all other logic gates?",
+    "options": ["AND", "OR", "NAND", "XOR"],
+    "answer": "NAND"
+  },
+  {
+    "id": 5,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the Boolean expression for an XOR gate with inputs A and B?",
+    "answer": "(A AND NOT B) OR (NOT A AND B)"
+  },
+  {
+    "id": 6,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a full adder circuit using only AND, OR, and XOR gates.",
+    "answer": "Full adder design with correct connections"
+  },
+  {
+    "id": 7,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "What is the output of an XOR gate when both inputs are TRUE?",
+    "options": ["TRUE", "FALSE", "UNDEFINED", "ERROR"],
+    "answer": "FALSE"
+  },
+  {
+    "id": 8,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "How many inputs does a standard NAND gate have?",
+    "answer": "2"
+  },
+  {
+    "id": 9,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 4-bit ripple carry adder using full adder circuits.",
+    "answer": "Correct 4-bit ripple carry adder design"
+  },
+  {
+    "id": 10,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "Which gate is represented by the symbol that looks like a D with a flat side?",
+    "options": ["AND", "OR", "NOT", "XOR"],
+    "answer": "AND"
+  },
+  {
+    "id": 11,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the Boolean expression for a NOR gate with inputs A and B?",
+    "answer": "NOT (A OR B)"
+  },
+  {
+    "id": 12,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 2-to-1 multiplexer using basic logic gates.",
+    "answer": "Correct 2-to-1 multiplexer design"
+  },
+  {
+    "id": 13,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "What is the output of a NAND gate when all inputs are TRUE?",
+    "options": ["TRUE", "FALSE", "UNDEFINED", "ERROR"],
+    "answer": "FALSE"
+  },
+  {
+    "id": 14,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "How many rows will a truth table for a 3-input logic gate have?",
+    "answer": "8"
+  },
+  {
+    "id": 15,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a JK flip-flop using NAND gates.",
+    "answer": "Correct JK flip-flop design using NAND gates"
+  },
+  {
+    "id": 16,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "Which logic gate is used to detect if an odd number of inputs are TRUE?",
+    "options": ["AND", "OR", "XOR", "NAND"],
+    "answer": "XOR"
+  },
+  {
+    "id": 17,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the main difference between a half adder and a full adder?",
+    "answer": "A full adder has a carry-in input in addition to the two addend inputs"
+  },
+  {
+    "id": 18,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 3-bit binary to octal decoder using logic gates.",
+    "answer": "Correct 3-bit binary to octal decoder design"
+  },
+  {
+    "id": 19,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "Which logic gate always outputs the opposite of its input?",
+    "options": ["AND", "OR", "NOT", "XOR"],
+    "answer": "NOT"
+  },
+  {
+    "id": 20,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the Boolean expression for an AND gate followed by a NOT gate?",
+    "answer": "NOT (A AND B)"
+  },
+  {
+    "id": 21,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "What is the symbol for an OR gate?",
+    "options": ["≥1", "&", "=1", "!"],
+    "answer": "≥1"
+  },
+  {
+    "id": 22,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is De Morgan's law for the expression NOT(A AND B)?",
+    "answer": "NOT A OR NOT B"
+  },
+  {
+    "id": 23,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 4-bit binary counter using D flip-flops and logic gates.",
+    "answer": "Correct 4-bit binary counter design"
+  },
+  {
+    "id": 24,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "How many inputs does a standard XOR gate have?",
+    "options": ["1", "2", "3", "4"],
+    "answer": "2"
+  },
+  {
+    "id": 25,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the purpose of a multiplexer in digital circuits?",
+    "answer": "To select one of several input signals and forward it to a single output line"
+  },
+  {
+    "id": 26,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 3-bit Gray code counter using JK flip-flops.",
+    "answer": "Correct 3-bit Gray code counter design"
+  },
+  {
+    "id": 27,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "What is the output of an AND gate when one input is FALSE and the other is TRUE?",
+    "options": ["TRUE", "FALSE", "UNDEFINED", "ERROR"],
+    "answer": "FALSE"
+  },
+  {
+    "id": 28,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the difference between combinational and sequential logic circuits?",
+    "answer": "Combinational circuits' outputs depend only on current inputs, while sequential circuits' outputs depend on both current inputs and previous states"
+  },
+  {
+    "id": 29,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 4-bit binary adder-subtractor circuit using full adders and XOR gates.",
+    "answer": "Correct 4-bit binary adder-subtractor design"
+  },
+  {
+    "id": 30,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "Which logic gate is represented by the symbol that looks like a crescent?",
+    "options": ["AND", "OR", "NOT", "NOR"],
+    "answer": "OR"
+  },
+  {
+    "id": 31,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the purpose of a flip-flop in digital circuits?",
+    "answer": "To store one bit of data"
+  },
+  {
+    "id": 32,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 4-bit magnitude comparator using logic gates.",
+    "answer": "Correct 4-bit magnitude comparator design"
+  },
+  {
+    "id": 33,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "What is the output of a NOR gate when all inputs are FALSE?",
+    "options": ["TRUE", "FALSE", "UNDEFINED", "ERROR"],
+    "answer": "TRUE"
+  },
+  {
+    "id": 34,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the difference between a latch and a flip-flop?",
+    "answer": "A latch is level-triggered, while a flip-flop is edge-triggered"
+  },
+  {
+    "id": 35,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 3-bit synchronous up-down counter using JK flip-flops.",
+    "answer": "Correct 3-bit synchronous up-down counter design"
+  },
+  {
+    "id": 36,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "Which logic gate is used to implement the logical OR function?",
+    "options": ["AND", "OR", "NOT", "XOR"],
+    "answer": "OR"
+  },
+  {
+    "id": 37,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the purpose of a decoder in digital circuits?",
+    "answer": "To convert a binary code to individual output lines"
+  },
+  {
+    "id": 38,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 4-bit binary multiplier using AND gates and full adders.",
+    "answer": "Correct 4-bit binary multiplier design"
+  },
+  {
+    "id": 39,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "What is the symbol for an XOR gate?",
+    "options": ["=1", "⊕", "&", "≥1"],
+    "answer": "⊕"
+  },
+  {
+    "id": 40,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the purpose of a shift register in digital circuits?",
+    "answer": "To shift its stored data left or right by a specified number of positions"
+  },
+  {
+    "id": 41,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 4-bit carry look-ahead adder using logic gates.",
+    "answer": "Correct 4-bit carry look-ahead adder design"
+  },
+  {
+    "id": 42,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "Which logic gate has only one input?",
+    "options": ["AND", "OR", "NOT", "XOR"],
+    "answer": "NOT"
+  },
+  {
+    "id": 43,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the difference between synchronous and asynchronous sequential circuits?",
+    "answer": "Synchronous circuits use a clock signal to coordinate state changes, while asynchronous circuits do not"
+  },
+  {
+    "id": 44,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 3-bit ring counter using D flip-flops.",
+    "answer": "Correct 3-bit ring counter design"
+  },
+  {
+    "id": 45,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "What is the output of an XOR gate when both inputs are FALSE?",
+    "options": ["TRUE", "FALSE", "UNDEFINED", "ERROR"],
+    "answer": "FALSE"
+  },
+  {
+    "id": 46,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the purpose of a priority encoder in digital circuits?",
+    "answer": "To encode the highest priority active input into a binary code"
+  },
+  {
+    "id": 47,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 4-bit binary-to-Gray code converter using XOR gates.",
+    "answer": "Correct 4-bit binary-to-Gray code converter design"
+  },
+  {
+    "id": 48,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "Which logic gate is represented by the symbol that looks like a D with a curved side?",
+    "options": ["AND", "OR", "NOT", "NOR"],
+    "answer": "OR"
+  },
+  {
+    "id": 49,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the purpose of a demultiplexer in digital circuits?",
+    "answer": "To route a single input to one of several possible outputs"
+  },
+  {
+    "id": 50,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 4-bit binary divider circuit using shift registers and a subtractor.",
+    "answer": "Correct 4-bit binary divider design"
+  },
+  {
+    "id": 51,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "What is the output of an AND gate when both inputs are FALSE?",
+    "options": ["TRUE", "FALSE", "UNDEFINED", "ERROR"],
+    "answer": "FALSE"
+  },
+  {
+    "id": 52,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the difference between a SR latch and a D latch?",
+    "answer": "A D latch has only one input (D) and prevents invalid states, while a SR latch has two inputs (S and R) and can enter an invalid state"
+  },
+  {
+    "id": 53,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 4-bit Johnson counter using D flip-flops and a NOT gate.",
+    "answer": "Correct 4-bit Johnson counter design"
+  },
+  {
+    "id": 54,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "What is the symbol for a NAND gate?",
+    "options": ["&", "≥1", "&̅", "=1"],
+    "answer": "&̅"
+  },
+  {
+    "id": 55,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the purpose of a parity generator in digital circuits?",
+    "answer": "To add an extra bit to a group of bits to ensure the number of 1s is always odd or even"
+  },
+  {
+    "id": 56,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 3-bit twisted ring counter using D flip-flops.",
+    "answer": "Correct 3-bit twisted ring counter design"
+  },
+  {
+    "id": 57,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "Which logic gate produces a TRUE output only when its inputs are different?",
+    "options": ["AND", "OR", "XOR", "NAND"],
+    "answer": "XOR"
+  },
+  {
+    "id": 58,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the difference between a master-slave flip-flop and a D flip-flop?",
+    "answer": "A master-slave flip-flop uses two latches in series, while a D flip-flop typically uses a single latch with additional logic"
+  },
+  {
+    "id": 59,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 4-bit binary-coded decimal (BCD) to 7-segment display decoder using logic gates.",
+    "answer": "Correct BCD to 7-segment display decoder design"
+  },
+  {
+    "id": 60,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "What is the output of a NOR gate when one input is TRUE and the other is FALSE?",
+    "options": ["TRUE", "FALSE", "UNDEFINED", "ERROR"],
+    "answer": "FALSE"
+  },
+  {
+    "id": 61,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the purpose of a Schmitt trigger in digital circuits?",
+    "answer": "To clean up noisy input signals by providing hysteresis"
+  },
+  {
+    "id": 62,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 4-bit sequential multiplier using shift registers and an accumulator.",
+    "answer": "Correct 4-bit sequential multiplier design"
+  },
+  {
+    "id": 63,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "Which logic gate is equivalent to an OR gate followed by a NOT gate?",
+    "options": ["AND", "NAND", "XOR", "NOR"],
+    "answer": "NOR"
+  },
+  {
+    "id": 64,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the purpose of a barrel shifter in digital circuits?",
+    "answer": "To shift or rotate a data word by a specified number of positions in a single operation"
+  },
+  {
+    "id": 65,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 3-bit flash analog-to-digital converter using comparators and a priority encoder.",
+    "answer": "Correct 3-bit flash ADC design"
+  },
+  {
+    "id": 66,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "What is the Boolean expression for a 2-input NOR gate?",
+    "options": ["A + B", "A • B", "A ⊕ B", "A̅ • B̅"],
+    "answer": "A̅ • B̅"
+  },
+  {
+    "id": 67,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the difference between a ripple counter and a synchronous counter?",
+    "answer": "In a ripple counter, each flip-flop triggers the next, while in a synchronous counter, all flip-flops are clocked simultaneously"
+  },
+  {
+    "id": 68,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 4-bit carry-save adder using full adders.",
+    "answer": "Correct 4-bit carry-save adder design"
+  },
+  {
+    "id": 69,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "Which logic gate is represented by the symbol that looks like an AND gate with a small circle on its output?",
+    "options": ["AND", "OR", "NAND", "NOR"],
+    "answer": "NAND"
+  },
+  {
+    "id": 70,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the purpose of a Gray code in digital systems?",
+    "answer": "To minimize errors in position encoders by ensuring only one bit changes between adjacent values"
+  },
+  {
+    "id": 71,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 4-bit binary-coded decimal (BCD) adder using 4-bit binary adders and additional logic.",
+    "answer": "Correct 4-bit BCD adder design"
+  },
+  {
+    "id": 72,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "What is the minimum number of 2-input NAND gates required to implement an XOR function?",
+    "options": ["2", "3", "4", "5"],
+    "answer": "4"
+  },
+  {
+    "id": 73,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the purpose of a tri-state buffer in digital circuits?",
+    "answer": "To allow multiple outputs to be connected to a single bus line"
+  },
+  {
+    "id": 74,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 3-bit successive approximation analog-to-digital converter using a comparator, DAC, and SAR logic.",
+    "answer": "Correct 3-bit SAR ADC design"
+  },
+  {
+    "id": 75,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "Which of the following is not a universal logic gate?",
+    "options": ["NAND", "NOR", "XOR", "NOT"],
+    "answer": "XOR"
+  },
+  {
+    "id": 76,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the purpose of a look-ahead carry generator in an adder circuit?",
+    "answer": "To reduce propagation delay by generating carry signals in parallel"
+  },
+  {
+    "id": 77,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 4-bit binary square root circuit using shift registers and a subtractor.",
+    "answer": "Correct 4-bit binary square root circuit design"
+  },
+  {
+    "id": 78,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "What is the output of an XOR gate when one input is TRUE and the other is FALSE?",
+    "options": ["Always TRUE", "Always FALSE", "Depends on which input is TRUE", "UNDEFINED"],
+    "answer": "Always TRUE"
+  },
+  {
+    "id": 79,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the difference between a static RAM and a dynamic RAM?",
+    "answer": "Static RAM stores each bit in a flip-flop, while dynamic RAM stores each bit as a charge in a capacitor"
+  },
+  {
+    "id": 80,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 4-bit bidirectional shift register with parallel load capability using multiplexers and flip-flops.",
+    "answer": "Correct 4-bit bidirectional shift register with parallel load design"
+  },
+  {
+    "id": 81,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "Which logic gate is known as a 'coincidence detector'?",
+    "options": ["AND", "OR", "XOR", "NAND"],
+    "answer": "AND"
+  },
+  {
+    "id": 82,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the purpose of a Karnaugh map in digital logic design?",
+    "answer": "To simplify Boolean algebra expressions and minimize the number of logic gates required"
+  },
+  {
+    "id": 83,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 3-bit binary multiplier using a sequential add-and-shift algorithm with a control unit.",
+    "answer": "Correct 3-bit sequential binary multiplier design"
+  },
+  {
+    "id": 84,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "What is the symbol for an AND gate?",
+    "options": ["&", "≥1", "⊕", "1"],
+    "answer": "&"
+  },
+  {
+    "id": 85,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the purpose of a Manchester encoding in digital communication?",
+    "answer": "To combine clock and data signals, ensuring frequent transitions for reliable clock recovery"
+  },
+  {
+    "id": 86,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 4-bit binary-to-excess-3 code converter using logic gates.",
+    "answer": "Correct 4-bit binary-to-excess-3 code converter design"
+  },
+  {
+    "id": 87,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "How many different logic states can be represented by 3 bits?",
+    "options": ["3", "6", "8", "16"],
+    "answer": "8"
+  },
+  {
+    "id": 88,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the purpose of a stability checker in asynchronous sequential circuits?",
+    "answer": "To detect and prevent hazards and race conditions in the circuit"
+  },
+  {
+    "id": 89,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 4-bit carry select adder using two 4-bit ripple carry adders and multiplexers.",
+    "answer": "Correct 4-bit carry select adder design"
+  },
+  {
+    "id": 90,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "Which logic gate is used to implement the Boolean function A • (A + B)?",
+    "options": ["AND", "OR", "XOR", "NAND"],
+    "answer": "AND"
+  },
+  {
+    "id": 91,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the purpose of a scan chain in digital circuit testing?",
+    "answer": "To provide a way to shift test patterns into and out of the circuit's flip-flops for testing"
+  },
+  {
+    "id": 92,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 3-bit binary-coded decimal (BCD) counter using JK flip-flops and additional logic.",
+    "answer": "Correct 3-bit BCD counter design"
+  },
+  {
+    "id": 93,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "What is the Boolean expression for the output of a 2-input XOR gate?",
+    "options": ["A + B", "A • B", "A ⊕ B", "A̅ + B̅"],
+    "answer": "A ⊕ B"
+  },
+  {
+    "id": 94,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the difference between a mealy and a moore finite state machine?",
+    "answer": "In a Mealy machine, outputs depend on both current state and inputs, while in a Moore machine, outputs depend only on the current state"
+  },
+  {
+    "id": 95,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 4-bit pipeline adder using registers and full adders.",
+    "answer": "Correct 4-bit pipeline adder design"
+  },
+  {
+    "id": 96,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "Which of the following is not a basic logic gate?",
+    "options": ["AND", "OR", "NOT", "XNOR"],
+    "answer": "XNOR"
+  },
+  {
+    "id": 97,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the purpose of a phase-locked loop (PLL) in digital systems?",
+    "answer": "To generate a stable clock signal that is synchronized with a reference signal"
+  },
+  {
+    "id": 98,
+    "level": "hard",
+    "type": "canvas-task",
+    "content": "Design a 4-bit binary-coded decimal (BCD) to binary converter using logic gates.",
+    "answer": "Correct 4-bit BCD to binary converter design"
+  },
+  {
+    "id": 99,
+    "level": "easy",
+    "type": "multiple-choice",
+    "content": "What is the result of ANDing any binary number with 0?",
+    "options": ["0", "1", "The original number", "Undefined"],
+    "answer": "0"
+  },
+  {
+    "id": 100,
+    "level": "medium",
+    "type": "text-answer",
+    "content": "What is the purpose of a bus arbiter in digital systems?",
+    "answer": "To manage and control access to a shared bus among multiple devices"
+  }
+  ]

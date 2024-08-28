@@ -1,0 +1,26 @@
+<div class="container">
+  <app-toast></app-toast>
+  <div class="form-body">
+    <div class="row">
+      <div class="form-holder">
+        <div class="form-content">
+          <div class="form-items">
+            <form (ngSubmit)="startChallenge()" class="requires-validation" novalidate>
+
+              <div class="col-md-12">
+                <label for="username" class="form-label">Username:</label>
+                <input type="text" id="username" [(ngModel)]="username" name="username" class="form-control" required>
+                <div class="invalid-feedback">
+                  Please enter a username.
+                </div>
+              </div>
+              <div class="form-button mt-3">
+                <button id="submit" type="submit" class="btn btn-primary">Start Challenge</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

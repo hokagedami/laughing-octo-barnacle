@@ -25,7 +25,8 @@
     "bootstrap": "^5.3.3",
     "jquery": "^3.7.1",
     "konva": "^9.3.14",
-    "p5": "^1.10.0",
+    "ngx-cookie-service": "^18.0.0",
+    "ngx-toast-alerts": "^2.0.6",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

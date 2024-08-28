@@ -1,13 +1,7 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import Konva from "konva";
 import {KonvaEventObject} from "konva/lib/Node";
-
-interface Connection {
-  start: Konva.Group | null;
-  end: Konva.Group | null;
-  inputCircle: Konva.Circle | null;
-  outputCircle: Konva.Circle | null;
-}
+import {Connection} from "../../../models/connection.model";
 
 @Component({
   selector: 'app-simulator-canvas',
