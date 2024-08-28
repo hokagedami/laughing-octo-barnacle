@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Question } from '../../models/question.model';
 import questions from '../../../../public/questions.json';
 
