@@ -1,7 +1,8 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, inject, ViewChild} from '@angular/core';
 import Konva from "konva";
 import {KonvaEventObject} from "konva/lib/Node";
 import {Connection} from "../../../models/connection.model";
+import {NgxToastAlertsService} from "ngx-toast-alerts";
 
 @Component({
   selector: 'app-simulator-canvas',
@@ -27,6 +28,8 @@ export class SimulatorCanvasComponent {
 
   connections: Connection [] = [];
   currentConnection: Connection | null = null;
+
+  private toast = inject(NgxToastAlertsService);
 
   constructor() {}
 
@@ -706,6 +709,55 @@ export class SimulatorCanvasComponent {
           this.currentConnection = null;
         }
       }
+    }
+  }
+
+  isCompleteCircuit(): boolean {
+    const visited = new Set<Konva.Group>();
+    const stack = [];
+
+    // Find all input gates
+    const inputGates = this.connections
+      .filter(conn => conn.inputCircle)
+      .map(conn => conn.start);
+
+    // Initialize stack with input gates
+    stack.push(...inputGates);
+
+    while (stack.length > 0) {
+      const currentGate = stack.pop();
+      if (!currentGate || visited.has(currentGate)) {
+        continue;
+      }
+
+      visited.add(currentGate);
+
+      // Check if current gate is an output gate
+      const isOutputGate = this.connections.some(conn => conn.end === currentGate && conn.outputCircle);
+      if (isOutputGate) {
+        return true;
+      }
+
+      // Add connected gates to stack
+      const connectedGates = this.connections
+        .filter(conn => conn.start === currentGate)
+        .map(conn => conn.end);
+
+      stack.push(...connectedGates);
+    }
+
+    return false;
+  }
+
+  checkCircuit(): void {
+    if (this.connections.length === 0) {
+      this.toast.error('Please connect some gates first');
+      return;
+    }
+    if (this.isCompleteCircuit()) {
+      this.toast.success('The circuit is complete. Well done!');
+    } else {
+      this.toast.error('The circuit is incomplete. Please connect all gates.');
     }
   }
 }
