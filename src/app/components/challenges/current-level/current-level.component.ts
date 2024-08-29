@@ -1,9 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { Question } from '../../../models/question.model';
 import { MultipleChoiceComponent } from '../multiple-choice/multiple-choice.component';
 import { TextAnswerComponent } from '../text-answer/text-answer.component';
 import { CanvasTaskComponent } from '../canvas-task/canvas-task.component';
 import { NgComponentOutlet, NgIf, TitleCasePipe } from '@angular/common';
+import {UserService} from "../../../services/user/user.service";
 
 @Component({
   selector: 'app-current-level',
@@ -20,19 +21,20 @@ import { NgComponentOutlet, NgIf, TitleCasePipe } from '@angular/common';
   styleUrls: ['./current-level.component.css']
 })
 export class CurrentLevelComponent implements OnInit {
+
+  constructor(private userService: UserService) {
+  }
+
   @Input() questions: Question[] = [];
   @Input() currentLevel: 'easy' | 'medium' | 'hard' = 'easy';
+  @Output() levelChange = new EventEmitter<string>();
   currentQuestionIndex: number = 0;
   challengeStarted: boolean = false;
   hasProgress: boolean = false;
   currentQuestionType: string = '';
-
-  private componentMapping: { [key: string]: any } = {
-    'multiple-choice': MultipleChoiceComponent,
-    'text-answer': TextAnswerComponent,
-    'canvas-task': CanvasTaskComponent
-  };
+  selectedAnswers: { [key: number]: string } = {};
   currentQuestion!: Question | null;
+  levelCompleted: boolean = false;
 
   ngOnInit(): void {
     this.hasProgress = this.currentQuestionIndex > 0;
@@ -44,15 +46,13 @@ export class CurrentLevelComponent implements OnInit {
     this.currentQuestionType = this.currentQuestion.type;
   }
 
-  getComponentForQuestionType(type: string): any {
-    return this.componentMapping[type];
-  }
-
   nextQuestion(): void {
     if (this.currentQuestionIndex < this.questions.length - 1) {
       this.currentQuestionIndex++;
       this.currentQuestion = this.questions[this.currentQuestionIndex];
       this.currentQuestionType = this.currentQuestion.type;
+    } else {
+      this.levelCompleted = true;
     }
   }
 
@@ -60,24 +60,33 @@ export class CurrentLevelComponent implements OnInit {
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
       this.currentQuestion = this.questions[this.currentQuestionIndex];
-      this.currentQuestionType = this.currentQuestion.type
+      this.currentQuestionType = this.currentQuestion.type;
     }
-  }
-
-  submitChallenge(): void {
-    alert('Challenge submitted!');
   }
 
   handleAnswerSelected(event: { questionId: number, selectedOption: string }): void {
-    const question = this.questions.find(q => q.id === event.questionId);
-    if (question) {
-      if (question.answer === event.selectedOption) {
-        // Update user info for question passed
-        console.log('Correct answer');
-      } else {
-        // Update user info for question failed
-        console.log('Incorrect answer');
-      }
+    this.selectedAnswers[event.questionId] = event.selectedOption;
+    if(this.selectedAnswers[event.questionId] === this.currentQuestion?.answer) {
+      this.userService.updateQuestionsAnswered(event.questionId);
     }
+  }
+
+  goToNextLevel(): void {
+    if (this.currentLevel === 'easy') {
+      this.currentLevel = 'medium';
+    } else if (this.currentLevel === 'medium') {
+      this.currentLevel = 'hard';
+    } else {
+      alert('You have completed all levels!');
+      return;
+    }
+    this.levelCompleted = false;
+    this.currentQuestionIndex = 0;
+    this.levelChange.emit(this.currentLevel);
+    this.startChallenge();
+  }
+
+  endLevel() {
+    this.levelCompleted = true;
   }
 }

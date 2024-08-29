@@ -12,17 +12,17 @@ import {NgForOf, NgIf} from "@angular/common";
   ],
   styleUrls: ['./multiple-choice.component.css']
 })
-export class MultipleChoiceComponent implements OnInit {
+export class MultipleChoiceComponent {
   @Input() question: Question | null = null;
   @Output() answerSelected = new EventEmitter<{ questionId: number, selectedOption: string }>();
   selectedOption: string | null = null;
 
-  ngOnInit() {
-    console.log(this.question);
-  }
 
   selectOption(option: string): void {
-    this.selectedOption = option;
+    if (this.question && option) {
+      this.selectedOption = option;
+      this.answerSelected.emit({questionId: this.question.id, selectedOption: option});
+    }
   }
 
   submitAnswer(): void {

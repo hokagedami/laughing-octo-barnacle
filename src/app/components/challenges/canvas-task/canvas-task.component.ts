@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Question} from "../../../models/question.model";
 
 @Component({
   selector: 'app-canvas-task',
@@ -8,5 +9,7 @@ import { Component } from '@angular/core';
   styleUrl: './canvas-task.component.css'
 })
 export class CanvasTaskComponent {
+  @Input() question!: Question;
+  @Output() answerSelected = new EventEmitter<{ questionId: number; selectedOption: string }>();
 
 }

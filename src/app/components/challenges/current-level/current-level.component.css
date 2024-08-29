@@ -1,7 +1,42 @@
+.challenge-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.challenge-content {
+  max-width: 600px;
+  width: 100%;
+  background-color: #f5f5f5;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.challenge-intro {
+  text-align: center;
+}
+
+.challenge-intro h2 {
+  margin-bottom: 20px;
+}
+
+.start-button {
+  font-size: 1.1em;
+  padding: 12px 24px;
+}
+
+.challenge-questions {
+  margin-top: 20px;
+}
+
 .navigation-buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 button {
@@ -11,9 +46,22 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover:not(:disabled) {
+  background-color: #0056b3;
 }
 
 button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
+}
+
+.submit-button {
+  background-color: #28a745;
+}
+
+.submit-button:hover {
+  background-color: #218838;
 }
