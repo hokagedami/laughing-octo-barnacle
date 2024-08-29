@@ -1,11 +1,20 @@
 <div *ngIf="question">
   <h3>{{ question.content }}</h3>
   <ul>
-    <li *ngFor="let option of question.options">
-      <label>
-        <input type="radio" name="option" [value]="option" (change)="selectOption(option)">
-        {{ option }}
-      </label>
+    <li *ngFor="let option of question.options" class="list-unstyled">
+      <div>
+        <span>
+          <input type="radio" class="btn-check" name="option" id="{{option}}" [value]="option" (change)="selectOption(option)" [disabled]="showAnswer" autocomplete="off">
+          <label class="btn" [ngClass]="{'btn-secondary': selectedOption !== option, 'btn-primary': selectedOption === option}" for="{{option}}">{{ option }}</label>
+        </span>
+        <span *ngIf="showAnswer">
+          <i class="fa fa-check" *ngIf="question.answer === option" style="color: green"></i>
+          <i class="fa fa-x" *ngIf="question.answer !== option" style="color: red"></i>
+        </span>
+      </div>
     </li>
   </ul>
+  <div class="d-flex flex-row-reverse" *ngIf="selectedOption !== null && !showAnswer">
+    <button class="btn btn-primary" (click)="submitAnswer()">Submit</button>
+  </div>
 </div>

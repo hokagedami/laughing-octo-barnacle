@@ -40,6 +40,10 @@ export class ChallengesHomeComponent implements OnInit {
 
   handleLevelChange(newLevel: string): void {
     if (this.user) {
+      if (newLevel === this.user.level) {
+        this.loadQuestions();
+        return;
+      }
       this.user.level = newLevel as 'easy' | 'medium' | 'hard';
       this.userService.updateProgress(this.user.level, 0);
       this.loadQuestions();

@@ -1,0 +1,22 @@
+.btn-check {
+  display: none;
+}
+
+.btn {
+  margin: 5px;
+}
+
+.btn-primary {
+  background-color: blue;
+  color: white;
+}
+
+.btn-secondary {
+  background-color: gray;
+  color: white;
+}
+
+.btn-check:checked + .btn {
+  background-color: #007bff;
+  color: white;
+}

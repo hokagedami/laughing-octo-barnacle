@@ -637,7 +637,6 @@ export class SimulatorCanvasComponent {
         };
         this.isDrawingConnection = true;
         circle.setAttr('HasConnection', true);
-        console.log(`Started connection from ${parent.getAttr('name')}`);
       } else {
         // Attempt to close the connection
         if (
@@ -700,10 +699,9 @@ export class SimulatorCanvasComponent {
             this.currentConnection.outputCircle.fill('green');
             this.currentConnection = null;
             this.isDrawingConnection = false;
-            console.log(`Connection completed: ${parent.getAttr('name')}`);
           }
         } else {
-          console.log("Invalid connection attempt");
+
           alert('Invalid connection attempt');
           this.currentConnection = null;
         }

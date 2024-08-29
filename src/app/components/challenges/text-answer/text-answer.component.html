@@ -1,1 +1,13 @@
-<p>text-answer works!</p>
+<div *ngIf="question">
+  <h3 class="my-3">{{ question.content }}</h3>
+  <div class="input-group">
+    <input class="form-control" type="text" [(ngModel)]="userAnswer" [disabled]="showAnswer" placeholder="Type your answer here">
+  </div>
+  <div class="d-flex flex-row-reverse" *ngIf="userAnswer && !showAnswer">
+    <button class="btn btn-primary" (click)="submitAnswer()">Submit</button>
+  </div>
+  <div *ngIf="showAnswer">
+    <span *ngIf="question.answer === userAnswer" style="color: green">Correct!</span>
+    <span *ngIf="question.answer !== userAnswer" style="color: red">Incorrect!</span>
+  </div>
+</div>

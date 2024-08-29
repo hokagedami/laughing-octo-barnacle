@@ -19,8 +19,9 @@ export class QuestionService {
   getQuestions(level: 'easy' | 'medium' | 'hard', answered: number []): Question[] {
     this.loadQuestions();
     return this.questions
-      .filter(q => q.level === level && !answered.includes(q.id))
+      // .filter(q => q.level === level && !answered.includes(q.id) && q.type === 'text-answer')
+      .filter(q => !answered.includes(q.id) && q.type === 'text-answer')
       .sort(() => 0.5 - Math.random())
-      .slice(0, 10 - answered.length);
+      .slice(0, 5 - answered.length);
   }
 }
