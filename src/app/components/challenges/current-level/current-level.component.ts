@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import { Question } from '../../../models/question.model';
 import { MultipleChoiceComponent } from '../multiple-choice/multiple-choice.component';
 import { TextAnswerComponent } from '../text-answer/text-answer.component';
@@ -21,11 +21,13 @@ import {UserService} from "../../../services/user/user.service";
   styleUrls: ['./current-level.component.css']
 })
 export class CurrentLevelComponent implements OnInit {
+  @ViewChild(MultipleChoiceComponent) multipleChoiceComponent!: MultipleChoiceComponent;
+  @ViewChild(TextAnswerComponent) textAnswerComponent!: TextAnswerComponent;
 
   constructor(private userService: UserService) {
   }
 
-  @Input() questions: Question[] = [];
+  @Input() currentLevelQuestions: Question[] = [];
   @Input() currentLevel: 'easy' | 'medium' | 'hard' = 'easy';
   @Output() levelChange = new EventEmitter<string>();
   currentQuestionIndex: number = 0;
@@ -35,6 +37,8 @@ export class CurrentLevelComponent implements OnInit {
   selectedAnswers: { [key: number]: string } = {};
   currentQuestion!: Question | null;
   levelCompleted: boolean = false;
+  nextQuestionDisabled: boolean = true;
+  correctTotal: number = 0;
 
   ngOnInit(): void {
     this.hasProgress = this.currentQuestionIndex > 0;
@@ -42,15 +46,19 @@ export class CurrentLevelComponent implements OnInit {
 
   startChallenge(): void {
     this.challengeStarted = true;
-    this.currentQuestion = this.questions[this.currentQuestionIndex];
+    this.currentQuestion = this.currentLevelQuestions[this.currentQuestionIndex];
     this.currentQuestionType = this.currentQuestion.type;
   }
 
   nextQuestion(): void {
-    if (this.currentQuestionIndex < this.questions.length - 1) {
+    if (this.currentQuestionIndex < this.currentLevelQuestions.length - 1) {
       this.currentQuestionIndex++;
-      this.currentQuestion = this.questions[this.currentQuestionIndex];
+      this.currentQuestion = this.currentLevelQuestions[this.currentQuestionIndex];
       this.currentQuestionType = this.currentQuestion.type;
+      if (!this.userService.getCurrentUser()?.questionsAnswered.includes(this.currentQuestion.id)) {
+        this.resetAnswerShown();
+        this.nextQuestionDisabled = true;
+      }
     } else {
       this.levelCompleted = true;
     }
@@ -59,16 +67,23 @@ export class CurrentLevelComponent implements OnInit {
   previousQuestion(): void {
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
-      this.currentQuestion = this.questions[this.currentQuestionIndex];
+      this.currentQuestion = this.currentLevelQuestions[this.currentQuestionIndex];
       this.currentQuestionType = this.currentQuestion.type;
+      if (!this.userService.getCurrentUser()?.questionsAnswered.includes(this.currentQuestion.id)) {
+        this.resetAnswerShown();
+      }
     }
   }
 
   handleAnswerSelected(event: { questionId: number, selectedOption: string }): void {
     this.selectedAnswers[event.questionId] = event.selectedOption;
+    if (this.selectedAnswers[event.questionId] === this.currentQuestion?.answer) {
+      this.correctTotal++;
+    }
     if(this.selectedAnswers[event.questionId] === this.currentQuestion?.answer) {
       this.userService.updateQuestionsAnswered(event.questionId);
     }
+    this.nextQuestionDisabled = false;
   }
 
   goToNextLevel(): void {
@@ -82,11 +97,35 @@ export class CurrentLevelComponent implements OnInit {
     }
     this.levelCompleted = false;
     this.currentQuestionIndex = 0;
+    this.correctTotal = 0;
     this.levelChange.emit(this.currentLevel);
     this.startChallenge();
   }
 
   endLevel() {
     this.levelCompleted = true;
+  }
+
+  resetAnswerShown() {
+    switch (this.currentQuestionType) {
+      case 'multiple-choice':
+        this.multipleChoiceComponent.showAnswer = false;
+        this.multipleChoiceComponent.selectedOption = null;
+        break;
+      case 'text-answer':
+        this.textAnswerComponent.showAnswer = false;
+        this.textAnswerComponent.userAnswer = '';
+        break;
+      case 'canvas-task':
+        break;
+    }
+  }
+
+  retakeLevel() {
+    this.currentQuestionIndex = 0;
+    this.levelCompleted = false;
+    this.correctTotal = 0;
+    this.levelChange.emit(this.currentLevel);
+    this.startChallenge();
   }
 }
