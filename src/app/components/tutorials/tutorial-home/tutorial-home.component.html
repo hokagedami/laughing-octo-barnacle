@@ -1,7 +1,7 @@
 <div class="d-flex flex-grow-1">
-    <app-sidebar class="flex-shrink-1" (pageChange)="selectedPage = $event"/>
-    <div class="container-fluid d-flex flex-column my-3 h-100">
-      <lesson-content [page]="selectedPage"/>
+    <app-sidebar (lessonCodeChange)="selectedLessonCode = $event"/>
+    <div class="container-fluid d-flex flex-column my-3">
+      <lesson-content [code]="selectedLessonCode"/>
     </div>
-  </div>
+</div>
 

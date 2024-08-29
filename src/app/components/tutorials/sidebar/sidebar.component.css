@@ -14,3 +14,22 @@
 .lessons a:hover {
   text-decoration: underline;
 }
+
+.scrollable-list {
+  max-height: 770px;
+  overflow-y: auto;
+}
+
+/* Optional scrollbar styling */
+.scrollable-list::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollable-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.scrollable-list::-webkit-scrollbar-thumb {
+  background: #888;
+}
+.scrollable-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
