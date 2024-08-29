@@ -12,9 +12,8 @@ import {RouterLink} from "@angular/router";
 })
 export class SidebarComponent {
 
-  @Output() pageChange=  new EventEmitter<string>();
+  @Output() pageChange =  new EventEmitter<string>();
   navigate(page: string) {
-    console.log(page);
     this.pageChange.emit(page);
   }
 }

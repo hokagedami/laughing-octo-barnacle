@@ -21,6 +21,6 @@ export class QuestionService {
     return this.questions
       .filter(q => q.level === level && !answered.includes(q.id))
       .sort(() => 0.5 - Math.random())
-      .slice(0, 20 - answered.length);
+      .slice(0, 10 - answered.length);
   }
 }

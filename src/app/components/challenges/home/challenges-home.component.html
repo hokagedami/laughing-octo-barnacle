@@ -4,4 +4,4 @@
     <p>You have completed all challenges!</p>
   </div>
 </div>
-<app-current-level [questions]="questions" [currentLevel]="currentLevel"></app-current-level>
+<app-current-level [questions]="questions" [currentLevel]="currentLevel" (levelChange)="handleLevelChange($event)"></app-current-level>

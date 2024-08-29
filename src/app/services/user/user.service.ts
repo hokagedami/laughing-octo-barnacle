@@ -32,4 +32,10 @@ export class UserService {
   getUserByUsername(username: string): User | undefined {
     return this.users.find(u => u.username === username);
   }
+
+  updateQuestionsAnswered(questionId: number) {
+    if (this.currentUser) {
+      this.currentUser.questionsAnswered.push(questionId);
+    }
+  }
 }

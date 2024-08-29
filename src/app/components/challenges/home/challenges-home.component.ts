@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {User} from "../../../models/user.model";
 import {Question} from "../../../models/question.model";
 import {UserService} from "../../../services/user/user.service";
@@ -21,8 +21,7 @@ export class ChallengesHomeComponent implements OnInit {
   user: User | null = null;
   questions: Question[] = [];
   currentLevel: 'easy' | 'medium' | 'hard' = 'easy';
-
-
+  @Input() levelUpdate: string = '';
 
   constructor(private userService: UserService, private questionService: QuestionService) {}
 
@@ -36,6 +35,14 @@ export class ChallengesHomeComponent implements OnInit {
   loadQuestions(): void {
     if (this.user) {
       this.questions = this.questionService.getQuestions(this.user.level, this.user.questionsAnswered);
+    }
+  }
+
+  handleLevelChange(newLevel: string): void {
+    if (this.user) {
+      this.user.level = newLevel as 'easy' | 'medium' | 'hard';
+      this.userService.updateProgress(this.user.level, 0);
+      this.loadQuestions();
     }
   }
 }
