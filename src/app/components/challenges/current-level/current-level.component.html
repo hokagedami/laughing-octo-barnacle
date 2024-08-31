@@ -8,24 +8,32 @@
     </div>
     <div *ngIf="challengeStarted && !levelCompleted" class="challenge-questions">
       <app-multiple-choice *ngIf="currentQuestionType === 'multiple-choice'"
-                           [question]="questions[currentQuestionIndex]"
+                           [question]="currentLevelQuestions[currentQuestionIndex]"
                            (answerSelected)="handleAnswerSelected($event)"></app-multiple-choice>
       <app-text-answer *ngIf="currentQuestionType === 'text-answer'"
-                       [question]="questions[currentQuestionIndex]"
+                       [question]="currentLevelQuestions[currentQuestionIndex]"
                        (answerSelected)="handleAnswerSelected($event)"></app-text-answer>
       <app-canvas-task *ngIf="currentQuestionType === 'canvas-task'"
-                       [question]="questions[currentQuestionIndex]"
+                       [question]="currentLevelQuestions[currentQuestionIndex]"
                        (answerSelected)="handleAnswerSelected($event)"></app-canvas-task>
-
+      <br>
+      <hr>
       <div class="navigation-buttons">
-        <button (click)="previousQuestion()" [disabled]="currentQuestionIndex === 0">Previous</button>
-        <button (click)="nextQuestion()" *ngIf="currentQuestionIndex !== questions.length - 1">Next</button>
-        <button *ngIf="currentQuestionIndex === questions.length - 1" (click)="endLevel()" >Submit</button>
+        <button (click)="previousQuestion()" [disabled]="currentQuestionIndex === 0">
+          <i class="fa fa-arrow-left"></i>
+          Previous
+        </button>
+        <button (click)="nextQuestion()" *ngIf="currentQuestionIndex !== currentLevelQuestions.length - 1" [disabled]="nextQuestionDisabled">
+          Next <i class="fa fa-arrow-right"></i>
+        </button>
+        <button *ngIf="currentQuestionIndex === currentLevelQuestions.length - 1" (click)="endLevel()" >Submit</button>
       </div>
     </div>
     <div *ngIf="levelCompleted" class="level-completed">
-      <h2>Congratulations! You have completed the {{ currentLevel | titlecase }} level.</h2>
-      <button (click)="goToNextLevel()" class="next-level-button">Go to Next Level</button>
+      <h2>You got {{correctTotal}} of {{currentLevelQuestions.length}}</h2>
+      <h2 *ngIf="correctTotal === currentLevelQuestions.length">Congratulations! You have completed the {{ currentLevel | titlecase }} level.</h2>
+      <button *ngIf="correctTotal === currentLevelQuestions.length" (click)="goToNextLevel()" class="next-level-button">Go to Next Level</button>
+      <button *ngIf="correctTotal < currentLevelQuestions.length" (click)="retakeLevel()" class="next-level-button">Retake Current Level</button>
     </div>
   </div>
 </div>

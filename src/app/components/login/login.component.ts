@@ -2,9 +2,6 @@ import {Component, inject} from '@angular/core';
 import { Router } from '@angular/router';
 import {AuthService} from "../../services/auth/auth.service";
 import {FormsModule} from "@angular/forms";
-import {ToastService} from "../../services/toast/toast.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {ToastComponent} from "../toast/toast.component";
 import {NgxToastAlertsService} from "ngx-toast-alerts";
 
 @Component({
@@ -12,8 +9,7 @@ import {NgxToastAlertsService} from "ngx-toast-alerts";
   templateUrl: './login.component.html',
   standalone: true,
   imports: [
-    FormsModule,
-    ToastComponent
+    FormsModule
   ],
   styleUrls: ['./login.component.css']
 })

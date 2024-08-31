@@ -1,6 +1,7 @@
 import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import { Question } from '../../../models/question.model';
-import {NgForOf, NgIf} from "@angular/common";
+import {NgClass, NgForOf, NgIf} from "@angular/common";
+import {UserService} from "../../../services/user/user.service";
 
 @Component({
   selector: 'app-multiple-choice',
@@ -8,26 +9,35 @@ import {NgForOf, NgIf} from "@angular/common";
   standalone: true,
   imports: [
     NgIf,
-    NgForOf
+    NgForOf,
+    NgClass
   ],
   styleUrls: ['./multiple-choice.component.css']
 })
 export class MultipleChoiceComponent {
+
+  constructor(private userService: UserService) {
+
+  }
   @Input() question: Question | null = null;
   @Output() answerSelected = new EventEmitter<{ questionId: number, selectedOption: string }>();
   selectedOption: string | null = null;
+  showAnswer: boolean = false;
+
+
 
 
   selectOption(option: string): void {
     if (this.question && option) {
       this.selectedOption = option;
-      this.answerSelected.emit({questionId: this.question.id, selectedOption: option});
     }
   }
 
   submitAnswer(): void {
     if (this.question && this.selectedOption) {
-      this.answerSelected.emit({ questionId: this.question.id, selectedOption: this.selectedOption });
+      this.showAnswer = true;
+      this.answerSelected.emit({questionId: this.question.id, selectedOption: this.selectedOption});
+      this.selectedOption = null;
     }
   }
 }

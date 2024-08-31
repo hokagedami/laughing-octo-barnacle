@@ -13,6 +13,6 @@ import {SidebarComponent} from "../sidebar/sidebar.component";
   styleUrl: './tutorial-home.component.css'
 })
 export class TutorialHomeComponent {
-  selectedPage: any;
+  selectedLessonCode: any;
 
 }

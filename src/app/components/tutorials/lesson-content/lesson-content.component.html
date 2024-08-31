@@ -1,6 +1,6 @@
 <div class="bg-dark text-white p-3 h-100">
   <h4>{{currentLesson.title}}</h4>
   <div class="content">
-    <p>{{currentLesson.content}}</p>
+    <p *ngFor="let paragraph of currentLesson.content.paragraphs">{{paragraph}}</p>
   </div>
 </div>

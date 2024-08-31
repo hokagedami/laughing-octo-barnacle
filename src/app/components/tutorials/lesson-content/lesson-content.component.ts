@@ -1,6 +1,7 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {NgForOf, NgOptimizedImage} from "@angular/common";
 import {Lesson} from "../../../models/lesson.model";
+import {LessonsService} from "../../../services/lessons/lessons.service";
 
 
 
@@ -16,38 +17,27 @@ import {Lesson} from "../../../models/lesson.model";
 })
 export class LessonContentComponent implements OnInit, OnChanges {
 
-  @Input() page: string = 'intro';
-  allLessons: Lesson[] = [
-    {
-      code: 'intro',
-      title: 'Introduction',
-      content: 'In this lesson, you will learn about the basics of logic gates and how they work.'
-    },
-    {
-      code: 'basic',
-      title: 'Basic Gates',
-      content: 'In this lesson, you will learn about the basic logic gates and how they work.'
-    },
-    {
-      code: 'adv',
-      title: 'Advanced Gates',
-      content: 'In this lesson, you will learn about the advanced logic gates and how they work.'
-    }
-  ];
-  currentLesson: Lesson = this.allLessons[0];
+  constructor(private lessonService: LessonsService) {
+  }
+
+  @Input() code: string = 'intro';
+  lessons: Lesson[] = [];
+  currentLesson!: Lesson;
 
   ngOnInit(): void {
-    this.setLesson(this.page);
+    this.lessons = this.lessonService.getLessons();
+    this.currentLesson = this.lessons[0];
+    this.setLesson(this.code);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['page']) {
-      this.setLesson(this.page);
+    if (changes['code']) {
+      this.setLesson(this.code);
     }
   }
 
-  setLesson(page: string): void {
-    const lesson = this.allLessons.find(lesson => lesson.code === page);
-    this.currentLesson = !lesson ? this.allLessons[0] : lesson;
+  setLesson(code: string): void {
+    const lesson = this.lessonService.getLesson(code);
+    this.currentLesson = !lesson ? this.lessons[0] : lesson;
   }
 }
