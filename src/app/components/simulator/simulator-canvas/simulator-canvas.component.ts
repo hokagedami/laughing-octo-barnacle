@@ -1,4 +1,4 @@
-import {Component, ElementRef, inject, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import Konva from "konva";
 import {KonvaEventObject} from "konva/lib/Node";
 import {Connection} from "../../../models/connection.model";
@@ -11,9 +11,12 @@ import {NgxToastAlertsService} from "ngx-toast-alerts";
   templateUrl: './simulator-canvas.component.html',
   styleUrl: './simulator-canvas.component.css'
 })
-export class SimulatorCanvasComponent {
+export class SimulatorCanvasComponent implements OnInit {
   @ViewChild('stageContainer', { static: true }) stageContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('toolbarContainer', { static: true }) toolbarContainer!: ElementRef<HTMLDivElement>;
+
+  @Input() canvasWidth: number | null = null;
+  @Input() canvasHeight: number | null = null;
 
   canvasStage!: Konva.Stage;
   canvasLayer!: Konva.Layer;
@@ -26,6 +29,7 @@ export class SimulatorCanvasComponent {
   selectedTool: 'select' | 'connect' = 'select';
   isDrawingConnection: boolean = false;
 
+  @Output() connectionsEvent: EventEmitter<Connection[]> = new EventEmitter<Connection[]>();
   connections: Connection [] = [];
   currentConnection: Connection | null = null;
 
@@ -42,8 +46,8 @@ export class SimulatorCanvasComponent {
   }
 
   initializeKonva(): void {
-    const containerWidth = this.stageContainer.nativeElement.offsetWidth;
-    const containerHeight = this.stageContainer.nativeElement.offsetHeight;
+    const containerWidth = this.canvasWidth ? this.canvasWidth : this.stageContainer.nativeElement.offsetWidth;
+    const containerHeight = this.canvasHeight ? this.canvasHeight : this.stageContainer.nativeElement.offsetHeight;
 
     this.canvasStage = new Konva.Stage({
       container: this.stageContainer.nativeElement,
@@ -173,16 +177,17 @@ export class SimulatorCanvasComponent {
         }
         else {
           // tell the user that the center is not free
-          alert('The center of the canvas is not free. Please move other elements to make space.');
+          this.toast.error('The center of the canvas is not free. Please move the elements currently at the center to make space for a new one.');
           return;
         }
       }
 
       const clonedProperties = {
         draggable: true,
-        id: `cloned-${Date.now()}-${Math.random()}`,
+        id: `cloned-${gate.id()}-${Date.now()}-${Math.random()}`,
         isToolbarIcon: false,
-        name: type
+        name: type,
+        original: gate.id()
       };
       const cloned = this.createIconByType(gate.getAttr('name'), posX, posY, clonedProperties);
 
@@ -663,38 +668,9 @@ export class SimulatorCanvasComponent {
             && this.currentConnection.start !== this.currentConnection.end
             && this.currentConnection.inputCircle.getAttr('circleType') !== this.currentConnection.outputCircle.getAttr('circleType')) {
             this.connections.push(this.currentConnection);
+            this.connectionsEvent.emit(this.connections);
 
-
-            const lineStartPosition = this.currentConnection.inputCircle.getAbsolutePosition();
-            const lineEndPosition = this.currentConnection.outputCircle.getAbsolutePosition();
-
-            // Calculate control points for S shape
-            const width = lineEndPosition.x - lineStartPosition.x;
-            const height = lineEndPosition.y - lineStartPosition.y;
-            const ctrlPoint1 = { x: lineStartPosition.x + width * 0.25, y: lineStartPosition.y + height * 0.75 };
-            const ctrlPoint2 = { x: lineStartPosition.x + width * 0.75, y: lineStartPosition.y + height * 0.25 };
-
-            // Create S shape
-            const sShape = new Konva.Shape({
-              sceneFunc: (context, shape) => {
-                context.beginPath();
-                context.moveTo(lineStartPosition.x, lineStartPosition.y);
-                context.bezierCurveTo(
-                  ctrlPoint1.x, ctrlPoint1.y,
-                  ctrlPoint2.x, ctrlPoint2.y,
-                  lineEndPosition.x, lineEndPosition.y
-                );
-                context.strokeShape(shape);
-              },
-              stroke: 'green',
-              strokeWidth: 5,
-              name: 's-shape',
-              draggable: true
-            });
-
-            this.canvasLayer.add(sShape);
-            this.canvasLayer.batchDraw();
-
+            this.drawConnectionLine(this.currentConnection.inputCircle, this.currentConnection.outputCircle);
             this.currentConnection.start.setAttr('draggable', false);
             this.currentConnection.end.setAttr('draggable', false);
             // set the color of the circles to green
@@ -759,5 +735,125 @@ export class SimulatorCanvasComponent {
     } else {
       this.toast.error('The circuit is incomplete. Please connect all gates.');
     }
+  }
+
+  createAndSampleCircuit(): void {
+    // Clear existing canvas
+    this.canvasLayer.destroyChildren();
+    this.connections = [];
+
+    // Function to create a gate by simulating a click on the toolbar icon
+    const createGate = (gateType: string, x: number, y: number): Konva.Group | null => {
+      const toolbarIcon = this.toolbarLayer.findOne(`.${gateType}`) as Konva.Group;
+      if (toolbarIcon) {
+        // Simulate a click on the toolbar icon
+        toolbarIcon.fire('click');
+
+        // Find the newly created gate on the canvas
+        const newGate = this.canvasLayer.findOne((node: Konva.Node) => {
+          const canvasCenterX = this.canvasStage.width() / 2;
+          const canvasCenterY = this.canvasStage.height() / 2;
+          return node.id().startsWith(`cloned-${toolbarIcon.id()}`) && node.getAttr("original") === toolbarIcon.id() && node.x() === canvasCenterX && node.y() === canvasCenterY;
+        }) as Konva.Group;
+        if (newGate) {
+          // Position the gate
+          newGate.position({ x, y });
+          this.canvasLayer.batchDraw();
+          return newGate;
+        }
+      }
+      this.toast.error(`Failed to create ${gateType} gate`);
+      return null;
+    };
+
+    // Create gates
+    const andGate = createGate('AND', 200, 200);
+    const oneGate1 = createGate('One', 100, 150);
+    const oneGate2 = createGate('One', 100, 250);
+    const lightBulb = createGate('LightBulb', 300, 200);
+
+    // Ensure all gates were created successfully
+    if (andGate && oneGate1 && oneGate2 && lightBulb) {
+      // Connect gates
+      // find the output circle of the oneGate1 and trigger a click event
+      const one1OutputCircle = oneGate1.findOne((node: Konva.Node) => {
+        return node.getAttr('circleType') === 'output';
+      }) as Konva.Circle;
+      const one2OutputCircle = oneGate2.findOne((node: Konva.Node) => {
+        return node.getAttr('circleType') === 'output';
+      }) as Konva.Circle;
+      const andInputCircles = andGate.find((node: Konva.Node) => {
+        return node.getAttr('circleType') === 'input';
+      });
+      const andOutputCircle = andGate.findOne((node: Konva.Node) => {
+        return node.getAttr('circleType') === 'output';
+      }) as Konva.Circle;
+      const bulbInputCircle = lightBulb.findOne((node: Konva.Node) => {
+        return node.getAttr('circleType') === 'input';
+      }) as Konva.Circle;
+
+      if (one1OutputCircle && one2OutputCircle && andInputCircles && andInputCircles.length == 2 && bulbInputCircle) {
+         this.drawConnectionLine(one1OutputCircle, andInputCircles[0] as Konva.Circle);
+         const connection1 = {
+           start: oneGate1,
+            end: andGate,
+            inputCircle: one1OutputCircle,
+            outputCircle: andInputCircles[0] as Konva.Circle
+         }
+
+         this.drawConnectionLine(one2OutputCircle, andInputCircles[1] as Konva.Circle);
+         const connection2 = {
+            start: oneGate2,
+            end: andGate,
+            inputCircle: one2OutputCircle,
+            outputCircle: andInputCircles[1] as Konva.Circle
+         }
+
+         this.drawConnectionLine(andOutputCircle, bulbInputCircle);
+         const connection3 = {
+            start: andGate,
+            end: lightBulb,
+            inputCircle: andOutputCircle,
+            outputCircle: bulbInputCircle
+         };
+
+         this.connections.push(connection1, connection2, connection3);
+         this.connectionsEvent.emit(this.connections);
+
+        // prevent dragging of the gates
+        andGate.setAttr('draggable', false);
+        oneGate1.setAttr('draggable', false);
+        oneGate2.setAttr('draggable', false);
+        lightBulb.setAttr('draggable', false);
+      }
+    } else {
+      this.toast.error('Failed to create all gates');
+    }
+    this.canvasLayer.draw();
+  }
+
+  drawConnectionLine(start: Konva.Circle, end: Konva.Circle): void {
+    const lineStartPosition = start.getAbsolutePosition();
+    const lineEndPosition = end.getAbsolutePosition();
+
+    const sShape = new Konva.Shape({
+      sceneFunc: (context, shape) => {
+        context.beginPath();
+        context.moveTo(lineStartPosition.x, lineStartPosition.y);
+        context.bezierCurveTo(
+          lineStartPosition.x + 50, lineStartPosition.y,
+          lineEndPosition.x - 50, lineEndPosition.y,
+          lineEndPosition.x, lineEndPosition.y
+        );
+        context.strokeShape(shape);
+      },
+      stroke: 'green',
+      strokeWidth: 2,
+      name: 's-shape',
+      draggable: false
+    });
+
+    this.canvasLayer.add(sShape);
+    this.canvasLayer.batchDraw();
   }
 }

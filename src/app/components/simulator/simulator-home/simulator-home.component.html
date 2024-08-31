@@ -16,7 +16,14 @@
       </li>
     </ul>
   </div>
-  <div class="container-fluid">
-    <app-simulator-canvas/>
+  <div class="container-fluid col">
+    <app-simulator-canvas class="row" (connectionsEvent)=handleConnectionsChange($event)></app-simulator-canvas>
+      <hr>
+    <div class="container text-center">
+      <div class="col">
+        <button class="btn btn-outline-secondary" (click)="checkCircuit()" [disabled]="checkCircuitBtnDisabled">Check Circuit</button>
+        <button class="btn btn-outline-secondary" (click)="createSampleCircuit()">Create Sample Circuit</button>
+      </div>
+    </div>
   </div>
 </div>
