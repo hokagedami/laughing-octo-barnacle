@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {SimulatorCanvasComponent} from "../simulator-canvas/simulator-canvas.component";
+import {Connection} from "../../../models/connection.model";
 
 
 @Component({
@@ -10,8 +11,21 @@ import {SimulatorCanvasComponent} from "../simulator-canvas/simulator-canvas.com
   standalone: true,
   imports: [CommonModule, SimulatorCanvasComponent]
 })
-export class SimulatorHomeComponent implements OnInit {
+export class SimulatorHomeComponent {
+  @ViewChild(SimulatorCanvasComponent) simulatorCanvasComponent!: SimulatorCanvasComponent;
+  checkCircuitBtnDisabled: boolean = true;
   constructor() {}
 
-  ngOnInit(): void {  }
+
+  createSampleCircuit() {
+    this.simulatorCanvasComponent.createAndSampleCircuit();
+  }
+
+  checkCircuit() {
+    this.simulatorCanvasComponent.checkCircuit();
+  }
+
+  handleConnectionsChange($event: Connection[]): void {
+    this.checkCircuitBtnDisabled = $event.length === 0;
+  }
 }

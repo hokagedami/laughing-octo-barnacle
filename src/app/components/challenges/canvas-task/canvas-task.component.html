@@ -1,1 +1,7 @@
-<p>canvas-task works!</p>
+<div *ngIf="question">
+  <h3>{{ question.content }}</h3>
+  <app-simulator-canvas [canvasWidth]="800" [canvasHeight]="600" ></app-simulator-canvas>
+  <div class="d-flex flex-row-reverse">
+    <button class="btn btn-primary" (click)="submitAnswer()">Submit</button>
+  </div>
+</div>
