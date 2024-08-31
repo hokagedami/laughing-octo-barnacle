@@ -19,8 +19,8 @@ export class QuestionService {
   getQuestions(level: 'easy' | 'medium' | 'hard', answered: number []): Question[] {
     this.loadQuestions();
     return this.questions
-      .filter(q => !answered.includes(q.id) && q.type === 'canvas-task')
+      .filter(q => !answered.includes(q.id) && q.level === level)
       .sort(() => 0.5 - Math.random())
-      .slice(0, 5 - answered.length);
+      .slice(0, 10 - answered.length);
   }
 }
