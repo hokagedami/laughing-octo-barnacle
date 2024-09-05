@@ -1,327 +1,50 @@
 [
   {
-    "code": "LG001",
+    "code": "LG01",
     "title": "Introduction to Logic Gates",
     "content": {
-      "title": "Understanding the Basics of Logic Gates",
+      "title": "Introduction to Logic Gates",
       "paragraphs": [
-        "Logic gates are the fundamental building blocks of digital circuits. They perform basic logical operations on binary inputs to produce a binary output.",
-        "In digital electronics, these gates are implemented using transistors and are crucial in creating complex processing units in computers and other digital systems.",
-        "The most basic logic gates are AND, OR, and NOT, which we will focus on in this course. Understanding these gates is essential for grasping more complex digital logic concepts."
-      ],
-      "images": [
-        "/assets/images/logic-gates-symbols.svg",
-        "/assets/images/basic-circuit-diagram.png"
+        "Logic gates are the fundamental components of digital electronics. They are used to build digital circuits, ranging from simple to highly complex systems, including integrated circuits. Complex microprocessors and microcontroller chips, for example, are created using numerous logic gates working together.",
+        "Each logic gate serves as a building block of digital systems and has one or more inputs and one output, with a logical relationship governing them. These gates work with binary signals, representing either True or False, ON or OFF, 1 or 0, and are capable of making decisions based on the input. The output state is determined by the input values according to a specific Boolean function that the gate implements.",
+        "Digital systems, including computers, are constructed using logic gates, which are the most basic decision-making components in any digital circuit. A logic gate is an electronic circuit that can process one or more inputs and produce a single output. It can be used to implement simple Boolean logic expressions.",
+        "Logic gates allow for the implementation of elementary logic expressions, known as Boolean expressions. The three primary types of logic gates are the OR gate, AND gate, and NOT gate. Typically, logic gates have two inputs and one output, though the NOT gate is an exception, having only one input and one output."
       ]
     }
   },
   {
-    "code": "LG002",
-    "title": "Binary Logic: The Foundation",
+    "code": "LG02",
+    "title": "AND Gate",
     "content": {
-      "title": "Exploring Binary Logic",
+      "title": "AND Gate",
       "paragraphs": [
-        "Binary logic is the cornerstone of digital electronics and computing. It uses two states, typically represented as 0 and 1, to encode information.",
-        "In the context of logic gates, these binary states are often interpreted as 'false' (0) and 'true' (1), or 'off' and 'on' in electrical circuits.",
-        "Understanding binary logic is crucial because it forms the basis for how all digital systems process and store information."
-      ],
-      "images": [
-        "/assets/images/binary-representation.svg",
-        "/assets/images/voltage-levels.png"
+        "An AND gate is a logic circuit with two or more inputs and one output. It performs a logical multiplication, meaning the output is HIGH (logic 1) only when all of its inputs are HIGH. In all other cases, the output will be LOW (logic 0).",
+        "The function of an AND gate can be represented by the expression: Y = A.B. Where 'A' and 'B' are the inputs, and 'Y' is the output. The output is logic 1 only when both 'A' and 'B' are 1; otherwise, the output is logic 0.",
+        "In summary, the AND gate produces a HIGH output only when all input conditions are met (i.e., all inputs are HIGH). It is widely used in digital circuits for decision-making based on multiple conditions."
       ]
     }
   },
   {
-    "code": "LG003",
-    "title": "Truth Tables: Visualizing Logic",
+    "code": "LG03",
+    "title": "OR Gate",
     "content": {
-      "title": "Mastering Truth Tables",
+      "title": "OR Gate",
       "paragraphs": [
-        "Truth tables are essential tools for understanding and analyzing logic gates. They provide a systematic way to show all possible input combinations and their corresponding outputs for a given logic gate.",
-        "A truth table lists all possible combinations of input values and the resulting output for each combination. For a gate with n inputs, there will be 2^n rows in the truth table.",
-        "Learning to read and create truth tables is crucial for designing and troubleshooting digital circuits."
-      ],
-      "images": [
-        "/assets/images/and-gate-truth-table.svg",
-        "/assets/images/or-gate-truth-table.svg",
-        "/assets/images/not-gate-truth-table.svg"
+        "An OR gate is a logic circuit with two or more inputs and one output. It performs logical addition, meaning the output is HIGH (logic 1) if at least one of its inputs is HIGH. The output is LOW (logic 0) only when all inputs are LOW.",
+        "The OR gate is one of the simplest and most commonly used logic gates. It produces a HIGH output (logic 1) if any or both of its inputs are HIGH (logic 1). The OR operation is represented by the '+' symbol. For example, the expression X + Y = Z is read as 'X OR Y equals Z,' where Z is the output.",
+        "In summary, the OR gate performs logical addition, producing a HIGH output when at least one input is HIGH, making it essential in digital logic systems."
       ]
     }
   },
   {
-    "code": "LG004",
-    "title": "The AND Gate: All Inputs Must Be True",
+    "code": "LG04",
+    "title": "NOT Gate",
     "content": {
-      "title": "Deep Dive into AND Gates",
+      "title": "NOT Gate (Inverter)",
       "paragraphs": [
-        "The AND gate is one of the most fundamental logic gates. It outputs TRUE (1) only when all of its inputs are TRUE (1).",
-        "In a two-input AND gate, both inputs must be 1 for the output to be 1. If any input is 0, the output will be 0.",
-        "AND gates are often used in circuits where an action should only occur if multiple conditions are met simultaneously."
-      ],
-      "images": [
-        "/assets/images/and-gate-symbol.svg",
-        "/assets/images/and-gate-truth-table.png",
-        "/assets/images/and-gate-circuit.svg"
-      ]
-    }
-  },
-  {
-    "code": "LG005",
-    "title": "The OR Gate: Any Input Can Be True",
-    "content": {
-      "title": "Understanding OR Gates",
-      "paragraphs": [
-        "The OR gate is another fundamental logic gate. It outputs TRUE (1) if any of its inputs are TRUE (1).",
-        "In a two-input OR gate, the output is 1 if either or both inputs are 1. The output is 0 only when all inputs are 0.",
-        "OR gates are commonly used in circuits where an action should occur if any one of several conditions is met."
-      ],
-      "images": [
-        "/assets/images/or-gate-symbol.svg",
-        "/assets/images/or-gate-truth-table.png",
-        "/assets/images/or-gate-circuit.svg"
-      ]
-    }
-  },
-  {
-    "code": "LG006",
-    "title": "The NOT Gate: Inverting the Input",
-    "content": {
-      "title": "Exploring NOT Gates",
-      "paragraphs": [
-        "The NOT gate, also known as an inverter, is unique among basic logic gates as it has only one input. It reverses the logical state of its input.",
-        "If the input is TRUE (1), the NOT gate outputs FALSE (0), and vice versa. This simple operation is fundamental to many digital logic operations.",
-        "NOT gates are often used to create complements of signals or to invert control signals in larger circuits."
-      ],
-      "images": [
-        "/assets/images/not-gate-symbol.svg",
-        "/assets/images/not-gate-truth-table.png",
-        "/assets/images/not-gate-circuit.svg"
-      ]
-    }
-  },
-  {
-    "code": "LG007",
-    "title": "Combining AND and NOT: The NAND Gate",
-    "content": {
-      "title": "Introduction to NAND Gates",
-      "paragraphs": [
-        "The NAND gate combines the functionality of an AND gate followed by a NOT gate. Its name is derived from 'NOT AND'.",
-        "A NAND gate outputs FALSE (0) only when all of its inputs are TRUE (1). In all other cases, it outputs TRUE (1).",
-        "NAND gates are considered universal gates because any other logic gate can be constructed using only NAND gates."
-      ],
-      "images": [
-        "/assets/images/nand-gate-symbol.svg",
-        "/assets/images/nand-gate-truth-table.png",
-        "/assets/images/nand-gate-from-and-not.svg"
-      ]
-    }
-  },
-  {
-    "code": "LG008",
-    "title": "Combining OR and NOT: The NOR Gate",
-    "content": {
-      "title": "Understanding NOR Gates",
-      "paragraphs": [
-        "The NOR gate combines an OR gate with a NOT gate. Its name stands for 'NOT OR'.",
-        "A NOR gate outputs TRUE (1) only when all of its inputs are FALSE (0). If any input is TRUE (1), the output is FALSE (0).",
-        "Like NAND gates, NOR gates are also universal gates, meaning any logical function can be implemented using only NOR gates."
-      ],
-      "images": [
-        "/assets/images/nor-gate-symbol.svg",
-        "/assets/images/nor-gate-truth-table.png",
-        "/assets/images/nor-gate-from-or-not.svg"
-      ]
-    }
-  },
-  {
-    "code": "LG009",
-    "title": "Boolean Algebra: The Math Behind Logic Gates",
-    "content": {
-      "title": "Foundations of Boolean Algebra",
-      "paragraphs": [
-        "Boolean algebra is the mathematical framework that underlies the operation of logic gates and digital circuits.",
-        "It deals with the study of operations on logical values and was founded by mathematician George Boole in the mid-19th century.",
-        "Key concepts in Boolean algebra include AND, OR, and NOT operations, which directly correspond to the basic logic gates we've studied."
-      ],
-      "images": [
-        "/assets/images/boolean-algebra-laws.svg",
-        "/assets/images/truth-table-to-boolean-expression.png"
-      ]
-    }
-  },
-  {
-    "code": "LG010",
-    "title": "Simplifying Logic Circuits",
-    "content": {
-      "title": "Techniques for Circuit Simplification",
-      "paragraphs": [
-        "Simplifying logic circuits is crucial for creating efficient and cost-effective digital systems.",
-        "Common techniques include using Boolean algebra laws, Karnaugh maps, and the Quine-McCluskey method.",
-        "By simplifying circuits, we can reduce the number of gates needed, which leads to faster operation, lower power consumption, and reduced manufacturing costs."
-      ],
-      "images": [
-        "/assets/images/karnaugh-map-example.svg",
-        "/assets/images/circuit-before-after-simplification.png"
-      ]
-    }
-  },
-  {
-    "code": "LG011",
-    "title": "Multi-Input AND Gates",
-    "content": {
-      "title": "Exploring Multi-Input AND Gates",
-      "paragraphs": [
-        "AND gates can have more than two inputs. A multi-input AND gate outputs TRUE only when all of its inputs are TRUE.",
-        "These gates are useful in scenarios where multiple conditions need to be met simultaneously before an action is taken.",
-        "The number of inputs can vary, but the fundamental AND logic remains the same regardless of the input count."
-      ],
-      "images": [
-        "/assets/images/3-input-and-gate.svg",
-        "/assets/images/4-input-and-gate-truth-table.png"
-      ]
-    }
-  },
-  {
-    "code": "LG012",
-    "title": "Multi-Input OR Gates",
-    "content": {
-      "title": "Understanding Multi-Input OR Gates",
-      "paragraphs": [
-        "Like AND gates, OR gates can also have multiple inputs. A multi-input OR gate outputs TRUE if any of its inputs are TRUE.",
-        "These gates are particularly useful in scenarios where an action should occur if any one of several conditions is met.",
-        "Multi-input OR gates are common in alarm systems, where any triggered sensor should activate the alarm."
-      ],
-      "images": [
-        "/assets/images/3-input-or-gate.svg",
-        "/assets/images/4-input-or-gate-truth-table.png"
-      ]
-    }
-  },
-  {
-    "code": "LG013",
-    "title": "Combining AND and OR: Priority Encoders",
-    "content": {
-      "title": "Creating Priority Encoders",
-      "paragraphs": [
-        "Priority encoders are digital circuits that combine AND and OR gates to encode multiple input lines into a binary code, giving priority to the highest-numbered active input.",
-        "These circuits are useful in systems where multiple inputs may be active simultaneously, but only one should be processed based on a predetermined priority.",
-        "Understanding how to combine AND and OR gates to create priority encoders is crucial for designing more complex digital systems."
-      ],
-      "images": [
-        "/assets/images/priority-encoder-diagram.svg",
-        "/assets/images/priority-encoder-truth-table.png"
-      ]
-    }
-  },
-  {
-    "code": "LG014",
-    "title": "Using NOT Gates for Input Control",
-    "content": {
-      "title": "NOT Gates in Input Control",
-      "paragraphs": [
-        "NOT gates play a crucial role in controlling which inputs affect a circuit's output.",
-        "By inverting certain inputs, we can create circuits that respond differently based on the presence or absence of specific signals.",
-        "This technique is often used in creating enable/disable functionality in larger circuits."
-      ],
-      "images": [
-        "/assets/images/not-gate-input-control-circuit.svg",
-        "/assets/images/input-control-truth-table.png"
-      ]
-    }
-  },
-  {
-    "code": "LG015",
-    "title": "Creating an XOR Gate from Basic Gates",
-    "content": {
-      "title": "Constructing XOR Gates",
-      "paragraphs": [
-        "The XOR (Exclusive OR) gate can be constructed using a combination of AND, OR, and NOT gates.",
-        "An XOR gate outputs TRUE only when its inputs are different (one TRUE and one FALSE).",
-        "Understanding how to build an XOR gate from basic gates demonstrates the power and flexibility of combining simple logic gates to create more complex functions."
-      ],
-      "images": [
-        "/assets/images/xor-from-basic-gates.svg",
-        "/assets/images/xor-truth-table.png"
-      ]
-    }
-  },
-  {
-    "code": "LG016",
-    "title": "Logic Gates in Computer Memory",
-    "content": {
-      "title": "Memory Cells and Logic Gates",
-      "paragraphs": [
-        "Logic gates are fundamental in creating computer memory cells, such as flip-flops and latches.",
-        "These memory elements use combinations of gates to store binary information, forming the basis of RAM and registers in computers.",
-        "Understanding how gates create memory cells is crucial for grasping how computers store and manipulate data."
-      ],
-      "images": [
-        "/assets/images/sr-latch-diagram.svg",
-        "/assets/images/d-flip-flop-circuit.png"
-      ]
-    }
-  },
-  {
-    "code": "LG017",
-    "title": "Implementing Basic Arithmetic with Logic Gates",
-    "content": {
-      "title": "Arithmetic Circuits Using Logic Gates",
-      "paragraphs": [
-        "Logic gates can be combined to perform basic arithmetic operations like addition and subtraction.",
-        "A half-adder, which adds two single binary digits, can be created using an XOR gate for the sum and an AND gate for the carry.",
-        "Full adders, which account for carry-in, can be constructed by combining half-adders and additional logic gates."
-      ],
-      "images": [
-        "/assets/images/half-adder-circuit.svg",
-        "/assets/images/full-adder-diagram.png"
-      ]
-    }
-  },
-  {
-    "code": "LG018",
-    "title": "Logic Gates in Decision Making Circuits",
-    "content": {
-      "title": "Decision Circuits with Logic Gates",
-      "paragraphs": [
-        "Logic gates are essential in creating circuits that make decisions based on multiple inputs.",
-        "Examples include voting systems, where a majority vote can be determined using a combination of AND and OR gates.",
-        "Threshold detectors, which activate when a certain number of inputs are TRUE, can also be implemented using logic gates."
-      ],
-      "images": [
-        "/assets/images/majority-vote-circuit.svg",
-        "/assets/images/threshold-detector-diagram.png"
-      ]
-    }
-  },
-  {
-    "code": "LG019",
-    "title": "Troubleshooting Logic Gate Circuits",
-    "content": {
-      "title": "Debugging Logic Circuits",
-      "paragraphs": [
-        "Troubleshooting logic circuits involves identifying and resolving issues in gate connections or operations.",
-        "Common problems include incorrect wiring, faulty gates, or logical errors in the circuit design.",
-        "Techniques for troubleshooting include using truth tables to verify gate behavior and systematic signal tracing through the circuit."
-      ],
-      "images": [
-        "/assets/images/logic-probe-usage.svg",
-        "/assets/images/common-troubleshooting-steps.png"
-      ]
-    }
-  },
-  {
-    "code": "LG020",
-    "title": "Future of Logic Gates: Quantum Computing",
-    "content": {
-      "title": "Quantum Gates: The Next Frontier",
-      "paragraphs": [
-        "Quantum computing introduces a new paradigm in logic gates, using quantum bits or 'qubits' instead of classical bits.",
-        "Quantum gates manipulate qubits, allowing for operations that are impossible with classical gates, such as superposition and entanglement.",
-        "While still in early stages, quantum gates promise to revolutionize computing, potentially solving problems that are intractable for classical computers."
-      ],
-      "images": [
-        "/assets/images/qubit-representation.svg",
-        "/assets/images/quantum-gate-symbols.png"
+        "A NOT gate, also known as an inverter, is a logic circuit with one input and one output. Its function is to invert or complement the input signal. This means the output is always the opposite of the input.",
+        "If the input to the NOT gate is denoted as 'A,' then the output 'Y' is represented as Y = A' (or A-bar). In simple terms, when the input is LOW (logic 0), the output will be HIGH (logic 1), and when the input is HIGH (logic 1), the output will be LOW (logic 0).",
+        "In summary, the NOT gate performs a fundamental logic operation by changing the input's logic level to its opposite. It converts a ‘1’ input to a ‘0’ output and vice versa."
       ]
     }
   }
