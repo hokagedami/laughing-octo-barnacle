@@ -115,7 +115,6 @@ export class SimulatorCanvasComponent implements OnInit {
   createToolbar(): void {
     const toolbarWidth = this.canvasWidth ? this.canvasWidth : this.toolbarContainer.nativeElement.offsetWidth;
     const toolbarHeight = 100;
-    const gateY = toolbarHeight / 2;
 
     this.toolbarContainer.nativeElement.style.height = `${toolbarHeight}px`;
     this.toolbarContainer.nativeElement.style.width = `${toolbarWidth}px`;
@@ -171,7 +170,7 @@ export class SimulatorCanvasComponent implements OnInit {
     gate.scale({ x: iconSize / 50, y: iconSize / 50 }); // Assuming original icon size is 50x50
 
 
-    gate.on('click', (e) => {
+    gate.on('click', () => {
       if (this.selectedTool === 'connect' || this.isDrawingConnection) {
         return;
       }
@@ -514,6 +513,8 @@ export class SimulatorCanvasComponent implements OnInit {
       imageNode.on('click', () => {
         this.canvasLayer.destroyChildren();
         this.canvasLayer.draw();
+        this.connections = [];
+        this.connectionsEvent.emit(this.connections);
       });
 
       this.toolbarLayer.add(imageNode);
@@ -595,7 +596,7 @@ export class SimulatorCanvasComponent implements OnInit {
 
     circle.setAttr('circleType', type);
 
-    circle.on('click', (e) => {
+    circle.on('click', () => {
       this.processCircleClick(circle);
     });
 
@@ -756,7 +757,6 @@ export class SimulatorCanvasComponent implements OnInit {
     if (this.isCompleteCircuit()) {
       this.claudeService.verifyLogicGateCircuit(image)
         .then((response) => {
-          console.log(response);
           const confidence = response[0].text;
           const responseTextArray = response[0].text.split(' ');
           const percentage = responseTextArray.filter((word: string) => word.includes('%'))[0];

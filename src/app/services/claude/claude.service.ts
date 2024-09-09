@@ -11,7 +11,6 @@ export class ClaudeService {
 
   private anthropic = new Anthropic({apiKey: this.apiKey, dangerouslyAllowBrowser: true});
 
-
   async verifyLogicGateCircuit(imageData: string): Promise<any> {
     const response = await this.anthropic.messages.create({
       model: 'claude-3-5-sonnet-20240620',
