@@ -364,6 +364,7 @@ export class SimulatorCanvasComponent implements OnInit {
       scaleX: scale,
       scaleY: scale,
       y: offsetY
+
     });
 
     const base = new Konva.Rect({
@@ -380,7 +381,7 @@ export class SimulatorCanvasComponent implements OnInit {
       strokeWidth: 2
     });
 
-    const inputCircle = this.createCircle(15 * scale, (70 + offsetY) * scale, 'input');
+    const inputCircle = this.createCircle(15 * scale, (70 + offsetY) * scale, 'input', true);
 
     group.add(bulbOutline, filament, base, inputLine, inputCircle);
     return group;
@@ -586,7 +587,7 @@ export class SimulatorCanvasComponent implements OnInit {
     });
   }
 
-  createCircle(x: number, y: number, type: string): Konva.Circle {
+  createCircle(x: number, y: number, type: string, isBulbCircle: boolean = false): Konva.Circle {
     const circle = new Konva.Circle({
       x,
       y,
@@ -597,6 +598,9 @@ export class SimulatorCanvasComponent implements OnInit {
     });
 
     circle.setAttr('circleType', type);
+    if (isBulbCircle) {
+      circle.setAttr('isBulbCircle', true);
+    }
 
     circle.on('click', () => {
       this.processCircleClick(circle);
@@ -689,7 +693,8 @@ export class SimulatorCanvasComponent implements OnInit {
           if (this.currentConnection.inputCircle && this.currentConnection.outputCircle
             && this.currentConnection.start && this.currentConnection.end
             && this.currentConnection.start !== this.currentConnection.end
-            && this.currentConnection.inputCircle.getAttr('circleType') !== this.currentConnection.outputCircle.getAttr('circleType')) {
+            && this.currentConnection.inputCircle.getAttr('circleType')
+            !== this.currentConnection.outputCircle.getAttr('circleType')) {
             this.connections.push(this.currentConnection);
             this.connectionsEvent.emit(this.connections);
 
@@ -701,6 +706,23 @@ export class SimulatorCanvasComponent implements OnInit {
             this.currentConnection.outputCircle.fill('green');
             this.currentConnection = null;
             this.isDrawingConnection = false;
+
+            // check if there is a bulb in the circuit
+            const bulbCircle = this.connections.find(conn => conn.inputCircle?.getAttr('isBulbCircle'))?.inputCircle;
+            if (bulbCircle) {
+              // set the color of the bulb filament to green
+              const bulbParent = bulbCircle.getParent() as Konva.Group;
+              const bulbFilament = bulbParent.findOne((node: Konva.Line) => {
+                return node.stroke() === 'red';
+              }) as Konva.Line;
+              if (bulbFilament) {
+                // check if the circuit is complete and change the color of the bulb filament to green
+                if (this.isCompleteCircuit()) {
+                  bulbFilament.stroke('green');
+                  this.canvasLayer.draw();
+                }
+              }
+            }
           }
         } else {
 
