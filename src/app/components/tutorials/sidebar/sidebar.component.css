@@ -1,5 +1,16 @@
+
 .bg-dark {
   background-color: #343a40 !important;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: 100vh;
+}
+
+.lessons {
+  flex: 1;
+  overflow-y: auto;
 }
 
 .lessons li {
@@ -16,7 +27,7 @@
 }
 
 .scrollable-list {
-  max-height: 770px;
+  flex: 1;
   overflow-y: auto;
 }
 

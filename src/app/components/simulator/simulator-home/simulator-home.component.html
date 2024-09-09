@@ -18,7 +18,7 @@
     </ul>
   </aside>
   <main class="main-content">
-    <app-simulator-canvas class="row" (connectionsEvent)=handleConnectionsChange($event)></app-simulator-canvas>
+    <app-simulator-canvas class="row" (connectionsEvent)=handleConnectionsChange($event) [canvasWidth]="600" [canvasHeight]="400"></app-simulator-canvas>
       <hr>
     <div class="container text-center">
       <div class="col">

@@ -1,11 +1,25 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.d-flex {
+  flex: 1;
+  display: flex;
+}
+
 .sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 250px;
-height: 100vh;
+  width: 25%;
+}
+
+.container-fluid {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
   overflow-y: auto;
-  background-color: #f8f9fa;
-padding: 20px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+.lesson-container {
+  display: flex;
+  height: 100%;
 }

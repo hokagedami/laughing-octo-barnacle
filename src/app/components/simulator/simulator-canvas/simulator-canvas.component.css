@@ -7,7 +7,7 @@
 
 .canvas-container {
   border: 1px solid #ccc;
-  width: 800px;
+  width: 850px;
   height: 600px;
   position: relative;
   background-color: #f0f0f0;
@@ -19,7 +19,7 @@
   align-items: center;
   margin-top: 20px;
   padding: 10px;
-  width: 800px;
+  width: 850px; /* Match the canvas-container width */
   height: 100px;
   background-color: #e0e0e0;
   border: 1px solid #ccc;

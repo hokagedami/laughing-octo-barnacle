@@ -8,7 +8,7 @@
 .sidebar {
   background-color: #343a40 !important;
   width: 200px;
-  padding: 20px;
+  height: 100vh;
 }
 .main-content {
   flex-grow: 1;

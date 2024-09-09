@@ -15,8 +15,8 @@ export class SimulatorCanvasComponent implements OnInit {
   @ViewChild('stageContainer', { static: true }) stageContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('toolbarContainer', { static: true }) toolbarContainer!: ElementRef<HTMLDivElement>;
 
-  @Input() canvasWidth: number | null = null;
-  @Input() canvasHeight: number | null = null;
+  @Input() canvasWidth!: number | null;
+  @Input() canvasHeight!: number | null;
 
   canvasStage!: Konva.Stage;
   canvasLayer!: Konva.Layer;
@@ -59,6 +59,8 @@ export class SimulatorCanvasComponent implements OnInit {
     this.canvasLayer = new Konva.Layer();
     this.canvasLayer.setAttr('type', 'canvasLayer');
     this.canvasStage.add(this.canvasLayer);
+    this.stageContainer.nativeElement.style.height = `${containerHeight}px`;
+    this.stageContainer.nativeElement.style.width = `${containerWidth}px`;
   }
 
   createGridBackground(): void {
@@ -67,7 +69,8 @@ export class SimulatorCanvasComponent implements OnInit {
     const stageWidth = this.canvasStage.width();
     const stageHeight = this.canvasStage.height();
 
-    for (let x = 0; x <= stageWidth; x += gridSize) {
+    const buffer = 1;
+    for (let x = 0; x <= stageWidth + buffer; x += gridSize) {
       const line = new Konva.Line({
         points: [x, 0, x, stageHeight],
         stroke: '#ddd',
@@ -76,7 +79,7 @@ export class SimulatorCanvasComponent implements OnInit {
       gridLayer.add(line);
     }
 
-    for (let y = 0; y <= stageHeight; y += gridSize) {
+    for (let y = 0; y <= stageHeight + buffer; y += gridSize) {
       const line = new Konva.Line({
         points: [0, y, stageWidth, y],
         stroke: '#ddd',
@@ -91,11 +94,71 @@ export class SimulatorCanvasComponent implements OnInit {
     gridLayer.moveToBottom();
   }
 
+  // createToolbarOld(): void {
+  //   const toolbarWidth = this.canvasWidth ? this.canvasWidth : this.toolbarContainer.nativeElement.offsetWidth;
+  //   const toolbarHeight = 100;
+  //   const elementPadding = 30;
+  //   const gateY = toolbarHeight / 2;
+  //
+  //   this.toolbarStage = new Konva.Stage({
+  //     container: this.toolbarContainer.nativeElement,
+  //     width: toolbarWidth,
+  //     height: toolbarHeight,
+  //   });
+  //
+  //   this.toolbarLayer = new Konva.Layer();
+  //   this.toolbarStage.add(this.toolbarLayer);
+  //
+  //   const elementSizes = {
+  //     AND: 50,
+  //     OR: 50,
+  //     NOT: 50,
+  //     LightBulb: 50,
+  //     One: 50,
+  //     Zero: 50,
+  //     Reset: 50,
+  //     Connector: 50
+  //   };
+  //
+  //   const totalElementWidth = Object.values(elementSizes).reduce((a, b) => a + b, 0);
+  //   const availableWidth = toolbarWidth - 2 * elementPadding - totalElementWidth;
+  //   const elementSpacing = availableWidth / (Object.keys(elementSizes).length - 1);
+  //
+  //   let currentX = elementPadding;
+  //
+  //   this.createGateIcon('AND', currentX, gateY, this.toolbarLayer);
+  //   currentX += elementSizes.AND + elementSpacing;
+  //
+  //   this.createGateIcon('OR', currentX, gateY, this.toolbarLayer);
+  //   currentX += elementSizes.OR + elementSpacing;
+  //
+  //   this.createGateIcon('NOT', currentX, gateY, this.toolbarLayer);
+  //   currentX += elementSizes.NOT + elementSpacing;
+  //
+  //   this.createGateIcon('LightBulb', currentX, gateY, this.toolbarLayer);
+  //   currentX += elementSizes.LightBulb + elementSpacing;
+  //
+  //   this.createGateIcon('One', currentX, gateY, this.toolbarLayer);
+  //   currentX += elementSizes.One + elementSpacing;
+  //
+  //   this.createGateIcon('Zero', currentX, gateY, this.toolbarLayer);
+  //   currentX += elementSizes.Zero + elementSpacing;
+  //
+  //   this.createConnectorTool(currentX, gateY, this.toolbarLayer);
+  //   currentX += elementSizes.Connector + elementSpacing;
+  //
+  //   this.createResetButton(currentX, gateY - elementSizes.Reset / 2, "public/images/reset.png", this.toolbarLayer);
+  //
+  //   this.toolbarLayer.draw();
+  // }
+
   createToolbar(): void {
-    const toolbarWidth = 800;
+    const toolbarWidth = this.canvasWidth ? this.canvasWidth : this.toolbarContainer.nativeElement.offsetWidth;
     const toolbarHeight = 100;
-    const elementPadding = 30;
     const gateY = toolbarHeight / 2;
+
+    this.toolbarContainer.nativeElement.style.height = `${toolbarHeight}px`;
+    this.toolbarContainer.nativeElement.style.width = `${toolbarWidth}px`;
 
     this.toolbarStage = new Konva.Stage({
       container: this.toolbarContainer.nativeElement,
@@ -106,57 +169,46 @@ export class SimulatorCanvasComponent implements OnInit {
     this.toolbarLayer = new Konva.Layer();
     this.toolbarStage.add(this.toolbarLayer);
 
-    const elementSizes = {
-      AND: 50,
-      OR: 50,
-      NOT: 50,
-      LightBulb: 50,
-      One: 50,
-      Zero: 50,
-      Reset: 50,
-      Connector: 50
-    };
+    const toolbarItems = ['AND', 'OR', 'NOT', 'LightBulb', 'One', 'Zero', 'Connector', 'Reset'];
+    const itemWidth = toolbarWidth / toolbarItems.length;
+    const itemHeight = toolbarHeight;
 
-    const totalElementWidth = Object.values(elementSizes).reduce((a, b) => a + b, 0);
-    const availableWidth = toolbarWidth - 2 * elementPadding - totalElementWidth;
-    const elementSpacing = availableWidth / (Object.keys(elementSizes).length - 1);
-
-    let currentX = elementPadding;
-
-    this.createGateIcon('AND', currentX, gateY, this.toolbarLayer);
-    currentX += elementSizes.AND + elementSpacing;
-
-    this.createGateIcon('OR', currentX, gateY, this.toolbarLayer);
-    currentX += elementSizes.OR + elementSpacing;
-
-    this.createGateIcon('NOT', currentX, gateY, this.toolbarLayer);
-    currentX += elementSizes.NOT + elementSpacing;
-
-    this.createGateIcon('LightBulb', currentX, gateY, this.toolbarLayer);
-    currentX += elementSizes.LightBulb + elementSpacing;
-
-    this.createGateIcon('One', currentX, gateY, this.toolbarLayer);
-    currentX += elementSizes.One + elementSpacing;
-
-    this.createGateIcon('Zero', currentX, gateY, this.toolbarLayer);
-    currentX += elementSizes.Zero + elementSpacing;
-
-    this.createConnectorTool(currentX, gateY, this.toolbarLayer);
-    currentX += elementSizes.Connector + elementSpacing;
-
-    this.createResetButton(currentX, gateY - elementSizes.Reset / 2, "public/images/reset.png", this.toolbarLayer);
+    toolbarItems.forEach((item, index) => {
+      const x = index * itemWidth;
+      const y = 0;
+      this.createToolbarItem(item, x, y, itemWidth, itemHeight);
+    });
 
     this.toolbarLayer.draw();
   }
 
-  createGateIcon(type: string, x: number, y: number, toolbarLayer: Konva.Layer): void {
+  createToolbarItem(type: string, x: number, y: number, width: number, height: number): void {
+    switch (type) {
+      case 'Connector':
+        this.createConnectorTool(x, y, width, height);
+        break;
+      case 'Reset':
+        this.createResetButton(x, y, width, height);
+        break;
+      default:
+        this.createGateIcon(type, x, y, width, height);
+    }
+  }
+
+  createGateIcon(type: string, x: number, y: number, width: number, height: number): void {
+    const iconSize = Math.min(width, height) * 0.6;
+    const iconX = x + (width - iconSize) / 2;
+    const iconY = y + (height - iconSize) / 2;
+
     const properties = {
       draggable: false,
       id: `gate-${Date.now()}-${Math.random()}`,
       isToolbarIcon: true,
       name: type
     };
-    let gate = this.createIconByType(type, x, y, properties);
+
+    let gate = this.createIconByType(type, iconX, iconY, properties);
+    gate.scale({ x: iconSize / 50, y: iconSize / 50 }); // Assuming original icon size is 50x50
 
 
     gate.on('click', (e) => {
@@ -197,7 +249,7 @@ export class SimulatorCanvasComponent implements OnInit {
       this.canvasLayer.fire('add', { target: cloned });
     });
 
-    toolbarLayer.add(gate);
+    this.toolbarLayer.add(gate);
   }
 
   isPositionFree(x: number, y: number): boolean {
@@ -448,19 +500,23 @@ export class SimulatorCanvasComponent implements OnInit {
     return group;
   }
 
-  createConnectorTool(x: number, y: number, toolbarLayer: Konva.Layer): void {
+  createConnectorTool(x: number, y: number, width: number, height: number): void {
+    const iconSize = Math.min(width, height) * 0.6;
+    const iconX = x + (width - iconSize) / 2;
+    const iconY = y + (height - iconSize) / 2;
+
     const connectorIcon = new Konva.Rect({
-      x: x,
-      y: y - 20,
-      width: 40,
-      height: 40,
+      x: iconX,
+      y: iconY,
+      width: iconSize,
+      height: iconSize,
       fill: 'lightgray',
       stroke: 'black',
       strokeWidth: 2
     });
 
     const connectorLine = new Konva.Line({
-      points: [x + 5, y, x + 35, y],
+      points: [iconX + iconSize * 0.1, iconY + iconSize / 2, iconX + iconSize * 0.9, iconY + iconSize / 2],
       stroke: 'black',
       strokeWidth: 2
     });
@@ -478,7 +534,30 @@ export class SimulatorCanvasComponent implements OnInit {
       this.toolbarLayer.draw();
     });
 
-    toolbarLayer.add(connectorGroup);
+    this.toolbarLayer.add(connectorGroup);
+  }
+
+  createResetButton(x: number, y: number, width: number, height: number): void {
+    const iconSize = Math.min(width, height) * 0.6;
+    const iconX = x + (width - iconSize) / 2;
+    const iconY = y + (height - iconSize) / 2;
+
+    Konva.Image.fromURL("public/images/reset.png", (imageNode) => {
+      imageNode.setAttrs({
+        x: iconX,
+        y: iconY,
+        width: iconSize,
+        height: iconSize,
+        draggable: false,
+      });
+
+      imageNode.on('click', () => {
+        this.canvasLayer.destroyChildren();
+        this.canvasLayer.draw();
+      });
+
+      this.toolbarLayer.add(imageNode);
+    });
   }
 
   handleCanvasGate(gate: Konva.Group): void {
@@ -541,25 +620,6 @@ export class SimulatorCanvasComponent implements OnInit {
         this.draggedGate = null;
         this.canvasStage.batchDraw();
       }
-    });
-  }
-
-  createResetButton(x: number, y: number, imageUrl: string, toolbarLayer: Konva.Layer): void {
-    Konva.Image.fromURL(imageUrl, (imageNode) => {
-      imageNode.setAttrs({
-        x: x,
-        y: y,
-        width: 40,
-        height: 40,
-        draggable: false,
-      });
-
-      imageNode.on('click', () => {
-        this.canvasLayer.destroyChildren();
-        this.canvasLayer.draw();
-      });
-
-      toolbarLayer.add(imageNode);
     });
   }
 
