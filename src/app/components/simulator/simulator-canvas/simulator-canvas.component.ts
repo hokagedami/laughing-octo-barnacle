@@ -43,6 +43,7 @@ export class SimulatorCanvasComponent implements OnInit {
   private toast = inject(NgxToastAlertsService);
 
   isLoading: boolean = false;
+  @Output() sampleCircuitBtnActiveEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 
   ngOnInit(): void {
@@ -137,7 +138,6 @@ export class SimulatorCanvasComponent implements OnInit {
       const y = 0;
       this.createToolbarItem(item, x, y, itemWidth, itemHeight);
     });
-
     this.toolbarLayer.draw();
   }
 
@@ -206,9 +206,10 @@ export class SimulatorCanvasComponent implements OnInit {
       this.handleCanvasGate(cloned);
       this.canvasStage.batchDraw();
       this.canvasLayer.fire('add', { target: cloned });
+      this.sampleCircuitBtnActiveEvent.emit(true);
     });
-
     this.toolbarLayer.add(gate);
+
   }
 
   isPositionFree(x: number, y: number): boolean {
@@ -515,6 +516,7 @@ export class SimulatorCanvasComponent implements OnInit {
         this.canvasLayer.draw();
         this.connections = [];
         this.connectionsEvent.emit(this.connections);
+        this.sampleCircuitBtnActiveEvent.emit(false);
       });
 
       this.toolbarLayer.add(imageNode);

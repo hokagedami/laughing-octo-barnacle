@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {SimulatorCanvasComponent} from "../simulator-canvas/simulator-canvas.component";
 import {Connection} from "../../../models/connection.model";
@@ -14,6 +14,7 @@ import {Connection} from "../../../models/connection.model";
 export class SimulatorHomeComponent {
   @ViewChild(SimulatorCanvasComponent) simulatorCanvasComponent!: SimulatorCanvasComponent;
   checkCircuitBtnDisabled: boolean = true;
+  sampleCircuitBtnActive: boolean = false;
   constructor() {}
 
 
@@ -27,6 +28,10 @@ export class SimulatorHomeComponent {
 
   handleConnectionsChange($event: Connection[]): void {
     this.checkCircuitBtnDisabled = $event.length === 0;
+  }
+
+  handleSampleCircuitBtnActiveChange($event: boolean): void {
+    this.sampleCircuitBtnActive = $event;
   }
 
   takeSnapshot() {
