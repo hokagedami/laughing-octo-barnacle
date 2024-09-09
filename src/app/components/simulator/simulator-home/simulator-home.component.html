@@ -1,22 +1,23 @@
-<div class="d-flex">
-  <div class="bg-dark text-white p-3" style="width: 30%; height: 100vh; overflow-y: auto;">
-    <h3>Guide</h3>
-    <ul class="list-group lessons">
-      <li class="list-group-item bg-dark text-white border-light">
+<div class="d-flex h-100">
+  <aside class="sidebar guide-container bg-dark-subtle w-25">
+    <h3 class="text-white p-3">Guide</h3>
+    <hr class="text-white">
+    <ul class="list-group">
+      <li class="list-group-item text-white">
         The toolbar contains the gates and inputs that can be used to build a circuit.
       </li>
-      <li class="list-group-item bg-dark text-white border-light">
+      <li class="list-group-item text-white">
         Click on a gate to add it to the center canvas. Ensure the center of the canvas does not have any gates.
       </li>
-      <li class="list-group-item bg-dark text-white border-light">
+      <li class="list-group-item text-white">
         The gates are draggable and can be connected to other gates when on the canvas.
       </li>
-      <li class="list-group-item bg-dark text-white border-light">
+      <li class="list-group-item text-white">
         The inputs can be connected to gates by dragging a line from the input/output circle of one gate to the input/output of another gate.
       </li>
     </ul>
-  </div>
-  <div class="container-fluid col">
+  </aside>
+  <main class="main-content">
     <app-simulator-canvas class="row" (connectionsEvent)=handleConnectionsChange($event)></app-simulator-canvas>
       <hr>
     <div class="container text-center">
@@ -24,6 +25,7 @@
         <button class="btn btn-outline-secondary" (click)="checkCircuit()" [disabled]="checkCircuitBtnDisabled">Check Circuit</button>
         <button class="btn btn-outline-secondary" (click)="createSampleCircuit()">Create Sample Circuit</button>
       </div>
+      <hr>
     </div>
-  </div>
+  </main>
 </div>

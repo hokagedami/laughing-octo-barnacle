@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import {UserService} from "../user/user.service";
+import {LoginResponse} from "../../models/login-response.model";
 
 @Injectable({
   providedIn: 'root'
@@ -11,17 +12,21 @@ export class AuthService {
 
   constructor(private cookieService: CookieService, private userService: UserService, private router: Router) {}
 
-  login(username: string): boolean {
+  login(username: string): LoginResponse {
     if (!username || username.trim().length === 0) {
-      return false
+      return { success: false, message: 'Please enter a username' };
     }
-    // check if user is in the database and add if not
+    let isNewUser = false;
     const user = this.userService.getUserByUsername(username);
-    if (user) {
+    if (!user) {
+      this.userService.setUser(username);
+      isNewUser = true;
+    }
+    else {
       this.userService.setUser(username);
     }
     this.cookieService.set(this.cookieName, username, 1, '/'); // Expires in 1 day
-    return true;
+    return { success: true, message: isNewUser ? 'Account creation and login successful': 'Login successful' };
   }
 
   isLoggedIn(): boolean {

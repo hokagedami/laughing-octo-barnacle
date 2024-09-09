@@ -1,0 +1,479 @@
+ [
+    {
+      "id": 1,
+      "level": "easy",
+      "type": "multiple-choice",
+      "content": "What is the output of an AND gate when both inputs are 1?",
+      "options": ["0", "1", "2", "None"],
+      "answer": "1"
+    },
+    {
+      "id": 2,
+      "level": "easy",
+      "type": "multiple-choice",
+      "content": "Which gate outputs 1 when either input is 1?",
+      "options": ["AND", "OR", "NOT", "NAND"],
+      "answer": "OR"
+    },
+    {
+      "id": 3,
+      "level": "easy",
+      "type": "multiple-choice",
+      "content": "What is the output of a NOT gate if the input is 0?",
+      "options": ["1", "0", "Depends", "Undefined"],
+      "answer": "1"
+    },
+    {
+      "id": 4,
+      "level": "easy",
+      "type": "multiple-choice",
+      "content": "Which logic gate can be used to invert the input?",
+      "options": ["AND", "OR", "NOT", "XOR"],
+      "answer": "NOT"
+    },
+    {
+      "id": 5,
+      "level": "easy",
+      "type": "multiple-choice",
+      "content": "Which gate outputs 0 when both inputs are 0?",
+      "options": ["NOR", "OR", "AND", "XOR"],
+      "answer": "OR"
+    },
+    {
+      "id": 6,
+      "level": "easy",
+      "type": "multiple-choice",
+      "content": "Which gate outputs 1 when both inputs are 1?",
+      "options": ["AND", "OR", "NOT", "NOR"],
+      "answer": "AND"
+    },
+    {
+      "id": 7,
+      "level": "easy",
+      "type": "multiple-choice",
+      "content": "Which logic gate outputs 1 when both inputs are different?",
+      "options": ["AND", "OR", "XOR", "NOT"],
+      "answer": "XOR"
+    },
+    {
+      "id": 8,
+      "level": "easy",
+      "type": "multiple-choice",
+      "content": "Which logic gate will output 1 only when both inputs are the same?",
+      "options": ["AND", "NOR", "XNOR", "OR"],
+      "answer": "XNOR"
+    },
+    {
+      "id": 9,
+      "level": "easy",
+      "type": "multiple-choice",
+      "content": "What is the output of an AND gate when one input is 1 and the other is 0?",
+      "options": ["0", "1", "Undefined", "Depends on circuit"],
+      "answer": "0"
+    },
+    {
+      "id": 10,
+      "level": "easy",
+      "type": "multiple-choice",
+      "content": "Which gate is known as the inverter?",
+      "options": ["AND", "NOT", "OR", "XOR"],
+      "answer": "NOT"
+    },
+    {
+      "id": 11,
+      "level": "easy",
+      "type": "multiple-choice",
+      "content": "What is the output of an OR gate if both inputs are 0?",
+      "options": ["0", "1", "Undefined", "Depends on circuit"],
+      "answer": "0"
+    },
+    {
+      "id": 12,
+      "level": "easy",
+      "type": "multiple-choice",
+      "content": "Which of the following gates outputs 0 when both inputs are 1?",
+      "options": ["NAND", "AND", "NOT", "OR"],
+      "answer": "NAND"
+    },
+    {
+      "id": 13,
+      "level": "easy",
+      "type": "multiple-choice",
+      "content": "Which gate would output 1 when both inputs are 0?",
+      "options": ["NOR", "AND", "OR", "NOT"],
+      "answer": "NOR"
+    },
+    {
+      "id": 14,
+      "level": "easy",
+      "type": "multiple-choice",
+      "content": "What is the function of a NOT gate?",
+      "options": ["Inverts the input", "Outputs 1 when both inputs are 1", "Outputs 0 when both inputs are 0", "None of the above"],
+      "answer": "Inverts the input"
+    },
+    {
+      "id": 15,
+      "level": "easy",
+      "type": "multiple-choice",
+      "content": "If both inputs to an AND gate are 0, what is the output?",
+      "options": ["1", "0", "Undefined", "Depends on inputs"],
+      "answer": "0"
+    },
+    {
+      "id": 16,
+      "level": "easy",
+      "type": "multiple-choice",
+      "content": "Which gate is commonly used to perform addition in binary circuits?",
+      "options": ["AND", "OR", "XOR", "NOT"],
+      "answer": "XOR"
+    },
+    {
+      "id": 17,
+      "level": "easy",
+      "type": "multiple-choice",
+      "content": "If the output of an OR gate is 0, what can you infer about the inputs?",
+      "options": ["Both inputs must be 1", "Both inputs must be 0", "One input is 1", "Either input is 1"],
+      "answer": "Both inputs must be 0"
+    },
+    {
+      "id": 18,
+      "level": "easy",
+      "type": "multiple-choice",
+      "content": "In a NOT gate, what is the output if the input is 1?",
+      "options": ["1", "0", "Depends on circuit", "Undefined"],
+      "answer": "0"
+    },
+    {
+      "id": 19,
+      "level": "easy",
+      "type": "canvas-task",
+      "content": "Design a simple circuit using an AND gate to light up a bulb when both switches are pressed.",
+      "answer": "AND gate with two switches and one light bulb"
+    },
+    {
+      "id": 20,
+      "level": "easy",
+      "type": "canvas-task",
+      "content": "Build a circuit that uses a NOT gate to invert the output from a switch.",
+      "answer": "NOT gate with one switch and one light bulb"
+    },
+    {
+      "id": 21,
+      "level": "medium",
+      "type": "multiple-choice",
+      "content": "What happens when both inputs of an OR gate are 1?",
+      "options": ["0", "1", "Undefined", "Depends on inputs"],
+      "answer": "1"
+    },
+    {
+      "id": 22,
+      "level": "medium",
+      "type": "multiple-choice",
+      "content": "Which of the following gates outputs 0 when both inputs are different?",
+      "options": ["XOR", "XNOR", "AND", "OR"],
+      "answer": "XNOR"
+    },
+    {
+      "id": 23,
+      "level": "medium",
+      "type": "multiple-choice",
+      "content": "Which gate would you use to compare two binary values and check if they are equal?",
+      "options": ["XOR", "XNOR", "AND", "NOT"],
+      "answer": "XNOR"
+    },
+    {
+      "id": 24,
+      "level": "medium",
+      "type": "multiple-choice",
+      "content": "In a digital circuit, what is the output of a NOT gate if the input is 1?",
+      "options": ["0", "1", "Undefined", "Depends on circuit"],
+      "answer": "0"
+    },
+    {
+      "id": 25,
+      "level": "medium",
+      "type": "multiple-choice",
+      "content": "What happens when both inputs to an AND gate are 0?",
+      "options": ["1", "0", "Undefined", "Depends on inputs"],
+      "answer": "0"
+    },
+    {
+      "id": 26,
+      "level": "medium",
+      "type": "multiple-choice",
+      "content": "Which of these gates is also called a universal gate?",
+      "options": ["NAND", "OR", "XOR", "NOT"],
+      "answer": "NAND"
+    },
+    {
+      "id": 27,
+      "level": "medium",
+      "type": "multiple-choice",
+      "content": "In an OR gate, what is the output if both inputs are 0?",
+      "options": ["1", "0", "Undefined", "Depends on inputs"],
+      "answer": "0"
+    },
+    {
+      "id": 28,
+      "level": "medium",
+      "type": "multiple-choice",
+      "content": "What happens when a NOT gate receives a 0 as an input?",
+      "options": ["Outputs 0", "Outputs 1", "Inverts the input", "Depends on the gate"],
+      "answer": "Outputs 1"
+    },
+    {
+      "id": 29,
+      "level": "medium",
+      "type": "multiple-choice",
+      "content": "What is the output of an XOR gate when both inputs are 1?",
+      "options": ["1", "0", "Undefined", "Depends on inputs"],
+      "answer": "0"
+    },
+    {
+      "id": 30,
+      "level": "medium",
+      "type": "multiple-choice",
+      "content": "Which gate is also known as the 'inverter'?",
+      "options": ["NOT", "AND", "XOR", "OR"],
+      "answer": "NOT"
+    },
+    {
+      "id": 31,
+      "level": "medium",
+      "type": "multiple-choice",
+      "content": "What does a NOR gate do when both inputs are 0?",
+      "options": ["Outputs 1", "Outputs 0", "Inverts the input", "Undefined"],
+      "answer": "Outputs 1"
+    },
+    {
+      "id": 32,
+      "level": "medium",
+      "type": "multiple-choice",
+      "content": "Which of these gates can be combined to create a full adder circuit?",
+      "options": ["XOR and AND", "OR and AND", "NOT and XOR", "AND and OR"],
+      "answer": "XOR and AND"
+    },
+    {
+      "id": 33,
+      "level": "medium",
+      "type": "multiple-choice",
+      "content": "If the output of a NOR gate is 0, what can you infer about the inputs?",
+      "options": ["Both inputs must be 1", "One input must be 1", "Both inputs are 0", "Cannot be determined"],
+      "answer": "One input must be 1"
+    },
+    {
+      "id": 34,
+      "level": "medium",
+      "type": "multiple-choice",
+      "content": "In a NOT gate, what happens if the input is 0?",
+      "options": ["The output is 0", "The output is 1", "The circuit becomes undefined", "None"],
+      "answer": "The output is 1"
+    },
+    {
+      "id": 35,
+      "level": "medium",
+      "type": "multiple-choice",
+      "content": "Which gate performs logical addition?",
+      "options": ["AND", "XOR", "OR", "NAND"],
+      "answer": "OR"
+    },
+    {
+      "id": 36,
+      "level": "medium",
+      "type": "multiple-choice",
+      "content": "Which gate performs logical multiplication?",
+      "options": ["AND", "XOR", "OR", "NOT"],
+      "answer": "AND"
+    },
+    {
+      "id": 37,
+      "level": "medium",
+      "type": "multiple-choice",
+      "content": "In a full adder circuit, what role does the XOR gate play?",
+      "options": ["Outputs carry", "Performs sum operation", "Checks equality", "Inverts the inputs"],
+      "answer": "Performs sum operation"
+    },
+    {
+      "id": 38,
+      "level": "medium",
+      "type": "canvas-task",
+      "content": "Build a circuit using an OR gate that turns on a light when either of two switches is pressed.",
+      "answer": "OR gate with two switches and one light"
+    },
+    {
+      "id": 39,
+      "level": "medium",
+      "type": "canvas-task",
+      "content": "Design a circuit that uses a NOT gate to control a motor when a sensor detects a signal.",
+      "answer": "NOT gate with sensor and motor"
+    },
+
+
+    {
+      "id": 40,
+      "level": "hard",
+      "type": "multiple-choice",
+      "content": "What is the output of a NAND gate when both inputs are 1?",
+      "options": ["0", "1", "2", "None"],
+      "answer": "0"
+    },
+    {
+      "id": 41,
+      "level": "hard",
+      "type": "multiple-choice",
+      "content": "How does an XOR gate behave with two identical inputs?",
+      "options": ["0", "1", "Undefined", "Inverted"],
+      "answer": "0"
+    },
+    {
+      "id": 42,
+      "level": "hard",
+      "type": "multiple-choice",
+      "content": "Which gate is also known as a universal gate and can be used to build any logic circuit?",
+      "options": ["AND", "NAND", "OR", "XOR"],
+      "answer": "NAND"
+    },
+    {
+      "id": 43,
+      "level": "hard",
+      "type": "multiple-choice",
+      "content": "In a full adder circuit, which gate produces the carry output?",
+      "options": ["AND", "XOR", "NOR", "OR"],
+      "answer": "AND"
+    },
+    {
+      "id": 44,
+      "level": "hard",
+      "type": "multiple-choice",
+      "content": "What is the behavior of a NAND gate when both inputs are 0?",
+      "options": ["0", "1", "Undefined", "Depends on circuit"],
+      "answer": "1"
+    },
+    {
+      "id": 45,
+      "level": "hard",
+      "type": "multiple-choice",
+      "content": "What happens when both inputs of an XOR gate are 1?",
+      "options": ["1", "0", "Undefined", "Depends on circuit"],
+      "answer": "0"
+    },
+    {
+      "id": 46,
+      "level": "hard",
+      "type": "multiple-choice",
+      "content": "In a logic circuit, which gate produces a 1 output only when both inputs are 0?",
+      "options": ["NOR", "NAND", "AND", "XOR"],
+      "answer": "NOR"
+    },
+    {
+      "id": 47,
+      "level": "hard",
+      "type": "multiple-choice",
+      "content": "Which gate combination is used to construct a half adder?",
+      "options": ["XOR and AND", "XOR and OR", "AND and OR", "NOT and OR"],
+      "answer": "XOR and AND"
+    },
+    {
+      "id": 48,
+      "level": "hard",
+      "type": "multiple-choice",
+      "content": "In a digital circuit, which gate would you use to detect an inequality between two binary inputs?",
+      "options": ["XOR", "XNOR", "AND", "OR"],
+      "answer": "XOR"
+    },
+    {
+      "id": 49,
+      "level": "hard",
+      "type": "multiple-choice",
+      "content": "What is the output of a NOR gate when both inputs are 1?",
+      "options": ["1", "0", "Undefined", "Depends on circuit"],
+      "answer": "0"
+    },
+    {
+      "id": 50,
+      "level": "hard",
+      "type": "multiple-choice",
+      "content": "Which gate combination would produce an XNOR gate?",
+      "options": ["XOR and NOT", "AND and OR", "OR and XOR", "NOR and XOR"],
+      "answer": "XOR and NOT"
+    },
+    {
+      "id": 51,
+      "level": "hard",
+      "type": "multiple-choice",
+      "content": "Which gate produces a high output (1) only when both inputs are different?",
+      "options": ["AND", "OR", "XOR", "NOR"],
+      "answer": "XOR"
+    },
+    {
+      "id": 52,
+      "level": "hard",
+      "type": "multiple-choice",
+      "content": "What is the primary application of a NOR gate in sequential logic circuits?",
+      "options": ["Latch circuits", "Adder circuits", "Comparator circuits", "Inverter circuits"],
+      "answer": "Latch circuits"
+    },
+    {
+      "id": 53,
+      "level": "hard",
+      "type": "multiple-choice",
+      "content": "Which of these gates can be used to create an SR flip-flop?",
+      "options": ["NAND", "XOR", "OR", "AND"],
+      "answer": "NAND"
+    },
+    {
+      "id": 54,
+      "level": "hard",
+      "type": "multiple-choice",
+      "content": "In a logic circuit, what is the result when both inputs to a NAND gate are 1?",
+      "options": ["1", "0", "Undefined", "Depends on inputs"],
+      "answer": "0"
+    },
+    {
+      "id": 55,
+      "level": "hard",
+      "type": "multiple-choice",
+      "content": "Which gate produces the complement of the XOR gate’s output?",
+      "options": ["XNOR", "NOR", "OR", "AND"],
+      "answer": "XNOR"
+    },
+    {
+      "id": 56,
+      "level": "hard",
+      "type": "multiple-choice",
+      "content": "In a digital circuit, which gate will output 0 when both inputs are the same?",
+      "options": ["XOR", "XNOR", "NOR", "AND"],
+      "answer": "XOR"
+    },
+    {
+      "id": 57,
+      "level": "hard",
+      "type": "canvas-task",
+      "content": "Build a circuit using NAND gates to control a light based on two switches.",
+      "answer": "NAND gate with two switches and a light"
+    },
+    {
+      "id": 58,
+      "level": "hard",
+      "type": "canvas-task",
+      "content": "Design a full adder circuit using XOR, AND, and OR gates to add two binary numbers.",
+      "answer": "Full adder using XOR, AND, OR gates"
+    },
+    {
+      "id": 59,
+      "level": "hard",
+      "type": "multiple-choice",
+      "content": "What is the output of an XNOR gate when both inputs are 1?",
+      "options": ["0", "1", "Undefined", "Depends on circuit"],
+      "answer": "1"
+    },
+    {
+      "id": 60,
+      "level": "hard",
+      "type": "multiple-choice",
+      "content": "Which gate is used to create a majority function logic circuit?",
+      "options": ["AND", "OR", "XOR", "NAND"],
+      "answer": "AND"
+    }
+  ]
+

@@ -11,5 +11,6 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'tutorials', component: TutorialHomeComponent },
   { path: 'challenges', component: ChallengesHomeComponent, canActivate: [AuthGuard] },
+  // { path: 'challenges', component: ChallengesHomeComponent},
   {path: 'simulator', component: SimulatorHomeComponent }
 ];

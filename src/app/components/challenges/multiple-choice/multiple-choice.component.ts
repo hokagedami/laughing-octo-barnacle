@@ -16,16 +16,10 @@ import {UserService} from "../../../services/user/user.service";
 })
 export class MultipleChoiceComponent {
 
-  constructor(private userService: UserService) {
-
-  }
   @Input() question: Question | null = null;
-  @Output() answerSelected = new EventEmitter<{ questionId: number, selectedOption: string }>();
+  @Output() answerSubmitted = new EventEmitter<{ questionId: number, selectedOption: string }>();
   selectedOption: string | null = null;
   showAnswer: boolean = false;
-
-
-
 
   selectOption(option: string): void {
     if (this.question && option) {
@@ -36,8 +30,8 @@ export class MultipleChoiceComponent {
   submitAnswer(): void {
     if (this.question && this.selectedOption) {
       this.showAnswer = true;
-      this.answerSelected.emit({questionId: this.question.id, selectedOption: this.selectedOption});
-      this.selectedOption = null;
+      this.answerSubmitted.emit({questionId: this.question.id, selectedOption: this.selectedOption});
+      this.selectedOption = "";
     }
   }
 }

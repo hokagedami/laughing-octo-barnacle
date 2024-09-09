@@ -1,10 +1,20 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { Question } from '../../../models/question.model';
 import { MultipleChoiceComponent } from '../multiple-choice/multiple-choice.component';
 import { TextAnswerComponent } from '../text-answer/text-answer.component';
 import { CanvasTaskComponent } from '../canvas-task/canvas-task.component';
 import { NgComponentOutlet, NgIf, TitleCasePipe } from '@angular/common';
 import {UserService} from "../../../services/user/user.service";
+import {QuestionService} from "../../../services/question/question.service";
+import confetti from 'canvas-confetti';
 
 @Component({
   selector: 'app-current-level',
@@ -20,15 +30,14 @@ import {UserService} from "../../../services/user/user.service";
   ],
   styleUrls: ['./current-level.component.css']
 })
-export class CurrentLevelComponent implements OnInit {
+export class CurrentLevelComponent implements OnInit, OnDestroy{
   @ViewChild(MultipleChoiceComponent) multipleChoiceComponent!: MultipleChoiceComponent;
   @ViewChild(TextAnswerComponent) textAnswerComponent!: TextAnswerComponent;
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private questionService: QuestionService) {
   }
-
   @Input() currentLevelQuestions: Question[] = [];
-  @Input() currentLevel: 'easy' | 'medium' | 'hard' = 'easy';
+  @Input() userCurrentLevel!: 'easy' | 'medium' | 'hard';
   @Output() levelChange = new EventEmitter<string>();
   currentQuestionIndex: number = 0;
   challengeStarted: boolean = false;
@@ -39,9 +48,19 @@ export class CurrentLevelComponent implements OnInit {
   levelCompleted: boolean = false;
   nextQuestionDisabled: boolean = true;
   correctTotal: number = 0;
+  challengeCompleted: boolean = false;
+  private confettiInterval: any;
+  isConfettiActive = false;
+  showResult: boolean = false;
+  NextButtonText: string = 'Next';
 
   ngOnInit(): void {
     this.hasProgress = this.currentQuestionIndex > 0;
+  }
+
+  ngOnDestroy() {
+    confetti.reset();
+    this.stopConfetti();
   }
 
   startChallenge(): void {
@@ -55,58 +74,47 @@ export class CurrentLevelComponent implements OnInit {
       this.currentQuestionIndex++;
       this.currentQuestion = this.currentLevelQuestions[this.currentQuestionIndex];
       this.currentQuestionType = this.currentQuestion.type;
-      if (!this.userService.getCurrentUser()?.questionsAnswered.includes(this.currentQuestion.id)) {
-        this.resetAnswerShown();
-        this.nextQuestionDisabled = true;
+      this.nextQuestionDisabled = true;
+      this.resetPageForNextQuestion();
+      if (this.currentQuestionIndex === this.currentLevelQuestions.length - 1) {
+        this.NextButtonText = 'Finish';
       }
     } else {
-      this.levelCompleted = true;
-    }
-  }
-
-  previousQuestion(): void {
-    if (this.currentQuestionIndex > 0) {
-      this.currentQuestionIndex--;
-      this.currentQuestion = this.currentLevelQuestions[this.currentQuestionIndex];
-      this.currentQuestionType = this.currentQuestion.type;
-      if (!this.userService.getCurrentUser()?.questionsAnswered.includes(this.currentQuestion.id)) {
-        this.resetAnswerShown();
-      }
+      this.showResult = true;
+      this.endChallenge();
     }
   }
 
   handleAnswerSelected(event: { questionId: number, selectedOption: string }): void {
     this.selectedAnswers[event.questionId] = event.selectedOption;
-    if (this.selectedAnswers[event.questionId] === this.currentQuestion?.answer) {
+    const answerIsCorrect = this.checkAnswer(event.questionId);
+    if (answerIsCorrect) {
       this.correctTotal++;
+      this.userService.updateProgress(this.userCurrentLevel, this.correctTotal);
     }
-    if(this.selectedAnswers[event.questionId] === this.currentQuestion?.answer) {
-      this.userService.updateQuestionsAnswered(event.questionId);
-    }
+    this.userService.updateUser(event.questionId, event.selectedOption, answerIsCorrect);
     this.nextQuestionDisabled = false;
   }
 
   goToNextLevel(): void {
-    if (this.currentLevel === 'easy') {
-      this.currentLevel = 'medium';
-    } else if (this.currentLevel === 'medium') {
-      this.currentLevel = 'hard';
+    if (this.userCurrentLevel === 'easy') {
+      this.userCurrentLevel = 'medium';
+    } else if (this.userCurrentLevel === 'medium') {
+      this.userCurrentLevel = 'hard';
     } else {
-      alert('You have completed all levels!');
-      return;
+     this.endChallenge();
+     return;
     }
     this.levelCompleted = false;
     this.currentQuestionIndex = 0;
     this.correctTotal = 0;
-    this.levelChange.emit(this.currentLevel);
+    this.NextButtonText = 'Next';
+    this.showResult = false;
+    this.levelChange.emit(this.userCurrentLevel);
     this.startChallenge();
   }
 
-  endLevel() {
-    this.levelCompleted = true;
-  }
-
-  resetAnswerShown() {
+  resetPageForNextQuestion() {
     switch (this.currentQuestionType) {
       case 'multiple-choice':
         this.multipleChoiceComponent.showAnswer = false;
@@ -121,11 +129,79 @@ export class CurrentLevelComponent implements OnInit {
     }
   }
 
+  endChallenge() {
+    this.levelCompleted = true;
+    if (this.correctTotal === this.currentLevelQuestions.length && this.userCurrentLevel === 'hard') {
+      this.challengeCompleted = true;
+      this.toggleConfetti();
+    }
+  }
+
   retakeLevel() {
+    this.userService.updateProgress(this.userCurrentLevel, 0);
     this.currentQuestionIndex = 0;
     this.levelCompleted = false;
     this.correctTotal = 0;
-    this.levelChange.emit(this.currentLevel);
+    this.NextButtonText = 'Next';
+    this.showResult = false;
+    this.levelChange.emit(this.userCurrentLevel);
     this.startChallenge();
+  }
+
+  toggleConfetti() {
+    if (this.isConfettiActive) {
+      this.stopConfetti();
+    } else {
+      this.startContinuousConfetti();
+    }
+  }
+
+  startContinuousConfetti() {
+    if (this.isConfettiActive) return;
+
+    this.isConfettiActive = true;
+    this.confettiInterval = setInterval(() => {
+      confetti({
+        particleCount: 100,
+        spread: 360,
+        origin: { y: 0.6 }
+      });
+    }, 250);
+  }
+
+  stopConfetti() {
+    if (this.confettiInterval) {
+      clearInterval(this.confettiInterval);
+      this.confettiInterval = null;
+    }
+    this.isConfettiActive = false;
+  }
+
+  checkAnswer(questionId: number): boolean {
+    return this.selectedAnswers[questionId] === this.questionService.getQuestionById(questionId)?.answer;
+  }
+
+  previousQuestion() {
+    if (this.currentQuestionIndex > 0) {
+      this.currentQuestionIndex--;
+      this.currentQuestion = this.currentLevelQuestions[this.currentQuestionIndex];
+      this.currentQuestionType = this.currentQuestion.type;
+      this.NextButtonText = 'Next';
+      if (this.selectedAnswers[this.currentQuestion.id]) {
+        switch (this.currentQuestionType) {
+          case 'multiple-choice':
+            this.multipleChoiceComponent.selectedOption = this.selectedAnswers[this.currentQuestion.id];
+            this.multipleChoiceComponent.showAnswer = true;
+            break;
+          case 'text-answer':
+            this.textAnswerComponent.userAnswer = this.selectedAnswers[this.currentQuestion.id];
+            this.textAnswerComponent.showAnswer = true;
+            break;
+          case 'canvas-task':
+            break;
+        }
+      }
+      this.nextQuestionDisabled = false;
+    }
   }
 }

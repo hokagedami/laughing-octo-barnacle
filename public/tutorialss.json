@@ -1,0 +1,88 @@
+[
+    {
+      "code": "LG01",
+      "title": "Introduction to Logic Gates",
+      "content": {
+        "title": "Introduction to Logic Gates",
+        "paragraphs": [
+          "Logic gates are the basic building blocks of digital circuits. They are devices that perform simple logical operations on binary inputs to produce a binary output. Logic gates are critical in the design and implementation of electronic systems, such as computers, smartphones, and other digital devices. By using logical gates, engineers can create circuits that make decisions based on a set of inputs. These gates are the foundation of digital electronics, enabling complex computation and information processing.",
+          "At the core, logic gates work with binary states—0 and 1. These two values represent the fundamental logic of digital systems, where 0 is equivalent to 'false' or 'off' and 1 is equivalent to 'true' or 'on.' Every logic gate has a unique function that manipulates the input values to produce a corresponding output. This makes logic gates essential components in performing mathematical calculations, data manipulation, and decision-making in digital circuits."
+        ],
+        "images": [
+          "/assets/images/logic-gates-symbols.svg",
+          "/assets/images/logic-gates-example.png"
+        ]
+      }
+    },
+    {
+      "code": "LG02",
+      "title": "AND Gate",
+      "content": {
+        "title": "Understanding the AND Gate",
+        "paragraphs": [
+          "The AND gate works similarly to an exam rule where both conditions must be satisfied. Imagine you’re taking an online quiz, and in order to pass the quiz, you need to get a score higher than 80 AND submit your answers on time. If you don’t achieve both conditions (high score and timely submission), you will fail. This represents the AND gate: it only gives a true output (pass) if both inputs (score and submission time) are true.",
+          "The truth table for an AND gate looks like this: If both inputs A and B are 0 (false), the output is 0 (false). If either A or B is 0, the output remains 0. Only when both A and B are 1 (true) does the AND gate produce a 1 as output.",
+          "Here is a simple truth table for the AND gate:",
+          "| A | B | Output (A AND B) |",
+          "|---|---|------------------|",
+          "| 0 | 0 | 0                |",
+          "| 0 | 1 | 0                |",
+          "| 1 | 0 | 0                |",
+          "| 1 | 1 | 1                |",
+          "A real-world example of an AND gate is in a car’s safety system. For the car to start, the driver must press the brake AND push the start button. If either the brake is not pressed or the start button is not pushed, the car will not start. This illustrates how the AND gate ensures that all conditions must be met before an action can occur.",
+          "AND gates are important in digital circuits because they require multiple conditions to be true before producing an output. Whether controlling a system or ensuring safety, AND gates are essential in enforcing conditions before an action is performed."
+        ],
+        "images": [
+          "/assets/images/and-gate-diagram.svg",
+          "/assets/images/car-safety-system-example.png"
+        ]
+      }
+    },
+    {
+      "code": "LG03",
+      "title": "OR Gate",
+      "content": {
+        "title": "Understanding the OR Gate",
+        "paragraphs": [
+          "The OR gate is similar to a scholarship application where meeting just one of several criteria makes you eligible. For example, to qualify for a scholarship, you need to either have a high GPA OR demonstrate financial need. If either of the conditions is met, you receive the scholarship. This is how the OR gate operates: it outputs true as long as at least one of the inputs is true.",
+          "The truth table for the OR gate looks like this: If both inputs A and B are 0, the output is 0 (false). However, if either A or B is 1 (true), or if both are true, the OR gate produces a 1 as output.",
+          "Here is a simple truth table for the OR gate:",
+          "| A | B | Output (A OR B) |",
+          "|---|---|-----------------|",
+          "| 0 | 0 | 0               |",
+          "| 0 | 1 | 1               |",
+          "| 1 | 0 | 1               |",
+          "| 1 | 1 | 1               |",
+          "A practical example of an OR gate can be seen in home security systems. The alarm is triggered if either the motion sensor or the door sensor detects movement. The system doesn’t need both sensors to be activated—just one sensor is enough to trigger the alarm. This illustrates how the OR gate works: it requires only one true input for the output to be true.",
+          "OR gates are commonly used in decision-making systems where multiple inputs can independently result in the same output. From security systems to everyday household devices, the OR gate ensures that actions are triggered when any one of several conditions is met."
+        ],
+        "images": [
+          "/assets/images/or-gate-diagram.svg",
+          "/assets/images/security-system-example.png"
+        ]
+      }
+    },
+    {
+      "code": "LG04",
+      "title": "NOT Gate",
+      "content": {
+        "title": "Understanding the NOT Gate",
+        "paragraphs": [
+          "The NOT gate, or inverter, works like a power-saving mode on your phone. When your battery drops below a certain level, the power-saving mode turns on automatically, even though it was off before. It reverses the phone’s state when the input condition (low battery) is detected. In this way, the NOT gate flips the input: when the input is 1 (on), the output is 0 (off), and when the input is 0 (off), the output is 1 (on).",
+          "The truth table for a NOT gate is quite simple: if the input is 0, the output is 1. If the input is 1, the output is 0.",
+          "Here is a simple truth table for the NOT gate:",
+          "| A | Output (NOT A) |",
+          "|---|----------------|",
+          "| 0 | 1              |",
+          "| 1 | 0              |",
+          "A real-world example of a NOT gate is in automated garden sprinkler systems. When the soil moisture sensor detects that the soil is dry (0), it turns on the sprinkler (1). When the soil becomes wet (1), the sprinkler turns off (0). This shows how the NOT gate inverts the signal to manage the sprinkler system based on the soil’s moisture level.",
+          "NOT gates are essential in digital circuits for flipping or reversing signals. They are widely used in control systems, ensuring that devices react appropriately when specific conditions are met. Their simplicity makes them invaluable for many practical applications in automation and electronics."
+        ],
+        "images": [
+          "/assets/images/not-gate-diagram.svg",
+          "/assets/images/sprinkler-system-example.png"
+        ]
+      }
+    }
+  ]
+

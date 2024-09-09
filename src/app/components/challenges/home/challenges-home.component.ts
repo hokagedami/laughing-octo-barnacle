@@ -34,7 +34,8 @@ export class ChallengesHomeComponent implements OnInit {
 
   loadQuestions(): void {
     if (this.user) {
-      this.questions = this.questionService.getQuestions(this.user.level, this.user.questionsAnswered);
+      this.questions = this.questionService.getQuestions(this.user.level);
+      this.currentLevel = this.user.level;
     }
   }
 

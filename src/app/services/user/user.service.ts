@@ -6,17 +6,18 @@ import {User} from "../../models/user.model";
 })
 export class UserService {
   private users: User[] = [
-    { username: 'admin', level: 'easy', progress: { easy: 0, medium: 0, hard: 0 }, questionsAnswered: [], challengeCompleted: false }
+    { username: 'admin', level: 'hard', progress: { easy: 3, medium: 3, hard: 0 }, questionsAnswered: [], challengeCompleted: false }
   ];
   private currentUser: User | null = null;
 
-  setUser(username: string): void {
+  setUser(username: string): User {
     let user = this.users.find(u => u.username === username);
     if (!user) {
       user = { username, level: 'easy', progress: { easy: 0, medium: 0, hard: 0 }, questionsAnswered: [], challengeCompleted: false };
       this.users.push(user);
     }
     this.currentUser = user;
+    return this.currentUser;
   }
 
   getCurrentUser(): User | null {
@@ -33,9 +34,10 @@ export class UserService {
     return this.users.find(u => u.username === username);
   }
 
-  updateQuestionsAnswered(questionId: number) {
+
+  updateUser(questionId: number, selectedOption: string, answerIsCorrect: boolean) {
     if (this.currentUser) {
-      this.currentUser.questionsAnswered.push(questionId);
+      this.currentUser.questionsAnswered.push({ questionId, selectedOption, answerIsCorrect });
     }
   }
 }
