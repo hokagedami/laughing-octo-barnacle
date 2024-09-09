@@ -1,2 +1,3 @@
-<div class="canvas-container flex-grow-1" #stageContainer></div>
+<div class="spinner" *ngIf="isLoading"></div>
+<div class="canvas-container flex-grow-1" [ngClass]="{'blur': isLoading}" #stageContainer></div>
 <div class="toolbar-container" #toolbarContainer></div>

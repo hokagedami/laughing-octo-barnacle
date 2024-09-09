@@ -3,17 +3,24 @@ import Konva from "konva";
 import {KonvaEventObject} from "konva/lib/Node";
 import {Connection} from "../../../models/connection.model";
 import {NgxToastAlertsService} from "ngx-toast-alerts";
+import {ClaudeService} from "../../../services/claude/claude.service";
+import {NgClass, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-simulator-canvas',
   standalone: true,
-  imports: [],
+  imports: [
+    NgIf,
+    NgClass
+  ],
   templateUrl: './simulator-canvas.component.html',
   styleUrl: './simulator-canvas.component.css'
 })
 export class SimulatorCanvasComponent implements OnInit {
   @ViewChild('stageContainer', { static: true }) stageContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('toolbarContainer', { static: true }) toolbarContainer!: ElementRef<HTMLDivElement>;
+
+  constructor(private claudeService: ClaudeService) {}
 
   @Input() canvasWidth!: number | null;
   @Input() canvasHeight!: number | null;
@@ -35,7 +42,8 @@ export class SimulatorCanvasComponent implements OnInit {
 
   private toast = inject(NgxToastAlertsService);
 
-  constructor() {}
+  isLoading: boolean = false;
+
 
   ngOnInit(): void {
     this.initializeKonva();
@@ -55,7 +63,7 @@ export class SimulatorCanvasComponent implements OnInit {
       height: containerHeight,
     });
 
-    this.canvasStage.container().style.backgroundColor = '#f0f0f0';
+    // this.canvasStage.container().style.backgroundColor = '#f0f0f0';
     this.canvasLayer = new Konva.Layer();
     this.canvasLayer.setAttr('type', 'canvasLayer');
     this.canvasStage.add(this.canvasLayer);
@@ -68,6 +76,16 @@ export class SimulatorCanvasComponent implements OnInit {
     const gridSize = 20;
     const stageWidth = this.canvasStage.width();
     const stageHeight = this.canvasStage.height();
+
+    // Add a white background
+    const background = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: stageWidth,
+      height: stageHeight,
+      fill: '#f0f0f0'
+    });
+    gridLayer.add(background);
 
     const buffer = 1;
     for (let x = 0; x <= stageWidth + buffer; x += gridSize) {
@@ -93,64 +111,6 @@ export class SimulatorCanvasComponent implements OnInit {
     this.canvasStage.add(gridLayer);
     gridLayer.moveToBottom();
   }
-
-  // createToolbarOld(): void {
-  //   const toolbarWidth = this.canvasWidth ? this.canvasWidth : this.toolbarContainer.nativeElement.offsetWidth;
-  //   const toolbarHeight = 100;
-  //   const elementPadding = 30;
-  //   const gateY = toolbarHeight / 2;
-  //
-  //   this.toolbarStage = new Konva.Stage({
-  //     container: this.toolbarContainer.nativeElement,
-  //     width: toolbarWidth,
-  //     height: toolbarHeight,
-  //   });
-  //
-  //   this.toolbarLayer = new Konva.Layer();
-  //   this.toolbarStage.add(this.toolbarLayer);
-  //
-  //   const elementSizes = {
-  //     AND: 50,
-  //     OR: 50,
-  //     NOT: 50,
-  //     LightBulb: 50,
-  //     One: 50,
-  //     Zero: 50,
-  //     Reset: 50,
-  //     Connector: 50
-  //   };
-  //
-  //   const totalElementWidth = Object.values(elementSizes).reduce((a, b) => a + b, 0);
-  //   const availableWidth = toolbarWidth - 2 * elementPadding - totalElementWidth;
-  //   const elementSpacing = availableWidth / (Object.keys(elementSizes).length - 1);
-  //
-  //   let currentX = elementPadding;
-  //
-  //   this.createGateIcon('AND', currentX, gateY, this.toolbarLayer);
-  //   currentX += elementSizes.AND + elementSpacing;
-  //
-  //   this.createGateIcon('OR', currentX, gateY, this.toolbarLayer);
-  //   currentX += elementSizes.OR + elementSpacing;
-  //
-  //   this.createGateIcon('NOT', currentX, gateY, this.toolbarLayer);
-  //   currentX += elementSizes.NOT + elementSpacing;
-  //
-  //   this.createGateIcon('LightBulb', currentX, gateY, this.toolbarLayer);
-  //   currentX += elementSizes.LightBulb + elementSpacing;
-  //
-  //   this.createGateIcon('One', currentX, gateY, this.toolbarLayer);
-  //   currentX += elementSizes.One + elementSpacing;
-  //
-  //   this.createGateIcon('Zero', currentX, gateY, this.toolbarLayer);
-  //   currentX += elementSizes.Zero + elementSpacing;
-  //
-  //   this.createConnectorTool(currentX, gateY, this.toolbarLayer);
-  //   currentX += elementSizes.Connector + elementSpacing;
-  //
-  //   this.createResetButton(currentX, gateY - elementSizes.Reset / 2, "public/images/reset.png", this.toolbarLayer);
-  //
-  //   this.toolbarLayer.draw();
-  // }
 
   createToolbar(): void {
     const toolbarWidth = this.canvasWidth ? this.canvasWidth : this.toolbarContainer.nativeElement.offsetWidth;
@@ -790,8 +750,30 @@ export class SimulatorCanvasComponent implements OnInit {
       this.toast.error('Please connect some gates first');
       return;
     }
+    this.isLoading = true;
+    const image = this.getCanvasSnapshotImageData();
+
     if (this.isCompleteCircuit()) {
-      this.toast.success('The circuit is complete. Well done!');
+      this.claudeService.verifyLogicGateCircuit(image)
+        .then((response) => {
+          console.log(response);
+          const confidence = response[0].text;
+          const responseTextArray = response[0].text.split(' ');
+          const percentage = responseTextArray.filter((word: string) => word.includes('%'))[0];
+          const confidenceNumber = parseFloat(percentage.replace('%', ''));
+          if (confidenceNumber < 50) {
+            this.toast.error(`The circuit is incomplete. Confidence: ${confidence}`);
+          }
+          else {
+            this.toast.success(`The circuit is complete. Confidence: ${confidence}`);
+          }
+        })
+        .catch((error) => {
+          this.toast.error('Failed to verify circuit: ' + error.message);
+        })
+        .finally(() => {
+          this.isLoading = false;
+        });
     } else {
       this.toast.error('The circuit is incomplete. Please connect all gates.');
     }
@@ -923,5 +905,9 @@ export class SimulatorCanvasComponent implements OnInit {
     link.href = dataUrl;
     link.download = 'circuit.png';
     link.click();
+  }
+
+  getCanvasSnapshotImageData(): string {
+    return this.canvasStage.toDataURL({pixelRatio: 5});
   }
 }
