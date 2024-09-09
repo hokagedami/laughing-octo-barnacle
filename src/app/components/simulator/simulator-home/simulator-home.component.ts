@@ -28,4 +28,8 @@ export class SimulatorHomeComponent {
   handleConnectionsChange($event: Connection[]): void {
     this.checkCircuitBtnDisabled = $event.length === 0;
   }
+
+  takeSnapshot() {
+    this.simulatorCanvasComponent.takeCanvasSnapshot();
+  }
 }

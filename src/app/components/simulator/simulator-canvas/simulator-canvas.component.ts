@@ -916,4 +916,12 @@ export class SimulatorCanvasComponent implements OnInit {
     this.canvasLayer.add(sShape);
     this.canvasLayer.batchDraw();
   }
+
+  takeCanvasSnapshot(): void {
+    const dataUrl = this.canvasStage.toDataURL({pixelRatio: 5});
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = 'circuit.png';
+    link.click();
+  }
 }
