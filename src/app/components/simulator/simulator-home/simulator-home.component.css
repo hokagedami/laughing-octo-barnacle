@@ -14,3 +14,7 @@
   flex-grow: 1;
   padding: 20px;
 }
+
+.text-justify {
+  text-align: justify;
+}

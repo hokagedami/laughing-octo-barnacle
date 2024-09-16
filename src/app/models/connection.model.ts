@@ -1,8 +1,15 @@
-import Konva from "konva";
+import {GateCircle} from "./konva/gate-circle.konva";
+import {Gate} from "./konva/gate.konva";
 
 export interface Connection {
-  start: Konva.Group | null;
-  end: Konva.Group | null;
-  inputCircle: Konva.Circle | null;
-  outputCircle: Konva.Circle | null;
+  isComplete?: boolean | false;
+  start: Gate | null;
+  end: Gate | null;
+  startCircle: GateCircle | null;
+  endCircle: GateCircle | null;
+  inputValue?: boolean;
+  outputValue?: boolean;
 }
+
+
+
