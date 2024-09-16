@@ -13,16 +13,16 @@ import {NgIf} from "@angular/common";
     NgIf,
     RouterLink
   ],
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
   isOnChallengesPage = false;
-  private routerSubscription!: Subscription;
+  routerSubscription!: Subscription;
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    public router: Router
   ) {}
 
   ngOnInit() {
@@ -43,7 +43,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  private updateLoginStatus() {
+  updateLoginStatus() {
     this.isLoggedIn = this.authService.isLoggedIn();
   }
 

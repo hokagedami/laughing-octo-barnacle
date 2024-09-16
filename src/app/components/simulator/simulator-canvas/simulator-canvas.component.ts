@@ -244,7 +244,7 @@ export class SimulatorCanvasComponent implements OnInit {
     return true;
   }
 
-  private handleConnectorClick(event: KonvaEventObject<MouseEvent>): void {
+  handleConnectorClick(event: KonvaEventObject<MouseEvent>): void {
     const connectorGate = event.target as Konva.Rect;
     this.selectedTool = this.selectedTool === 'connect' ? 'select' : 'connect';
     connectorGate.fill(this.selectedTool === 'connect' ? 'yellow' : 'lightgray');
@@ -564,7 +564,7 @@ export class SimulatorCanvasComponent implements OnInit {
     return this.canvasStage.toDataURL({pixelRatio: 5});
   }
 
-  private drawConnectionLine(start: GateCircle, end: GateCircle): void {
+  drawConnectionLine(start: GateCircle, end: GateCircle): void {
     const lineStartPosition = start.getAbsolutePosition();
     const lineEndPosition = end.getAbsolutePosition();
 

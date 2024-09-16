@@ -1,50 +1,251 @@
 [
   {
-    "code": "LG01",
+    "code": "LG101",
     "title": "Introduction to Logic Gates",
     "content": {
-      "title": "Introduction to Logic Gates",
+      "title": "Understanding the Basics of Logic Gates",
       "paragraphs": [
-        "Logic gates are the fundamental components of digital electronics. They are used to build digital circuits, ranging from simple to highly complex systems, including integrated circuits. Complex microprocessors and microcontroller chips, for example, are created using numerous logic gates working together.",
-        "Each logic gate serves as a building block of digital systems and has one or more inputs and one output, with a logical relationship governing them. These gates work with binary signals, representing either True or False, ON or OFF, 1 or 0, and are capable of making decisions based on the input. The output state is determined by the input values according to a specific Boolean function that the gate implements.",
-        "Digital systems, including computers, are constructed using logic gates, which are the most basic decision-making components in any digital circuit. A logic gate is an electronic circuit that can process one or more inputs and produce a single output. It can be used to implement simple Boolean logic expressions.",
-        "Logic gates allow for the implementation of elementary logic expressions, known as Boolean expressions. The three primary types of logic gates are the OR gate, AND gate, and NOT gate. Typically, logic gates have two inputs and one output, though the NOT gate is an exception, having only one input and one output."
+        "Logic gates are the fundamental building blocks of digital circuits. They perform basic logical operations on binary inputs to produce a single binary output.",
+        "In this course, we will focus on three essential logic gates: AND, OR, and NOT. These gates form the foundation for more complex digital systems and are crucial in computer science and electronics.",
+        "Each lesson will explore the functionality, truth tables, and real-world applications of these gates, providing you with a solid understanding of digital logic."
+      ],
+      "tables": [
+        {
+          "title": "Basic Logic Gates",
+          "columns": ["Gate", "Inputs", "Output"],
+          "data": [
+            ["AND", "2 or more", "1"],
+            ["OR", "2 or more", "1"],
+            ["NOT", "1", "1"]
+          ]
+        }
       ]
     }
   },
   {
-    "code": "LG02",
-    "title": "AND Gate",
+    "code": "LG102",
+    "title": "The AND Gate",
     "content": {
-      "title": "AND Gate",
+      "title": "Understanding and Using the AND Gate",
       "paragraphs": [
-        "An AND gate is a logic circuit with two or more inputs and one output. It performs a logical multiplication, meaning the output is HIGH (logic 1) only when all of its inputs are HIGH. In all other cases, the output will be LOW (logic 0).",
-        "The function of an AND gate can be represented by the expression: Y = A.B. Where 'A' and 'B' are the inputs, and 'Y' is the output. The output is logic 1 only when both 'A' and 'B' are 1; otherwise, the output is logic 0.",
-        "In summary, the AND gate produces a HIGH output only when all input conditions are met (i.e., all inputs are HIGH). It is widely used in digital circuits for decision-making based on multiple conditions."
+        "The AND gate is a basic logic gate that implements logical conjunction. It behaves according to the AND truth table.",
+        "An AND gate only outputs a high (1) when all of its inputs are high. In all other cases, it outputs a low (0).",
+        "AND gates are commonly used in circuits that need to check if multiple conditions are true simultaneously."
+      ],
+      "images": [
+        "/public/images/And Gate Image.png"
+      ],
+      "tables": [
+        {
+          "title": "AND Gate Truth Table",
+          "columns": ["Input A", "Input B", "Output"],
+          "data": [
+            ["0", "0", "0"],
+            ["0", "1", "0"],
+            ["1", "0", "0"],
+            ["1", "1", "1"]
+          ]
+        }
       ]
     }
   },
   {
-    "code": "LG03",
-    "title": "OR Gate",
+    "code": "LG103",
+    "title": "The OR Gate",
     "content": {
-      "title": "OR Gate",
+      "title": "Understanding and Using the OR Gate",
       "paragraphs": [
-        "An OR gate is a logic circuit with two or more inputs and one output. It performs logical addition, meaning the output is HIGH (logic 1) if at least one of its inputs is HIGH. The output is LOW (logic 0) only when all inputs are LOW.",
-        "The OR gate is one of the simplest and most commonly used logic gates. It produces a HIGH output (logic 1) if any or both of its inputs are HIGH (logic 1). The OR operation is represented by the '+' symbol. For example, the expression X + Y = Z is read as 'X OR Y equals Z,' where Z is the output.",
-        "In summary, the OR gate performs logical addition, producing a HIGH output when at least one input is HIGH, making it essential in digital logic systems."
+        "The OR gate is a logic gate that implements logical disjunction. It follows the OR truth table.",
+        "An OR gate outputs a high (1) when at least one of its inputs is high. It only outputs a low (0) when all inputs are low.",
+        "OR gates are useful in circuits where you need to check if at least one of several conditions is true."
+      ],
+      "images": [
+        "/public/images/Or Gate Image.png"
+      ],
+      "tables": [
+        {
+          "title": "OR Gate Truth Table",
+          "columns": ["Input A", "Input B", "Output"],
+          "data": [
+            ["0", "0", "0"],
+            ["0", "1", "1"],
+            ["1", "0", "1"],
+            ["1", "1", "1"]
+          ]
+        }
       ]
     }
   },
   {
-    "code": "LG04",
-    "title": "NOT Gate",
+    "code": "LG104",
+    "title": "The NOT Gate",
     "content": {
-      "title": "NOT Gate (Inverter)",
+      "title": "Understanding and Using the NOT Gate",
       "paragraphs": [
-        "A NOT gate, also known as an inverter, is a logic circuit with one input and one output. Its function is to invert or complement the input signal. This means the output is always the opposite of the input.",
-        "If the input to the NOT gate is denoted as 'A,' then the output 'Y' is represented as Y = A' (or A-bar). In simple terms, when the input is LOW (logic 0), the output will be HIGH (logic 1), and when the input is HIGH (logic 1), the output will be LOW (logic 0).",
-        "In summary, the NOT gate performs a fundamental logic operation by changing the input's logic level to its opposite. It converts a ‘1’ input to a ‘0’ output and vice versa."
+        "The NOT gate, also known as an inverter, is a logic gate that implements logical negation. It has a single input and output.",
+        "A NOT gate outputs the opposite of its input: when the input is high (1), the output is low (0), and vice versa.",
+        "NOT gates are essential for creating complementary signals and are often used in combination with other gates to create more complex logic functions."
+      ],
+      "images": [
+        "/public/images/Not Gate Image.png"
+      ],
+      "tables": [
+        {
+          "title": "NOT Gate Truth Table",
+          "columns": ["Input", "Output"],
+          "data": [
+            ["0", "1"],
+            ["1", "0"]
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "code": "LG105",
+    "title": "Combining AND and OR Gates",
+    "content": {
+      "title": "Creating Complex Logic with AND and OR Gates",
+      "paragraphs": [
+        "By combining AND and OR gates, we can create more complex logical operations and decision-making circuits.",
+        "These combinations allow us to implement functions that require multiple conditions to be checked simultaneously or alternatively.",
+        "Understanding how to combine these gates is crucial for designing larger digital systems and solving real-world logical problems."
+      ],
+      "tables": [
+        {
+          "title": "Example: (A AND B) OR C",
+          "columns": ["A", "B", "C", "Output"],
+          "data": [
+            ["0", "0", "0", "0"],
+            ["0", "0", "1", "1"],
+            ["0", "1", "0", "0"],
+            ["0", "1", "1", "1"],
+            ["1", "0", "0", "0"],
+            ["1", "0", "1", "1"],
+            ["1", "1", "0", "1"],
+            ["1", "1", "1", "1"]
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "code": "LG106",
+    "title": "Using NOT Gates with AND and OR",
+    "content": {
+      "title": "Expanding Logic Capabilities with NOT Gates",
+      "paragraphs": [
+        "Incorporating NOT gates with AND and OR gates greatly expands our ability to create complex logical functions.",
+        "This combination allows us to create NAND, NOR, and XOR gates, which are fundamental in digital circuit design.",
+        "We'll explore how negating inputs or outputs of AND and OR gates can lead to new and useful logical operations."
+      ],
+      "tables": [
+        {
+          "title": "NAND Gate Truth Table (NOT-AND)",
+          "columns": ["Input A", "Input B", "Output"],
+          "data": [
+            ["0", "0", "1"],
+            ["0", "1", "1"],
+            ["1", "0", "1"],
+            ["1", "1", "0"]
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "code": "LG107",
+    "title": "Boolean Algebra Basics",
+    "content": {
+      "title": "Introduction to Boolean Algebra for Logic Gates",
+      "paragraphs": [
+        "Boolean algebra is the mathematical framework that underlies the operation of logic gates.",
+        "We'll introduce basic Boolean operations and how they relate to AND, OR, and NOT gates.",
+        "Understanding Boolean algebra is crucial for simplifying complex logical expressions and optimizing digital circuits."
+      ],
+      "tables": [
+        {
+          "title": "Basic Boolean Laws",
+          "columns": ["Law", "AND Example", "OR Example"],
+          "data": [
+            ["Commutative", "A·B = B·A", "A+B = B+A"],
+            ["Associative", "A·(B·C) = (A·B)·C", "A+(B+C) = (A+B)+C"],
+            ["Distributive", "A·(B+C) = A·B + A·C", "A+(B·C) = (A+B)·(A+C)"]
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "code": "LG108",
+    "title": "Karnaugh Maps",
+    "content": {
+      "title": "Simplifying Logic Functions with Karnaugh Maps",
+      "paragraphs": [
+        "Karnaugh maps (K-maps) are a powerful tool for simplifying Boolean algebra expressions and logic circuits.",
+        "We'll learn how to create and use K-maps for functions with up to four variables.",
+        "This technique is invaluable for optimizing logic gate arrangements and minimizing the number of gates needed in a circuit."
+      ],
+      "tables": [
+        {
+          "title": "2-Variable K-map",
+          "columns": ["A\\B", "0", "1"],
+          "data": [
+            ["0", "0", "1"],
+            ["1", "1", "1"]
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "code": "LG109",
+    "title": "Practical Applications",
+    "content": {
+      "title": "Real-World Applications of Logic Gates",
+      "paragraphs": [
+        "Logic gates are the building blocks of digital systems used in everyday technology.",
+        "We'll explore practical applications of AND, OR, and NOT gates in various fields, including computer hardware, digital electronics, and control systems.",
+        "Understanding these applications helps bridge the gap between theoretical knowledge and real-world implementation of logic gates."
+      ],
+      "tables": [
+        {
+          "title": "Logic Gates in Everyday Devices",
+          "columns": ["Device", "Use"],
+          "data": [
+            ["Computer", "Arithmetic Logic Unit (ALU)"],
+            ["Digital Camera", "Image Processing"],
+            ["Smartphone", "Touch Screen Interface"]
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "code": "LG110",
+    "title": "Building a Simple Circuit",
+    "content": {
+      "title": "Designing and Implementing a Basic Logic Circuit",
+      "paragraphs": [
+        "In this final lesson, we'll put our knowledge into practice by designing and building a simple logic circuit.",
+        "We'll go through the process of translating a logical problem into a circuit design using AND, OR, and NOT gates.",
+        "This hands-on experience will consolidate your understanding of logic gates and prepare you for more advanced digital design challenges."
+      ],
+      "tables": [
+        {
+          "title": "Circuit Truth Table",
+          "columns": ["Sensor 1", "Sensor 2", "Override", "Alarm"],
+          "data": [
+            ["0", "0", "0", "0"],
+            ["0", "0", "1", "1"],
+            ["0", "1", "0", "1"],
+            ["0", "1", "1", "1"],
+            ["1", "0", "0", "1"],
+            ["1", "0", "1", "1"],
+            ["1", "1", "0", "1"],
+            ["1", "1", "1", "1"]
+          ]
+        }
       ]
     }
   }
