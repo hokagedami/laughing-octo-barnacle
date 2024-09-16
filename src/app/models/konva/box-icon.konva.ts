@@ -1,9 +1,8 @@
 import Konva from "konva";
 import {GateCircle} from "./gate-circle.konva";
-import {GroupConfig} from "konva/lib/Group";
-import {Gate} from "./gate.konva";
+import {Gate, GateConfig} from "./gate.konva";
 
-export interface BoxIconConfig extends GroupConfig{
+export interface BoxIconConfig extends GateConfig {
   textValue: string;
   handleCircleClick?: (event: Konva.KonvaEventObject<MouseEvent>) => void;
 }

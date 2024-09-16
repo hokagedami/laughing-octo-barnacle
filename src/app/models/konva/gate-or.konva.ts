@@ -1,10 +1,9 @@
-import {GroupConfig} from "konva/lib/Group";
 import Konva from "konva";
 import {GateCircle} from "./gate-circle.konva";
-import {Gate} from "./gate.konva";
+import {Gate, GateConfig} from "./gate.konva";
 
 
-export interface OrGateConfig extends GroupConfig {
+export interface OrGateConfig extends GateConfig {
   [key: string]: any;
   handleCircleClick?: (event: Konva.KonvaEventObject<MouseEvent>) => void;
 }

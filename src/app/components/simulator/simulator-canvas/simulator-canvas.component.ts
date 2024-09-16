@@ -5,14 +5,16 @@ import {Connection} from "../../../models/connection.model";
 import {NgxToastAlertsService} from "ngx-toast-alerts";
 import {ClaudeService} from "../../../services/claude/claude.service";
 import {NgClass, NgIf} from "@angular/common";
-import {GateCircle} from "../../../classes/gate-circle.konva";
-import {BoxIcon} from "../../../classes/box-icon.konva";
-import {AndGate} from "../../../classes/gate-and.konva";
-import {OrGate} from "../../../classes/gate-or.konva";
-import {NotGate} from "../../../classes/gate-not.konva";
-import {GateBulb} from "../../../classes/gate-bulb.konva";
-import {GateConnector} from "../../../classes/gate-connector.konva";
-import {Gate} from "../../../classes/gate.konva";
+import {GateCircle} from "../../../models/konva/gate-circle.konva";
+import {BoxIcon} from "../../../models/konva/box-icon.konva";
+import {AndGate} from "../../../models/konva/gate-and.konva";
+import {OrGate} from "../../../models/konva/gate-or.konva";
+import {NotGate} from "../../../models/konva/gate-not.konva";
+import {GateBulb} from "../../../models/konva/gate-bulb.konva";
+import {GateConnector} from "../../../models/konva/gate-connector.konva";
+import {Gate} from "../../../models/konva/gate.konva";
+import {Router} from "@angular/router";
+import {CircuitGraph} from "../../../models/specials/gate-circuit-graph";
 
 @Component({
   selector: 'app-simulator-canvas',
@@ -28,9 +30,10 @@ export class SimulatorCanvasComponent implements OnInit {
   @ViewChild('stageContainer', { static: true }) stageContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('toolbarContainer', { static: true }) toolbarContainer!: ElementRef<HTMLDivElement>;
 
-  constructor(private claudeService: ClaudeService) {
+  constructor(private claudeService: ClaudeService, private router: Router) {
     this.processCircleClick = this.processCircleClick.bind(this);
     this.handleConnectorClick = this.handleConnectorClick.bind(this);
+    this.circuitGraph = new CircuitGraph();
   }
 
   @Input() canvasWidth!: number | null;
@@ -52,6 +55,8 @@ export class SimulatorCanvasComponent implements OnInit {
   connections: Connection [] = [];
   currentConnection: Connection | null = null;
 
+  circuitGraph!: CircuitGraph;
+
   toast = inject(NgxToastAlertsService);
   isLoading: boolean = false;
 
@@ -64,7 +69,7 @@ export class SimulatorCanvasComponent implements OnInit {
     this.setupLayerWatchers();
   }
 
-  initializeKonva(): void {
+  private initializeKonva(): void {
     const containerWidth = this.canvasWidth ? this.canvasWidth : this.stageContainer.nativeElement.offsetWidth;
     const containerHeight = this.canvasHeight ? this.canvasHeight : this.stageContainer.nativeElement.offsetHeight;
 
@@ -81,7 +86,7 @@ export class SimulatorCanvasComponent implements OnInit {
     this.stageContainer.nativeElement.style.width = `${containerWidth}px`;
   }
 
-  createGridBackground(): void {
+  private createGridBackground(): void {
     const gridLayer = new Konva.Layer();
     const gridSize = 20;
     const stageWidth = this.canvasStage.width();
@@ -122,7 +127,7 @@ export class SimulatorCanvasComponent implements OnInit {
     gridLayer.moveToBottom();
   }
 
-  createToolbar(): void {
+  private createToolbar(): void {
     const toolbarWidth = this.canvasWidth ? this.canvasWidth : this.toolbarContainer.nativeElement.offsetWidth;
     const toolbarHeight = 100;
 
@@ -150,7 +155,7 @@ export class SimulatorCanvasComponent implements OnInit {
     this.toolbarLayer.draw();
   }
 
-  createToolbarItem(type: string, x: number, y: number, width: number, height: number): void {
+  private createToolbarItem(type: string, x: number, y: number, width: number, height: number): void {
     switch (type) {
       case 'Connector':
         const connector = new GateConnector({x, y, _width: width, _height: height, handleClick: this.handleConnectorClick});
@@ -165,7 +170,7 @@ export class SimulatorCanvasComponent implements OnInit {
     }
   }
 
-  createGateIcon(type: string, x: number, y: number, width: number, height: number): void {
+  private createGateIcon(type: string, x: number, y: number, width: number, height: number): void {
     const iconSize = Math.min(width, height) * 0.6;
     const iconX = x + (width - iconSize) / 2;
     const iconY = y + (height - iconSize) / 2;
@@ -183,6 +188,7 @@ export class SimulatorCanvasComponent implements OnInit {
 
     gate.on('click', () => {
       if (this.selectedTool === 'connect' || this.isDrawingConnection) {
+        this.toast.error('Ensure the connector tool is inactive before adding a new gate');
         return;
       }
 
@@ -219,11 +225,13 @@ export class SimulatorCanvasComponent implements OnInit {
       this.canvasLayer.fire('add', { target: cloned });
       this.sampleCircuitBtnActiveEvent.emit(false);
     });
+
+
     this.toolbarLayer.add(gate);
 
   }
 
-  isPositionFree(x: number, y: number): boolean {
+  private isPositionFree(x: number, y: number): boolean {
     const stageChildren = this.canvasLayer.getChildren();
     for (const child of stageChildren) {
 
@@ -236,17 +244,18 @@ export class SimulatorCanvasComponent implements OnInit {
     return true;
   }
 
-  handleConnectorClick(event: KonvaEventObject<MouseEvent>): void {
+  private handleConnectorClick(event: KonvaEventObject<MouseEvent>): void {
     const connectorGate = event.target as Konva.Rect;
     this.selectedTool = this.selectedTool === 'connect' ? 'select' : 'connect';
     connectorGate.fill(this.selectedTool === 'connect' ? 'yellow' : 'lightgray');
     if (this.selectedTool === 'select') {
       this.isDrawingConnection = false;
       this.currentConnection = null;
+      this.connections = [];
     }
   }
 
-  createResetButton(x: number, y: number, width: number, height: number): void {
+  private createResetButton(x: number, y: number, width: number, height: number): void {
     const iconSize = Math.min(width, height) * 0.6;
     const iconX = x + (width - iconSize) / 2;
     const iconY = y + (height - iconSize) / 2;
@@ -272,7 +281,7 @@ export class SimulatorCanvasComponent implements OnInit {
     });
   }
 
-  handleCanvasGate(gate: Konva.Group): void {
+  private handleCanvasGate(gate: Gate): void {
     gate.off('click');
 
     gate.on('dragstart', (e: KonvaEventObject<DragEvent>) => {
@@ -313,9 +322,20 @@ export class SimulatorCanvasComponent implements OnInit {
 
     // Initial check
     updateDraggable();
+
+    gate.on('contextmenu', (e: KonvaEventObject<MouseEvent>) => {
+      e.evt.preventDefault();
+      const hasConnection = this.connections.some(conn => conn.start === gate || conn.end === gate);
+      if (!hasConnection) {
+        gate.destroy();
+        this.canvasLayer.batchDraw();
+      } else {
+        this.toast.error('Cannot delete gate with existing connections');
+      }
+    });
   }
 
-  setupCanvasDragListeners(): void {
+  private setupCanvasDragListeners(): void {
     this.canvasStage.on('dragover', (e) => {
       e.evt.preventDefault();
     });
@@ -335,12 +355,12 @@ export class SimulatorCanvasComponent implements OnInit {
     });
   }
 
-  isCircleInsideCanvas(circle: Konva.Circle): boolean {
+  private isCircleInsideCanvas(circle: Konva.Circle): boolean {
     const circleParent = circle.getParent();
     return !circleParent?.getAttr('isToolbarIcon');
   }
 
-  setupLayerWatchers() {
+  private setupLayerWatchers() {
     this.canvasLayer.on('add', (e) => {
       const shape = e.target;
       if (shape instanceof Konva.Group) {
@@ -349,8 +369,8 @@ export class SimulatorCanvasComponent implements OnInit {
     });
   }
 
-  createIconByType(type: string, x: number, y: number, attributes: object): Konva.Group {
-    let gate: Konva.Group;
+  private createIconByType(type: string, x: number, y: number, attributes: object): Gate {
+    let gate: Gate;
 
     switch (type) {
       case 'AND':
@@ -366,20 +386,22 @@ export class SimulatorCanvasComponent implements OnInit {
         gate = new GateBulb({x, y, handleCircleClick: this.processCircleClick});
         break;
       case 'One':
-        gate = new BoxIcon({x, y, textValue: '1', handleCircleClick: this.processCircleClick});
+        gate = new BoxIcon({x, y, textValue: '1', handleCircleClick: this.processCircleClick, outputValue: true});
         break;
       case 'Zero':
-        gate = new BoxIcon({x, y, textValue: '0', handleCircleClick: this.processCircleClick});
+        gate = new BoxIcon({x, y, textValue: '0', handleCircleClick: this.processCircleClick, outputValue: false});
         break;
       default:
-        throw new Error(`Unknown gate type: ${type}`);
+        this.toast.error(`Error Setting Up Simulator Environment: Contact Support`);
+        this.router.navigate(['/']);
+        throw new Error('Error Setting Up Simulator Environment: Contact Support');
     }
 
     gate.setAttrs(attributes);
     return gate;
   }
 
-  processCircleClick(event: KonvaEventObject<MouseEvent>): void {
+  private processCircleClick(event: KonvaEventObject<MouseEvent>): void {
     const circle = event.target as GateCircle;
     if (this.selectedTool === 'connect' && this.isCircleInsideCanvas(circle)) {
       const parent = circle.getParent() as Konva.Group;
@@ -395,20 +417,27 @@ export class SimulatorCanvasComponent implements OnInit {
 
   private startNewConnection(circle: GateCircle, parent: Konva.Group, circleType: string): void {
     if (circle.getAttr('HasConnection')) {
-      alert('Please start a fresh connection');
+      this.toast.error('Please start a fresh connection. The selected gate already has a connection');
       return;
     }
     this.currentConnection = {
-      start: parent,
+      start: null,
       end: null,
-      inputCircle: circleType === 'input' ? circle : null,
-      outputCircle: circleType === 'output' ? circle : null,
+      endCircle: circleType === 'input' ? circle : null,
+      startCircle: circleType === 'output' ? circle : null,
     };
+    if (circleType === 'input') {
+      this.currentConnection.end = parent;
+    }
+    else if (circleType === 'output') {
+      this.currentConnection.start = parent;
+    }
+
     this.isDrawingConnection = true;
     circle.setAttr('HasConnection', true);
   }
 
-  private attemptToCloseConnection(circle: GateCircle, parent: Konva.Group, circleType: string): void {
+  private attemptToCloseConnection(circle: GateCircle, parent: Gate, circleType: string): void {
     if (this.isValidConnectionAttempt(circle, parent, circleType)) {
       this.completeConnection(circle, parent, circleType);
     } else {
@@ -417,23 +446,23 @@ export class SimulatorCanvasComponent implements OnInit {
     }
   }
 
-  private isValidConnectionAttempt(circle: GateCircle, parent: Konva.Group, circleType: string): boolean {
+  private isValidConnectionAttempt(circle: GateCircle, parent: Gate, circleType: string): boolean {
     const isDifferentParent = parent !== this.currentConnection?.start;
-    const isDifferentCircleTypeFromInput = circleType !== this.currentConnection?.inputCircle?.getAttr('circleType');
-    const isDifferentCircleTypeFromOutput = circleType !== this.currentConnection?.outputCircle?.getAttr('circleType');
+    const isDifferentCircleTypeFromInput = circleType !== this.currentConnection?.startCircle?.getAttr('circleType');
+    const isDifferentCircleTypeFromOutput = circleType !== this.currentConnection?.endCircle?.getAttr('circleType');
     const hasNoConnection = !circle.getAttr('HasConnection');
 
     return isDifferentParent && isDifferentCircleTypeFromInput && isDifferentCircleTypeFromOutput && hasNoConnection;
   }
 
-  private completeConnection(circle: GateCircle, parent: Konva.Group, circleType: string): void {
+  private completeConnection(circle: GateCircle, parent: Gate, circleType: string): void {
     if (this.currentConnection){
       if (circleType === 'input') {
-        this.currentConnection.inputCircle = circle;
+        this.currentConnection.endCircle = circle;
         this.currentConnection.end = parent;
       } else if (circleType === 'output') {
-        this.currentConnection.outputCircle = circle;
-        this.currentConnection.end = parent;
+        this.currentConnection.startCircle = circle;
+        this.currentConnection.start = parent;
       }
     }
 
@@ -445,48 +474,41 @@ export class SimulatorCanvasComponent implements OnInit {
   private isCompleteCurrentConnection(): boolean {
     return (
       this.currentConnection !== null &&
-      this.currentConnection.inputCircle !== null &&
-      this.currentConnection.outputCircle !== null &&
+      this.currentConnection.startCircle !== null &&
+      this.currentConnection.endCircle !== null &&
       this.currentConnection.start !== null &&
       this.currentConnection.end !== null &&
       this.currentConnection.start !== this.currentConnection.end &&
-      this.currentConnection.inputCircle.getAttr('circleType') !== this.currentConnection.outputCircle.getAttr('circleType')
+      this.currentConnection.startCircle.getAttr('circleType') !== this.currentConnection.endCircle.getAttr('circleType')
     );
   }
 
   private finalizeCurrentConnection(): void {
+
     if (this.currentConnection) {
       this.connections.push(this.currentConnection);
       this.connectionsEvent.emit(this.connections);
 
-      if (this.currentConnection.inputCircle && this.currentConnection.outputCircle) {
-        this.drawConnectionLine(this.currentConnection.inputCircle, this.currentConnection.outputCircle);
+      if (this.currentConnection.startCircle && this.currentConnection.endCircle) {
+        this.drawConnectionLine(this.currentConnection.startCircle, this.currentConnection.endCircle);
+
         if (this.currentConnection.start && this.currentConnection.end) {
           this.setDraggable(this.currentConnection.start, false);
           this.setDraggable(this.currentConnection.end, false);
         }
-        if (this.currentConnection.inputCircle && this.currentConnection.outputCircle) {
-        this.setCircleFillColor(this.currentConnection.inputCircle, 'green');
-        this.setCircleFillColor(this.currentConnection.outputCircle, 'green');
+        if (this.currentConnection.startCircle && this.currentConnection.endCircle) {
+        this.setCircleFillColor(this.currentConnection.startCircle, 'green');
+        this.setCircleFillColor(this.currentConnection.endCircle, 'green');
         }
+        this.circuitGraph = new CircuitGraph();
+        this.circuitGraph.buildGraph(this.connections);
+        this.circuitGraph.evaluateCircuit();
+        this.updateVisuals();
       }
-
       this.resetCurrentConnection();
-      this.handleBulbCircuit();
     }
   }
 
-  private handleBulbCircuit(): void {
-    const bulbCircle = this.connections.find(conn => conn.inputCircle?.getAttr('isBulbCircle'))?.inputCircle;
-    if (bulbCircle && this.isCompleteCircuit()) {
-      const bulbParent = bulbCircle.getParent() as Konva.Group;
-      const bulbFilament = bulbParent.findOne((node: Konva.Line) => node.stroke() === 'red') as Konva.Line;
-      if (bulbFilament) {
-        bulbFilament.stroke('green');
-        this.canvasLayer.draw();
-      }
-    }
-  }
 
   private setDraggable(node: Konva.Node, draggable: boolean): void {
     node.setAttr('draggable', draggable);
@@ -501,13 +523,13 @@ export class SimulatorCanvasComponent implements OnInit {
     this.isDrawingConnection = false;
   }
 
-  isCompleteCircuit(): boolean {
+  private isCompleteCircuit(): boolean {
     const visited = new Set<Konva.Group>();
     const stack = [];
 
     // Find all input gates
     const inputGates = this.connections
-      .filter(conn => conn.inputCircle)
+      .filter(conn => conn.startCircle)
       .map(conn => conn.start);
 
     // Initialize stack with input gates
@@ -522,7 +544,7 @@ export class SimulatorCanvasComponent implements OnInit {
       visited.add(currentGate);
 
       // Check if current gate is an output gate
-      const isOutputGate = this.connections.some(conn => conn.end === currentGate && conn.outputCircle);
+      const isOutputGate = this.connections.some(conn => conn.end === currentGate && conn.endCircle);
       if (isOutputGate) {
         return true;
       }
@@ -538,40 +560,62 @@ export class SimulatorCanvasComponent implements OnInit {
     return false;
   }
 
-  checkCircuit(): void {
-    if (this.connections.length === 0) {
-      this.toast.error('Please connect some gates first');
-      return;
-    }
-    this.isLoading = true;
-    const image = this.getCanvasSnapshotImageData();
+  private getCanvasSnapshotImageData(): string {
+    return this.canvasStage.toDataURL({pixelRatio: 5});
+  }
 
-    if (this.isCompleteCircuit()) {
-      this.claudeService.verifyLogicGateCircuit(image)
-        .then((response) => {
-          const confidence = response[0].text;
-          const responseTextArray = response[0].text.split(' ');
-          const percentage = responseTextArray.filter((word: string) => word.includes('%'))[0];
-          const confidenceNumber = parseFloat(percentage.replace('%', ''));
-          if (confidenceNumber < 50) {
-            this.toast.error(`The circuit is incomplete. Confidence: ${confidence}`);
+  private drawConnectionLine(start: GateCircle, end: GateCircle): void {
+    const lineStartPosition = start.getAbsolutePosition();
+    const lineEndPosition = end.getAbsolutePosition();
+
+    const sShape = new Konva.Shape({
+      sceneFunc: (context, shape) => {
+        context.beginPath();
+        context.moveTo(lineStartPosition.x, lineStartPosition.y);
+        context.bezierCurveTo(
+          lineStartPosition.x + 50, lineStartPosition.y,
+          lineEndPosition.x - 50, lineEndPosition.y,
+          lineEndPosition.x, lineEndPosition.y
+        );
+        context.strokeShape(shape);
+      },
+      stroke: 'green',
+      strokeWidth: 2,
+      name: 's-shape',
+      draggable: false
+    });
+
+    this.canvasLayer.add(sShape);
+    this.canvasLayer.batchDraw();
+  }
+
+  private updateVisuals(): void {
+    this.connections.forEach(conn => {
+      if (conn.startCircle && conn.endCircle) {
+        this.setCircleFillColor(conn.startCircle, conn.outputValue ? 'green' : 'red');
+        this.setCircleFillColor(conn.endCircle, conn.outputValue ? 'green' : 'red');
+      }
+
+      if (conn.end){
+        // find the bulb gate
+        const gate = conn.end;
+        if (gate instanceof GateBulb) {
+          const bulbFilament = gate.findOne((node: Konva.Line) => node.stroke() === 'red'
+            || node.stroke() === 'green') as Konva.Line;
+          if (bulbFilament) {
+            bulbFilament.stroke(gate.getAttr('outputValue') ? 'green' : 'red');
           }
-          else {
-            this.toast.success(`The circuit is complete. Confidence: ${confidence}`);
-          }
-        })
-        .catch((error) => {
-          this.toast.error('Failed to verify circuit: ' + error.message);
-        })
-        .finally(() => {
-          this.isLoading = false;
-        });
-    } else {
-      this.toast.error('The circuit is incomplete. Please connect all gates.');
-    }
+        }
+      }
+    });
+    this.canvasLayer.batchDraw();
   }
 
   createAndSampleCircuit(): void {
+    if (this.selectedTool === 'connect' || this.isDrawingConnection) {
+      this.toast.error('Please switch to the select tool before creating a sample circuit');
+      return;
+    }
     // Clear existing canvas
     this.canvasLayer.destroyChildren();
     this.connections = [];
@@ -627,28 +671,28 @@ export class SimulatorCanvasComponent implements OnInit {
       }) as GateCircle;
 
       if (one1OutputCircle && one2OutputCircle && andInputCircles && andInputCircles.length == 2 && bulbInputCircle) {
-         this.drawConnectionLine(one1OutputCircle, andInputCircles[0] as Konva.Circle);
+         this.drawConnectionLine(one1OutputCircle, andInputCircles[0] as GateCircle);
          const connection1 = {
            start: oneGate1,
             end: andGate,
-            inputCircle: one1OutputCircle,
-            outputCircle: andInputCircles[0] as GateCircle
+            startCircle: one1OutputCircle,
+            endCircle: andInputCircles[0] as GateCircle
          }
 
-         this.drawConnectionLine(one2OutputCircle, andInputCircles[1] as Konva.Circle);
+         this.drawConnectionLine(one2OutputCircle, andInputCircles[1] as GateCircle);
          const connection2 = {
             start: oneGate2,
             end: andGate,
-            inputCircle: one2OutputCircle,
-            outputCircle: andInputCircles[1] as GateCircle
+            startCircle: one2OutputCircle,
+            endCircle: andInputCircles[1] as GateCircle
          }
 
          this.drawConnectionLine(andOutputCircle, bulbInputCircle);
          const connection3 = {
             start: andGate,
             end: lightBulb,
-            inputCircle: andOutputCircle,
-            outputCircle: bulbInputCircle
+            startCircle: andOutputCircle,
+            endCircle: bulbInputCircle
          };
 
          this.connections.push(connection1, connection2, connection3);
@@ -666,29 +710,37 @@ export class SimulatorCanvasComponent implements OnInit {
     this.canvasLayer.draw();
   }
 
-  drawConnectionLine(start: Konva.Circle, end: Konva.Circle): void {
-    const lineStartPosition = start.getAbsolutePosition();
-    const lineEndPosition = end.getAbsolutePosition();
+  checkCircuit(): void {
+    if (this.connections.length === 0) {
+      this.toast.error('Please connect some gates first');
+      return;
+    }
+    this.isLoading = true;
+    const image = this.getCanvasSnapshotImageData();
 
-    const sShape = new Konva.Shape({
-      sceneFunc: (context, shape) => {
-        context.beginPath();
-        context.moveTo(lineStartPosition.x, lineStartPosition.y);
-        context.bezierCurveTo(
-          lineStartPosition.x + 50, lineStartPosition.y,
-          lineEndPosition.x - 50, lineEndPosition.y,
-          lineEndPosition.x, lineEndPosition.y
-        );
-        context.strokeShape(shape);
-      },
-      stroke: 'green',
-      strokeWidth: 2,
-      name: 's-shape',
-      draggable: false
-    });
-
-    this.canvasLayer.add(sShape);
-    this.canvasLayer.batchDraw();
+    if (this.isCompleteCircuit()) {
+      this.claudeService.verifyLogicGateCircuit(image)
+        .then((response) => {
+          const confidence = response[0].text;
+          const responseTextArray = response[0].text.split(' ');
+          const percentage = responseTextArray.filter((word: string) => word.includes('%'))[0];
+          const confidenceNumber = parseFloat(percentage.replace('%', ''));
+          if (confidenceNumber < 50) {
+            this.toast.error(`The circuit is incomplete. Confidence: ${confidence}`);
+          }
+          else {
+            this.toast.success(`The circuit is complete. Confidence: ${confidence}`);
+          }
+        })
+        .catch((error) => {
+          this.toast.error('Failed to verify circuit: ' + error.message);
+        })
+        .finally(() => {
+          this.isLoading = false;
+        });
+    } else {
+      this.toast.error('The circuit is incomplete. Please connect all gates.');
+    }
   }
 
   takeCanvasSnapshot(): void {
@@ -697,9 +749,5 @@ export class SimulatorCanvasComponent implements OnInit {
     link.href = dataUrl;
     link.download = 'circuit.png';
     link.click();
-  }
-
-  getCanvasSnapshotImageData(): string {
-    return this.canvasStage.toDataURL({pixelRatio: 5});
   }
 }

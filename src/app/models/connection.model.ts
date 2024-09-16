@@ -1,10 +1,15 @@
-import Konva from "konva";
-import {GateCircle} from "../classes/gate-circle.konva";
-import {Gate} from "../classes/gate.konva";
+import {GateCircle} from "./konva/gate-circle.konva";
+import {Gate} from "./konva/gate.konva";
 
 export interface Connection {
+  isComplete?: boolean | false;
   start: Gate | null;
   end: Gate | null;
-  inputCircle: GateCircle | null;
-  outputCircle: GateCircle | null;
+  startCircle: GateCircle | null;
+  endCircle: GateCircle | null;
+  inputValue?: boolean;
+  outputValue?: boolean;
 }
+
+
+
