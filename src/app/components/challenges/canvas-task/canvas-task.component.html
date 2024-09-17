@@ -1,7 +1,14 @@
 <div *ngIf="question">
   <h3>{{ question.content }}</h3>
-  <app-simulator-canvas [canvasWidth]="600" [canvasHeight]="400" ></app-simulator-canvas>
-  <div class="d-flex flex-row-reverse">
+  <ng-container *ngIf="!showAnswer; else screenshot">
+    <app-simulator-canvas [canvasWidth]="600" [canvasHeight]="400"></app-simulator-canvas>
+  </ng-container>
+  <ng-template #screenshot>
+    <div class="canvas-screenshot" [style.width.px]="600" [style.height.px]="400">
+      <img [src]="canvasShot" [style.width.px]="500" [style.height.px]="400" alt="Canvas Screenshot">
+    </div>
+  </ng-template>
+  <div class="d-flex flex-row-reverse" *ngIf="showSubmitButton">
     <button class="btn btn-primary" (click)="submitAnswer()">Submit</button>
   </div>
 </div>

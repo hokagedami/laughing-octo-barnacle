@@ -509,7 +509,6 @@ export class SimulatorCanvasComponent implements OnInit {
     }
   }
 
-
   private setDraggable(node: Konva.Node, draggable: boolean): void {
     node.setAttr('draggable', draggable);
   }
@@ -564,6 +563,32 @@ export class SimulatorCanvasComponent implements OnInit {
     return this.canvasStage.toDataURL({pixelRatio: 5});
   }
 
+  private updateVisuals(): void {
+    this.connections.forEach(conn => {
+      if (conn.startCircle && conn.endCircle) {
+        this.setCircleFillColor(conn.startCircle, conn.outputValue ? 'green' : 'red');
+        this.setCircleFillColor(conn.endCircle, conn.outputValue ? 'green' : 'red');
+      }
+
+      if (conn.end){
+        // find the bulb gate
+        const gate = conn.end;
+        if (gate instanceof GateBulb) {
+          const bulbFilament = gate.findOne((node: Konva.Line) => node.stroke() === 'red'
+            || node.stroke() === 'green') as Konva.Line;
+          if (bulbFilament) {
+            bulbFilament.stroke(gate.getAttr('outputValue') ? 'green' : 'red');
+          }
+        }
+      }
+    });
+    this.canvasLayer.batchDraw();
+  }
+
+  private isCanvasEmpty(): boolean {
+    return this.canvasLayer.getChildren().length === 0;
+  }
+
   drawConnectionLine(start: GateCircle, end: GateCircle): void {
     const lineStartPosition = start.getAbsolutePosition();
     const lineEndPosition = end.getAbsolutePosition();
@@ -586,28 +611,6 @@ export class SimulatorCanvasComponent implements OnInit {
     });
 
     this.canvasLayer.add(sShape);
-    this.canvasLayer.batchDraw();
-  }
-
-  private updateVisuals(): void {
-    this.connections.forEach(conn => {
-      if (conn.startCircle && conn.endCircle) {
-        this.setCircleFillColor(conn.startCircle, conn.outputValue ? 'green' : 'red');
-        this.setCircleFillColor(conn.endCircle, conn.outputValue ? 'green' : 'red');
-      }
-
-      if (conn.end){
-        // find the bulb gate
-        const gate = conn.end;
-        if (gate instanceof GateBulb) {
-          const bulbFilament = gate.findOne((node: Konva.Line) => node.stroke() === 'red'
-            || node.stroke() === 'green') as Konva.Line;
-          if (bulbFilament) {
-            bulbFilament.stroke(gate.getAttr('outputValue') ? 'green' : 'red');
-          }
-        }
-      }
-    });
     this.canvasLayer.batchDraw();
   }
 
@@ -743,11 +746,59 @@ export class SimulatorCanvasComponent implements OnInit {
     }
   }
 
+  async challengeCheckCircuit(question: string): Promise<boolean> {
+    if (this.connections.length === 0) {
+      return false;
+    }
+    this.isLoading = true;
+    const image = this.getCanvasSnapshotImageData();
+
+    let res = false;
+    if (this.isCompleteCircuit()) {
+
+      try {
+        const clauseResponse = await this.claudeService.verifyLogicGateCircuitWithQuestion(image, question);
+        const responseTextArray = clauseResponse[0].text.split(' ');
+        const percentage = responseTextArray.filter((word: string) => word.includes('%'))[0];
+        const confidenceNumber = parseFloat(percentage.replace('%', ''));
+        res = confidenceNumber >= 50;
+      }
+      catch (e) {
+        res = false;
+      }
+      finally {
+        this.isLoading = false;
+      }
+    } else {
+      res = false;
+    }
+    return res;
+  }
+
+  challengeTakeCanvasSnapshot(): string | null {
+    return this.isCanvasEmpty() ? null : this.getCanvasSnapshotImageData();
+  }
+
   takeCanvasSnapshot(): void {
     const dataUrl = this.canvasStage.toDataURL({pixelRatio: 5});
     const link = document.createElement('a');
     link.href = dataUrl;
     link.download = 'circuit.png';
     link.click();
+  }
+
+
+  challengeDisableCanvas() {
+    this.canvasLayer.getChildren().forEach(child => {
+      child.draggable(false);
+      child.off('click');
+      child.off('dragstart');
+      child.off('dragmove');
+      child.off('dragend');
+      child.off('contextmenu');
+    });
+    this.canvasStage.off('drop');
+    this.canvasStage.off('dragover');
+    this.toolbarLayer.visible(false);
   }
 }
