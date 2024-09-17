@@ -33,7 +33,6 @@ describe('HeaderComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // tests for ngOnInit, ngOnDestroy, updateLoginStatus, logout
   it('should call updateLoginStatus on ngOnInit', () => {
     spyOn(component as any, 'updateLoginStatus');
     component.ngOnInit();

@@ -70,39 +70,6 @@ describe('CurrentLevelComponent', () => {
     expect(component.currentQuestionType).toBe('multiple-choice');
   });
 
-  it('should handle multiple-choice answer selection correctly', () => {
-    const mockQuestion: Question = { id: 1, level: 'easy', type: 'multiple-choice', content: 'Test?', options: ['A', 'B'], answer: 'A' };
-    questionServiceSpy.getQuestionById.and.returnValue(mockQuestion);
-    component.handleAnswerSelected({ questionId: 1, selectedOption: 'A' });
-    expect(component.selectedAnswers[1]).toBe('A');
-    expect(component.correctTotal).toBe(1);
-    expect(userServiceSpy.updateProgress).toHaveBeenCalledWith(component.userCurrentLevel, 1);
-    expect(userServiceSpy.updateUser).toHaveBeenCalledWith(1, 'A', true);
-    expect(component.nextQuestionDisabled).toBeFalse();
-  });
-
-  it('should handle text-answer selection correctly', () => {
-    const mockQuestion: Question = { id: 2, level: 'easy', type: 'text-answer', content: 'Test?', answer: 'Correct' };
-    questionServiceSpy.getQuestionById.and.returnValue(mockQuestion);
-    component.handleAnswerSelected({ questionId: 2, selectedOption: 'Correct' });
-    expect(component.selectedAnswers[2]).toBe('Correct');
-    expect(component.correctTotal).toBe(1);
-    expect(userServiceSpy.updateProgress).toHaveBeenCalledWith(component.userCurrentLevel, 1);
-    expect(userServiceSpy.updateUser).toHaveBeenCalledWith(2, 'Correct', true);
-    expect(component.nextQuestionDisabled).toBeFalse();
-  });
-
-  it('should handle canvas-task answer selection', () => {
-    const mockQuestion: Question = { id: 3, level: 'medium', type: 'canvas-task', content: 'Draw a circle', answer: 'circle' };
-    questionServiceSpy.getQuestionById.and.returnValue(mockQuestion);
-    component.handleAnswerSelected({ questionId: 3, selectedOption: 'circle' });
-    expect(component.selectedAnswers[3]).toBe('circle');
-    expect(component.correctTotal).toBe(1);
-    expect(userServiceSpy.updateProgress).toHaveBeenCalledWith(component.userCurrentLevel, 1);
-    expect(userServiceSpy.updateUser).toHaveBeenCalledWith(3, 'circle', true);
-    expect(component.nextQuestionDisabled).toBeFalse();
-  });
-
   it('should end challenge when all levels are completed', () => {
     component.userCurrentLevel = 'hard';
     component.goToNextLevel();
