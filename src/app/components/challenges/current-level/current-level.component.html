@@ -18,11 +18,11 @@
                            (answerSelected)="handleAnswerSelected($event)"></app-text-answer>
           <app-canvas-task *ngIf="currentQuestionType === 'canvas-task'"
                            [question]="currentLevelQuestions[currentQuestionIndex]"
-                           (answerSelected)="handleAnswerSelected($event)"></app-canvas-task>
+                           (answerProvided)="handleAnswerSelected($event)"></app-canvas-task>
           <br>
           <hr>
           <div class="navigation-buttons">
-            <button (click)="previousQuestion()" [disabled]="currentQuestionIndex === 0">
+            <button (click)="previousQuestion()" [disabled]="currentQuestionIndex === 0 || (!nextQuestionDisabled && NextButtonText === 'Finish')">
               <i class="fa fa-arrow-left"></i>
               Previous
             </button>

@@ -33,6 +33,7 @@ import confetti from 'canvas-confetti';
 export class CurrentLevelComponent implements OnInit, OnDestroy{
   @ViewChild(MultipleChoiceComponent) multipleChoiceComponent!: MultipleChoiceComponent;
   @ViewChild(TextAnswerComponent) textAnswerComponent!: TextAnswerComponent;
+  @ViewChild(CanvasTaskComponent) canvasTaskComponent!: CanvasTaskComponent;
 
   constructor(private userService: UserService, private questionService: QuestionService) {
   }
@@ -53,6 +54,7 @@ export class CurrentLevelComponent implements OnInit, OnDestroy{
   isConfettiActive = false;
   showResult: boolean = false;
   NextButtonText: string = 'Next';
+  disablePreviousButton: boolean = false;
 
   ngOnInit(): void {
     this.hasProgress = this.currentQuestionIndex > 0;
@@ -85,14 +87,63 @@ export class CurrentLevelComponent implements OnInit, OnDestroy{
     }
   }
 
-  handleAnswerSelected(event: { questionId: number, selectedOption: string }): void {
-    this.selectedAnswers[event.questionId] = event.selectedOption;
-    const answerIsCorrect = this.checkAnswer(event.questionId);
-    if (answerIsCorrect) {
-      this.correctTotal++;
-      this.userService.updateProgress(this.userCurrentLevel, this.correctTotal);
+  previousQuestion() {
+    if (this.currentQuestionIndex > 0) {
+      this.currentQuestionIndex--;
+      this.currentQuestion = this.currentLevelQuestions[this.currentQuestionIndex];
+      this.currentQuestionType = this.currentQuestion.type;
+      this.NextButtonText = 'Next';
+      if (this.selectedAnswers[this.currentQuestion.id]) {
+        switch (this.currentQuestionType) {
+          case 'multiple-choice':
+            this.multipleChoiceComponent.selectedOption = this.selectedAnswers[this.currentQuestion.id];
+            this.multipleChoiceComponent.showAnswer = true;
+            break;
+          case 'text-answer':
+            this.textAnswerComponent.userAnswer = this.selectedAnswers[this.currentQuestion.id];
+            this.textAnswerComponent.showAnswer = true;
+            break;
+          case 'canvas-task':
+            this.canvasTaskComponent.canvasShot = this.selectedAnswers[this.currentQuestion.id];
+            this.canvasTaskComponent.showAnswer = true;
+            this.canvasTaskComponent.showSubmitButton = false;
+            break;
+        }
+      }
+      this.nextQuestionDisabled = false;
     }
-    this.userService.updateUser(event.questionId, event.selectedOption, answerIsCorrect);
+  }
+
+  async handleAnswerSelected(event: { questionId: number, selectedOption: string }): Promise<void> {
+    this.selectedAnswers[event.questionId] = event.selectedOption;
+    const answerIsCorrect = await this.checkAnswer(event.questionId);
+
+    switch (this.currentQuestionType) {
+      case 'multiple-choice':
+        if (answerIsCorrect) {
+          this.correctTotal++;
+          this.userService.updateProgress(this.userCurrentLevel, this.correctTotal);
+        }
+        this.userService.updateUser(event.questionId, event.selectedOption, answerIsCorrect);
+        break;
+      case 'text-answer':
+        if (answerIsCorrect) {
+          this.correctTotal++;
+          this.userService.updateProgress(this.userCurrentLevel, this.correctTotal);
+        }
+        this.userService.updateUser(event.questionId, event.selectedOption, answerIsCorrect);
+        break;
+      case 'canvas-task':
+        if (answerIsCorrect) {
+          this.correctTotal++;
+          this.userService.updateProgress(this.userCurrentLevel, this.correctTotal);
+        }
+        this.userService.updateUser(event.questionId, event.selectedOption, answerIsCorrect);
+        break;
+      default:
+        console.error('Unknown question type:', this.currentQuestionType);
+        return;
+    }
     this.nextQuestionDisabled = false;
   }
 
@@ -125,6 +176,9 @@ export class CurrentLevelComponent implements OnInit, OnDestroy{
         this.textAnswerComponent.userAnswer = '';
         break;
       case 'canvas-task':
+        this.canvasTaskComponent.showAnswer = false;
+        this.canvasTaskComponent.canvasShot = null;
+        this.canvasTaskComponent.showSubmitButton = true;
         break;
     }
   }
@@ -177,31 +231,25 @@ export class CurrentLevelComponent implements OnInit, OnDestroy{
     this.isConfettiActive = false;
   }
 
-  checkAnswer(questionId: number): boolean {
-    return this.selectedAnswers[questionId] === this.questionService.getQuestionById(questionId)?.answer;
-  }
+  async checkAnswer(questionId: number): Promise<boolean> {
+    const question = this.questionService.getQuestionById(questionId);
+    if (!question) {
+      return false;
+    }
 
-  previousQuestion() {
-    if (this.currentQuestionIndex > 0) {
-      this.currentQuestionIndex--;
-      this.currentQuestion = this.currentLevelQuestions[this.currentQuestionIndex];
-      this.currentQuestionType = this.currentQuestion.type;
-      this.NextButtonText = 'Next';
-      if (this.selectedAnswers[this.currentQuestion.id]) {
-        switch (this.currentQuestionType) {
-          case 'multiple-choice':
-            this.multipleChoiceComponent.selectedOption = this.selectedAnswers[this.currentQuestion.id];
-            this.multipleChoiceComponent.showAnswer = true;
-            break;
-          case 'text-answer':
-            this.textAnswerComponent.userAnswer = this.selectedAnswers[this.currentQuestion.id];
-            this.textAnswerComponent.showAnswer = true;
-            break;
-          case 'canvas-task':
-            break;
+    switch (question.type) {
+      case 'multiple-choice':
+        return this.selectedAnswers[questionId] === question.answer;
+      case 'text-answer':
+        return this.selectedAnswers[questionId].trim().toLowerCase() === question.answer.trim().toLowerCase();
+      case 'canvas-task':
+        if (!this.currentQuestion?.content) {
+          return false;
         }
-      }
-      this.nextQuestionDisabled = false;
+        return await this.canvasTaskComponent.challengeCheckCircuit(this.currentQuestion?.content);
+      default:
+        console.error('Unknown question type:', question.type);
+        return false;
     }
   }
 }
