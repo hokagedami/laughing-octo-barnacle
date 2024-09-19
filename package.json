@@ -35,12 +35,17 @@
     "zone.js": "~0.14.3"
   },
   "devDependencies": {
+    "@angular-builders/custom-webpack": "^18.0.0",
     "@angular-devkit/build-angular": "^18.0.7",
     "@angular/cli": "^18.0.7",
     "@angular/compiler-cli": "^18.0.0",
     "@types/canvas-confetti": "^1.6.4",
+    "@types/dotenv-webpack": "^7.0.7",
     "@types/jasmine": "~5.1.0",
+    "@types/node": "^22.5.5",
     "@types/p5": "^1.7.6",
+    "cross-env": "^7.0.3",
+    "dotenv-webpack": "^8.1.0",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import Anthropic from "@anthropic-ai/sdk";
-import {environment} from "../../../environment/env";
+// import {environment} from "../../../environment/env";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClaudeService {
 
-  private apiKey = environment.claudeApiKey;
+  private apiKey = process.env['CLAUDE_API_KEY'];
 
   private anthropic = new Anthropic({apiKey: this.apiKey, dangerouslyAllowBrowser: true});
 
