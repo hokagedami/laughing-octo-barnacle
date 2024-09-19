@@ -187,6 +187,7 @@ export class CurrentLevelComponent implements OnInit, OnDestroy{
     this.levelCompleted = true;
     if (this.correctTotal === this.currentLevelQuestions.length && this.userCurrentLevel === 'hard') {
       this.challengeCompleted = true;
+      this.userService.updateProgress(this.userCurrentLevel, this.correctTotal);
       this.toggleConfetti();
     }
   }

@@ -19,9 +19,9 @@ export class QuestionService {
   getQuestions(level: 'easy' | 'medium' | 'hard'): Question[] {
     this.loadQuestions();
     return this.questions
-      .filter(q => q.level === level && q.type === 'canvas-task')
+      .filter(q => q.level === level)
       .sort(() => 0.5 - Math.random())
-      .slice(0, 2);
+      .slice(0, 5);
   }
 
   getQuestionById(id: number): Question | undefined {

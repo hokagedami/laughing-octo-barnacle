@@ -6,7 +6,7 @@ import {User} from "../../models/user.model";
 })
 export class UserService {
   private users: User[] = [
-    { username: 'admin', level: 'hard', progress: { easy: 3, medium: 3, hard: 0 }, questionsAnswered: [], challengeCompleted: false }
+    { username: 'admin', level: 'hard', progress: { easy: 3, medium: 3, hard: 3 }, questionsAnswered: [], challengeCompleted: true }
   ];
   private currentUser: User | null = null;
 
