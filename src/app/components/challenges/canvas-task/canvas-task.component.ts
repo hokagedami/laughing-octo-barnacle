@@ -1,6 +1,6 @@
 import {Component, EventEmitter, inject, Input, Output, ViewChild} from '@angular/core';
 import {Question} from "../../../models/question.model";
-import {NgForOf, NgIf} from "@angular/common";
+import {NgForOf, NgIf, NgStyle} from "@angular/common";
 import {SimulatorCanvasComponent} from "../../simulator/simulator-canvas/simulator-canvas.component";
 import {NgxToastAlertsService} from "ngx-toast-alerts";
 
@@ -10,7 +10,8 @@ import {NgxToastAlertsService} from "ngx-toast-alerts";
   imports: [
     NgForOf,
     NgIf,
-    SimulatorCanvasComponent
+    SimulatorCanvasComponent,
+    NgStyle
   ],
   templateUrl: './canvas-task.component.html',
   styleUrl: './canvas-task.component.css'
@@ -19,6 +20,7 @@ export class CanvasTaskComponent {
   @ViewChild(SimulatorCanvasComponent) simulatorCanvas!: SimulatorCanvasComponent;
   @Input() question!: Question;
   @Output() answerProvided = new EventEmitter<{ questionId: number; selectedOption: string }>();
+  answerIsCorrect: boolean | null = null;
 
   showSubmitButton = true;
   canvasShot: string  | null = null;

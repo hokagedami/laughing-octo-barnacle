@@ -3,9 +3,40 @@
   <ng-container *ngIf="!showAnswer; else screenshot">
     <app-simulator-canvas [canvasWidth]="600" [canvasHeight]="400"></app-simulator-canvas>
   </ng-container>
-  <ng-template #screenshot>
-    <div class="canvas-screenshot" [style.width.px]="600" [style.height.px]="400">
+  <ng-template #screenshot class="d-flex flex-column">
+    <div class="canvas-screenshot row" [style.width.px]="600" [style.height.px]="400">
       <img [src]="canvasShot" [style.width.px]="500" [style.height.px]="400" alt="Canvas Screenshot">
+      <div class="p-2">
+        <div *ngIf="showAnswer && answerIsCorrect !== null" class="d-flex flex-row justify-content-center">
+          <span>
+            <i class="fa fa-check" *ngIf="answerIsCorrect" style="color: green"></i>
+            <i class="fa fa-x" *ngIf="!answerIsCorrect" style="color: red"></i>
+          </span>
+          <span>
+            <i class="fa fa-check" *ngIf="answerIsCorrect" style="color: green"></i>
+            <i class="fa fa-x" *ngIf="!answerIsCorrect" style="color: red"></i>
+          </span>
+          <span style="padding-right: 1rem">
+            <i class="fa fa-check" *ngIf="answerIsCorrect" style="color: green"></i>
+            <i class="fa fa-x" *ngIf="!answerIsCorrect" style="color: red"></i>
+          </span>
+          <p [ngStyle]="{'color': answerIsCorrect ? 'green' : 'red'}">
+            {{answerIsCorrect ? 'Correct!' : 'Incorrect!'}}
+          </p>
+          <span style="padding-left: 1rem">
+            <i class="fa fa-check" *ngIf="answerIsCorrect" style="color: green"></i>
+            <i class="fa fa-x" *ngIf="!answerIsCorrect" style="color: red"></i>
+          </span>
+          <span>
+            <i class="fa fa-check" *ngIf="answerIsCorrect" style="color: green"></i>
+            <i class="fa fa-x" *ngIf="!answerIsCorrect" style="color: red"></i>
+          </span>
+          <span>
+            <i class="fa fa-check" *ngIf="answerIsCorrect" style="color: green"></i>
+            <i class="fa fa-x" *ngIf="!answerIsCorrect" style="color: red"></i>
+          </span>
+        </div>
+      </div>
     </div>
   </ng-template>
   <div class="d-flex flex-row-reverse" *ngIf="showSubmitButton">
