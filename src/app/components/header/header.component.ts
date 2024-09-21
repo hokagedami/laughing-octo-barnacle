@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import {Router, NavigationEnd, RouterLink} from '@angular/router';
+import {Router, NavigationEnd, RouterLink, RouterLinkActive} from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { AuthService } from "../../services/auth/auth.service";
@@ -11,7 +11,8 @@ import {NgIf} from "@angular/common";
   standalone: true,
   imports: [
     NgIf,
-    RouterLink
+    RouterLink,
+    RouterLinkActive
   ],
   styleUrls: ['./header.component.css']
 })

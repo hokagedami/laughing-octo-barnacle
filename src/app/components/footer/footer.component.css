@@ -1,5 +1,13 @@
-footer {
-  position: relative;
-  bottom: 0;
+.footer {
   width: 100%;
+  background-color: #535361;
+  padding: 15px 0;
+  font-size: 14px;
+}
+
+@media (max-width: 576px) {
+  .footer {
+    font-size: 12px;
+    padding: 10px 0;
+  }
 }

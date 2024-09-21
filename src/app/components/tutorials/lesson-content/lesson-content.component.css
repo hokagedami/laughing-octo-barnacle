@@ -1,4 +1,15 @@
 .bg-dark {
   background-color: #343a40 !important;
-  border-radius: 10px; /* Adjust the radius value as needed */
+  border-radius: 10px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.table-responsive {
+  overflow-x: auto;
 }
