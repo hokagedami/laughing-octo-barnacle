@@ -107,6 +107,8 @@ export class CurrentLevelComponent implements OnInit, OnDestroy{
             this.canvasTaskComponent.canvasShot = this.selectedAnswers[this.currentQuestion.id];
             this.canvasTaskComponent.showAnswer = true;
             this.canvasTaskComponent.showSubmitButton = false;
+            const answerIsCorrect = this.userService.getCurrentUser()?.questionsAnswered.find(q => q.questionId === this.currentQuestion?.id)?.answerIsCorrect ?? false;
+            this.canvasTaskComponent.answerIsCorrect = answerIsCorrect;
             break;
         }
       }
@@ -137,7 +139,9 @@ export class CurrentLevelComponent implements OnInit, OnDestroy{
         if (answerIsCorrect) {
           this.correctTotal++;
           this.userService.updateProgress(this.userCurrentLevel, this.correctTotal);
+          this.canvasTaskComponent.showAnswer = true;
         }
+        this.canvasTaskComponent.answerIsCorrect = answerIsCorrect;
         this.userService.updateUser(event.questionId, event.selectedOption, answerIsCorrect);
         break;
       default:
@@ -179,6 +183,7 @@ export class CurrentLevelComponent implements OnInit, OnDestroy{
         this.canvasTaskComponent.showAnswer = false;
         this.canvasTaskComponent.canvasShot = null;
         this.canvasTaskComponent.showSubmitButton = true;
+        this.canvasTaskComponent.answerIsCorrect = null;
         break;
     }
   }
