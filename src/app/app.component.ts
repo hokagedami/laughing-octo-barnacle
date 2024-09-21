@@ -15,7 +15,7 @@ import {NgIf} from "@angular/common";
 export class AppComponent implements OnInit {
 
   title = 'logic-gate';
-  isMobile: boolean = false;
+  isNotSuitableScreen: boolean = false;
 
   constructor(cookieService: CookieService) {
     cookieService.deleteAll();
@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
   }
 
   checkScreenSize() {
-    this.isMobile = window.innerWidth < 768; // Adjust the width as needed
+    this.isNotSuitableScreen = window.innerWidth <= 1099;
   }
 
 }

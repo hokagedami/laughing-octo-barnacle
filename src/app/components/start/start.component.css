@@ -3,13 +3,30 @@
   height: 100%;
 }
 
+/* Adjust column widths to reduce card width by 15% */
+.row-cols-1 > * {
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.row-cols-md-2 > * {
+  width: 42.5%; /* Half of 85% */
+}
+
+.row-cols-lg-3 > * {
+  width: 28.33%; /* One-third of 85% */
+}
+
 .card {
   transition: transform 0.3s ease-in-out;
   height: 100%;
+  transform: scale(1, 0.9); /* Reduces height by 10% */
+  transform-origin: top center;
 }
 
 .card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-5px) scale(1, 0.9); /* Maintain height reduction while hovering */
 }
 
 .card-body {
@@ -21,7 +38,7 @@
 .image-container {
   position: relative;
   width: 100%;
-  padding-top: 100%; /* 1:1 Aspect Ratio */
+  padding-top: 90%; /* Reduced from 100% to 90% (10% reduction) */
   overflow: hidden;
 }
 
@@ -36,8 +53,31 @@
   object-fit: cover;
 }
 
-@media (max-width: 768px) {
-  .image-container {
-    padding-top: 75%; /* 4:3 Aspect Ratio for smaller screens */
+@media (max-width: 767px) {
+  .card {
+    margin-bottom: 1rem;
   }
+  .image-container {
+    padding-top: 67.5%; /* Reduced from 75% to 67.5% (10% reduction of 4:3 aspect ratio) */
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .row-cols-md-2 > .col:last-child {
+    margin-top: 1rem;
+  }
+}
+
+/* Adjust text size to fit reduced card dimensions */
+.card-title {
+  font-size: 1.3rem;
+}
+
+.card-text {
+  font-size: 0.85rem;
+}
+
+.btn {
+  font-size: 0.85rem;
+  padding: 0.25rem 0.5rem;
 }
