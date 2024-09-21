@@ -52,4 +52,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.authService.logout();
     this.router.navigate(['/']);
   }
+
+  closeMenu() {
+    const navbarToggler = document.querySelector('.navbar-toggler') as HTMLElement;
+    const navbarCollapse = document.querySelector('.navbar-collapse') as HTMLElement;
+    if (window.getComputedStyle(navbarToggler).display !== 'none') {
+      navbarCollapse.classList.remove('show');
+    }
+  }
 }

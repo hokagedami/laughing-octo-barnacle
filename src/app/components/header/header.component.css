@@ -28,3 +28,10 @@
     width: 100%;
   }
 }
+
+/* Add this to ensure proper spacing in the collapsed menu */
+@media (max-width: 991px) {
+  .navbar-collapse {
+    padding-bottom: 10px;
+  }
+}
