@@ -4,11 +4,11 @@
     <p *ngFor="let paragraph of currentLesson.content.paragraphs">{{paragraph}}</p>
   </div>
 
-  <div *ngIf="currentLesson.content.images">
-    <img *ngFor="let image of currentLesson.content.images" [src]="image" alt="Lesson Image" class="img-fluid mb-3" height="300" width="300">
+  <div *ngIf="currentLesson.content.images" class="image-container">
+    <img *ngFor="let image of currentLesson.content.images" [src]="image" alt="Lesson Image" class="img-fluid mb-3">
   </div>
 
-  <div *ngIf="currentLesson.content.tables">
+  <div *ngIf="currentLesson.content.tables" class="table-responsive">
     <table class="table table-bordered table-hover">
       <thead>
         <tr>

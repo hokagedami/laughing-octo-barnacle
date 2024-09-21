@@ -1,29 +1,24 @@
-
 .bg-dark {
   background-color: #343a40 !important;
-  flex: 1;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
-  height: 100vh;
+  height: 100%;
 }
 
 .lessons {
-  flex: 1;
-  overflow-y: auto;
+  list-style-type: none;
+  padding: 0;
 }
 
 .lessons li {
   margin-bottom: 15px;
 }
 
-.lessons a {
-  text-decoration: none;
-  font-size: 1.2em;
-}
-
-.lessons a:hover {
-  text-decoration: underline;
+.lessons button {
+  width: 100%;
+  text-align: left;
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 .scrollable-list {
@@ -43,4 +38,10 @@
 }
 .scrollable-list::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+@media (max-width: 767px) {
+  .bg-dark {
+    height: 200px;
+  }
 }

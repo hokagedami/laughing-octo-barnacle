@@ -58,7 +58,7 @@
     margin-bottom: 1rem;
   }
   .image-container {
-    padding-top: 67.5%; /* Reduced from 75% to 67.5% (10% reduction of 4:3 aspect ratio) */
+    padding-top: 67.5%;
   }
 }
 
@@ -68,16 +68,33 @@
   }
 }
 
-/* Adjust text size to fit reduced card dimensions */
 .card-title {
   font-size: 1.3rem;
 }
 
 .card-text {
-  font-size: 0.85rem;
+  font-size: 1rem;
 }
 
 .btn {
-  font-size: 0.85rem;
+  font-size: 1rem;
   padding: 0.25rem 0.5rem;
+  font-weight: 700;
+}
+
+.btn-tut {
+  color: #111111;
+}
+
+.btn-ch {
+  color: #616368;
+}
+
+.btn-des {
+  color: #6b747c;
+}
+
+.welcome-text {
+  font-size: 2.5rem;
+  font-family: "Roboto", sans-serif, cursive;
 }
