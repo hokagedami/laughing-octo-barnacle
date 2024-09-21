@@ -1,5 +1,5 @@
 <div class="d-flex h-100">
-  <aside class="sidebar guide-container bg-dark-subtle w-25">
+  <aside class="sidebar guide-container bg-dark-subtle w-25" *ngIf="!isOnSmallScreen">
     <h3 class="text-white p-3">Guide</h3>
     <hr class="text-white">
     <ul class="list-group text-justify">
@@ -27,9 +27,12 @@
     </ul>
   </aside>
   <main class="main-content">
-    <app-simulator-canvas class="row" (connectionsEvent)=handleConnectionsChange($event) (sampleCircuitBtnActiveEvent)=handleSampleCircuitBtnActiveChange($event) [canvasWidth]="800" [canvasHeight]="600"></app-simulator-canvas>
-      <hr>
-    <div class="container text-center">
+    <div class="alert alert-danger text-center" role="alert"  *ngIf="isOnSmallScreen">
+      This simulator is not available on small screens. Please use a larger screen or a computer.
+    </div>
+    <app-simulator-canvas *ngIf="!isOnSmallScreen" class="row" (connectionsEvent)=handleConnectionsChange($event) (sampleCircuitBtnActiveEvent)=handleSampleCircuitBtnActiveChange($event) [canvasWidth]="800" [canvasHeight]="600"></app-simulator-canvas>
+      <hr *ngIf="!isOnSmallScreen">
+    <div class="container text-center" *ngIf="!isOnSmallScreen">
       <div class="d-flex justify-content-evenly">
         <button class="btn btn-outline-secondary" (click)="checkCircuit()" [disabled]="checkCircuitBtnDisabled">Check Circuit</button>
         <button class="btn btn-outline-secondary" (click)="createSampleCircuit()" [disabled]="sampleCircuitBtnActive">Create Sample Circuit</button>
@@ -38,4 +41,6 @@
       <hr>
     </div>
   </main>
+</div>
+<div class="d-flex justify-content-center align-content-center h-100">
 </div>

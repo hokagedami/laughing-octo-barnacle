@@ -1,7 +1,9 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {SimulatorCanvasComponent} from "../simulator-canvas/simulator-canvas.component";
 import {Connection} from "../../../models/connection.model";
+import {EventService} from "../../../services/event/event.service";
+import {Subscription} from "rxjs";
 
 
 @Component({
@@ -11,12 +13,25 @@ import {Connection} from "../../../models/connection.model";
   standalone: true,
   imports: [CommonModule, SimulatorCanvasComponent]
 })
-export class SimulatorHomeComponent {
+export class SimulatorHomeComponent implements OnInit, OnDestroy {
   @ViewChild(SimulatorCanvasComponent) simulatorCanvasComponent!: SimulatorCanvasComponent;
   checkCircuitBtnDisabled: boolean = true;
   sampleCircuitBtnActive: boolean = false;
-  constructor() {}
+  isOnSmallScreen: boolean = false;
+  width: number = 0;
+  height: number = 0;
+  private resizeSubscription!: Subscription;
 
+  constructor(private eventService: EventService) {}
+
+  ngOnInit() {
+    this.isOnSmallScreen = window.innerWidth <= 1099;
+    this.resizeSubscription = this.eventService.resizeObservable$.subscribe(({ width, height }) => {
+      this.isOnSmallScreen = width <= 1099;
+      this.width = width;
+      this.height = height;
+    });
+  }
 
   createSampleCircuit() {
     this.simulatorCanvasComponent.createAndSampleCircuit();
@@ -37,4 +52,9 @@ export class SimulatorHomeComponent {
   takeSnapshot() {
     this.simulatorCanvasComponent.takeCanvasSnapshot();
   }
+
+  ngOnDestroy() {
+    this.resizeSubscription.unsubscribe();
+  }
+
 }
