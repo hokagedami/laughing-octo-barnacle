@@ -6,6 +6,7 @@ main {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background: #eae6d5;
 }
 
 html, body {

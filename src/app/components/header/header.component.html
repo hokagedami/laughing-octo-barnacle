@@ -22,7 +22,7 @@
           <a class="nav-link" routerLink="/simulator" routerLinkActive="active" (click)="closeMenu()">Simulator</a>
         </li>
       </ul>
-      <button class="btn btn-danger" (click)="logout(); closeMenu()">Logout</button>
+      <button class="btn btn-danger" *ngIf="isLoggedIn" (click)="logout(); closeMenu()">Logout</button>
     </div>
   </div>
 </nav>
