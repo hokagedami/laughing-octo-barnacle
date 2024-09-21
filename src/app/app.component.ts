@@ -7,6 +7,7 @@ import {NgIf} from "@angular/common";
 import {EventService} from "./services/event/event.service";
 import {Subscription, fromEvent} from "rxjs";
 import {debounceTime} from "rxjs/operators";
+import {Platform} from "@angular/cdk/platform";
 
 @Component({
   selector: 'app-root',
@@ -21,7 +22,7 @@ export class AppComponent implements OnInit, OnDestroy {
   isNotSuitableScreen: boolean = false;
   private resizeSubscription!: Subscription;
 
-  constructor(cookieService: CookieService, private eventService: EventService) {
+  constructor(cookieService: CookieService, private eventService: EventService, private platform: Platform) {
     cookieService.deleteAll();
   }
   ngOnInit() {
@@ -29,11 +30,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.resizeSubscription = fromEvent(window, 'resize')
       .pipe(debounceTime(200))
       .subscribe(() => {
-        this.eventService.emitResize(window.innerWidth, window.innerHeight);
+        this.eventService.emitResize();
       });
 
     // Emit initial size
-    this.eventService.emitResize(window.innerWidth, window.innerHeight);
+    this.eventService.emitResize(this.isNotSuitableScreen);
   }
 
   @HostListener('window:resize', ['$event'])
@@ -42,7 +43,8 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   checkScreenSize() {
-    this.isNotSuitableScreen = window.innerWidth <= 1099;
+    console.log('window.innerWidth', window.innerWidth);
+    this.isNotSuitableScreen = window.innerWidth <= 991 || (this.platform.IOS || this.platform.ANDROID);
   }
 
   ngOnDestroy() {

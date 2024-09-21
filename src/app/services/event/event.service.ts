@@ -6,13 +6,13 @@ import { debounceTime } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class EventService {
-  private resizeSubject = new Subject<{ width: number; height: number }>();
+  private resizeSubject = new Subject<{ smallScreen: boolean }>();
 
-  resizeObservable$: Observable<{ width: number; height: number }> = this.resizeSubject.asObservable().pipe(
+  resizeObservable$: Observable<{ smallScreen: boolean }> = this.resizeSubject.asObservable().pipe(
     debounceTime(200) // Debounce to avoid excessive emissions
   );
 
-  emitResize(width: number, height: number) {
-    this.resizeSubject.next({ width, height });
+  emitResize(smallScreen: boolean = false) {
+    this.resizeSubject.next({ smallScreen});
   }
 }

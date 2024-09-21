@@ -27,8 +27,6 @@ export class CanvasTaskComponent implements OnInit, OnDestroy {
   @Output() answerProvided = new EventEmitter<{ questionId: number; selectedOption: string }>();
   answerIsCorrect: boolean | null = null;
   private resizeSubscription!: Subscription;
-  width: number = 0;
-  height: number = 0;
 
   showSubmitButton = true;
   canvasShot: string  | null = null;
@@ -39,10 +37,8 @@ export class CanvasTaskComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.disableOnSmallScreen = window.length <= 1099;
     this.resizeSubscription = this.eventService.resizeObservable$.subscribe(
-      ({ width, height }) => {
-        this.width = width;
-        this.height = height;
-        this.disableOnSmallScreen = this.width <= 1099;
+      ({ smallScreen }) => {
+        this.disableOnSmallScreen = smallScreen
       }
     );
   }

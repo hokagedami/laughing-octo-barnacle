@@ -18,18 +18,14 @@ export class SimulatorHomeComponent implements OnInit, OnDestroy {
   checkCircuitBtnDisabled: boolean = true;
   sampleCircuitBtnActive: boolean = false;
   isOnSmallScreen: boolean = false;
-  width: number = 0;
-  height: number = 0;
   private resizeSubscription!: Subscription;
 
   constructor(private eventService: EventService) {}
 
   ngOnInit() {
     this.isOnSmallScreen = window.innerWidth <= 1099;
-    this.resizeSubscription = this.eventService.resizeObservable$.subscribe(({ width, height }) => {
-      this.isOnSmallScreen = width <= 1099;
-      this.width = width;
-      this.height = height;
+    this.resizeSubscription = this.eventService.resizeObservable$.subscribe(({ smallScreen }) => {
+      this.isOnSmallScreen = smallScreen;
     });
   }
 
