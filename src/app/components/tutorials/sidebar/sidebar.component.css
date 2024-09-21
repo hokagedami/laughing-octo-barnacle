@@ -42,6 +42,30 @@
 
 @media (max-width: 767px) {
   .bg-dark {
-    height: 200px;
+    height: auto;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .lessons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .lessons li {
+    width: 48%; /* Adjust as needed */
+    margin-bottom: 10px;
+  }
+
+  .lessons button {
+    font-size: 0.9em;
+    padding: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lessons li {
+    width: 100%;
   }
 }

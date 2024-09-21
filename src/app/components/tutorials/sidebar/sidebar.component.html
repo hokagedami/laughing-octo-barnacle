@@ -1,10 +1,12 @@
 <div class="bg-dark text-white p-3">
   <h3>Lessons</h3>
- <div class="scrollable-list">
-   <ul class="list-group lessons">
-     <li *ngFor="let lesson of lessons" class="list-group-item">
-       <button class="btn" style="background-color: #007bff; color: white" (click)="navigate(lesson.code)">{{lesson.title}}</button>
-     </li>
-   </ul>
- </div>
+  <div class="scrollable-list">
+    <ul class="lessons">
+      <li *ngFor="let lesson of lessons">
+        <button class="btn btn-link text-white" (click)="navigate(lesson.code)">
+          {{lesson.title}}
+        </button>
+      </li>
+    </ul>
+  </div>
 </div>
