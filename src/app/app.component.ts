@@ -43,7 +43,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   checkScreenSize() {
-    console.log('window.innerWidth', window.innerWidth);
     this.isNotSuitableScreen = window.innerWidth <= 991 || (this.platform.IOS || this.platform.ANDROID);
   }
 

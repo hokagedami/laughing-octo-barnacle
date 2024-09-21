@@ -35,7 +35,6 @@ export class CanvasTaskComponent implements OnInit, OnDestroy {
   disableOnSmallScreen: boolean = false;
 
   ngOnInit() {
-    this.disableOnSmallScreen = window.length <= 1099;
     this.resizeSubscription = this.eventService.resizeObservable$.subscribe(
       ({ smallScreen }) => {
         this.disableOnSmallScreen = smallScreen
