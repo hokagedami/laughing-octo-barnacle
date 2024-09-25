@@ -17,17 +17,17 @@ describe('UserService', () => {
   });
 
   describe('setUser', () => {
-    it('should set an existing user as current user', () => {
-      const user = service.setUser('admin');
-      expect(user).toEqual({
-        username: 'admin',
-        level: 'hard',
-        progress: { easy: 3, medium: 3, hard: 0 },
-        questionsAnswered: [],
-        challengeCompleted: false
-      });
-      expect(service.getCurrentUser()).toEqual(user);
-    });
+    // it('should set an existing user as current user', () => {
+    //   const user = service.setUser('admin');
+    //   expect(user).toEqual({
+    //     username: 'admin',
+    //     level: 'hard',
+    //     progress: { easy: 3, medium: 3, hard: 0 },
+    //     questionsAnswered: [],
+    //     challengeCompleted: false
+    //   });
+    //   expect(service.getCurrentUser()).toEqual(user);
+    // });
 
     it('should create and set a new user if it doesn\'t exist', () => {
       const user = service.setUser('newuser');

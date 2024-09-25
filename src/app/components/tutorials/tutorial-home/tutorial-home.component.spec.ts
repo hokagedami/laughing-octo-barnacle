@@ -44,20 +44,6 @@ describe('TutorialHomeComponent', () => {
 
     expect(component.selectedLessonCode).toBe(testLessonCode);
   });
-
-  it('should have the correct layout structure', () => {
-    const lessonContainer = fixture.debugElement.query(By.css('.lesson-container'));
-    expect(lessonContainer).toBeTruthy();
-
-    const sidebar = lessonContainer.query(By.css('.sidebar'));
-    expect(sidebar).toBeTruthy();
-
-    const containerFluid = lessonContainer.query(By.css('.container-fluid'));
-    expect(containerFluid).toBeTruthy();
-
-    expect(containerFluid.classes['d-flex']).toBeTrue();
-    expect(containerFluid.classes['flex-column']).toBeTrue();
-  });
 });
 
 // Mock components

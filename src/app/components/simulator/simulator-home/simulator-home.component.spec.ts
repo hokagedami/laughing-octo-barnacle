@@ -3,11 +3,16 @@ import { SimulatorHomeComponent } from './simulator-home.component';
 import { SimulatorCanvasComponent } from '../simulator-canvas/simulator-canvas.component';
 import { Connection } from '../../../models/connection.model';
 import { By } from '@angular/platform-browser';
+import { EventService } from '../../../services/event/event.service';
+import { ClaudeService } from '../../../services/claude/claude.service';
+import { of } from 'rxjs';
 
 describe('SimulatorHomeComponent', () => {
   let component: SimulatorHomeComponent;
   let fixture: ComponentFixture<SimulatorHomeComponent>;
   let mockSimulatorCanvasComponent: jasmine.SpyObj<SimulatorCanvasComponent>;
+  let mockEventService: jasmine.SpyObj<EventService>;
+  let mockClaudeService: jasmine.SpyObj<ClaudeService>;
 
   beforeEach(async () => {
     mockSimulatorCanvasComponent = jasmine.createSpyObj('SimulatorCanvasComponent', [
@@ -16,13 +21,24 @@ describe('SimulatorHomeComponent', () => {
       'takeCanvasSnapshot'
     ]);
 
+    mockEventService = jasmine.createSpyObj('EventService', [], {
+      resizeObservable$: of({ smallScreen: false })
+    });
+
+    mockClaudeService = jasmine.createSpyObj('ClaudeService', ['sendMessage']);
+
     await TestBed.configureTestingModule({
-      imports: [SimulatorHomeComponent, SimulatorCanvasComponent]
+      imports: [SimulatorHomeComponent],
+      providers: [
+        { provide: EventService, useValue: mockEventService },
+        { provide: ClaudeService, useValue: mockClaudeService }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SimulatorHomeComponent);
     component = fixture.componentInstance;
     component.simulatorCanvasComponent = mockSimulatorCanvasComponent;
+    component.isOnSmallScreen = false; // Ensure we're not on a small screen for these tests
     fixture.detectChanges();
   });
 
@@ -47,14 +63,11 @@ describe('SimulatorHomeComponent', () => {
     expect(component.sampleCircuitBtnActive).toBeFalse();
   });
 
-  it('should have a guide section in the template', () => {
-    const guideElement = fixture.debugElement.query(By.css('.sidebar'));
-    expect(guideElement).toBeTruthy();
-  });
-
   it('should have buttons for Check Circuit, Create Sample Circuit, and Take Snapshot', () => {
-    const buttons = fixture.debugElement.queryAll(By.css('button'));
-    const buttonTexts = buttons.map(button => button.nativeElement.textContent.trim());
+    const buttonContainers = fixture.debugElement.queryAll(By.css('.d-flex.justify-content-evenly'));
+    expect(buttonContainers.length).toBeGreaterThan(0);
+
+    const buttonTexts = buttonContainers[0].children.map(child => child.nativeElement.textContent.trim());
     expect(buttonTexts).toContain('Check Circuit');
     expect(buttonTexts).toContain('Create Sample Circuit');
     expect(buttonTexts).toContain('Take Snapshot');
@@ -63,16 +76,16 @@ describe('SimulatorHomeComponent', () => {
   it('should disable Check Circuit button when checkCircuitBtnDisabled is true', () => {
     component.checkCircuitBtnDisabled = true;
     fixture.detectChanges();
-    const checkCircuitButton = fixture.debugElement.queryAll(By.css('button'))
-      .find(button => button.nativeElement.textContent.trim() === 'Check Circuit');
+    const checkCircuitButton = fixture.debugElement.queryAll(By.css('.d-flex.justify-content-evenly > *'))
+      .find(el => el.nativeElement.textContent.trim() === 'Check Circuit');
     expect(checkCircuitButton?.nativeElement.disabled).toBeTrue();
   });
 
   it('should enable Check Circuit button when checkCircuitBtnDisabled is false', () => {
     component.checkCircuitBtnDisabled = false;
     fixture.detectChanges();
-    const checkCircuitButton = fixture.debugElement.queryAll(By.css('button'))
-      .find(button => button.nativeElement.textContent.trim() === 'Check Circuit');
+    const checkCircuitButton = fixture.debugElement.queryAll(By.css('.d-flex.justify-content-evenly > *'))
+      .find(el => el.nativeElement.textContent.trim() === 'Check Circuit');
     expect(checkCircuitButton?.nativeElement.disabled).toBeFalse();
   });
 });

@@ -58,6 +58,7 @@ export class CurrentLevelComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     this.hasProgress = this.currentQuestionIndex > 0;
+    this.challengeCompleted = this.userService.getCurrentUser()?.challengeCompleted ?? false;
   }
 
   ngOnDestroy() {
@@ -190,9 +191,11 @@ export class CurrentLevelComponent implements OnInit, OnDestroy{
 
   endChallenge() {
     this.levelCompleted = true;
+    this.userService.moveUserToNextLevel();
     if (this.correctTotal === this.currentLevelQuestions.length && this.userCurrentLevel === 'hard') {
       this.challengeCompleted = true;
       this.userService.updateProgress(this.userCurrentLevel, this.correctTotal);
+      this.userService.updateChallengeCompleted();
       this.toggleConfetti();
     }
   }
@@ -243,6 +246,7 @@ export class CurrentLevelComponent implements OnInit, OnDestroy{
       return false;
     }
 
+    // return true;
     switch (question.type) {
       case 'multiple-choice':
         return this.selectedAnswers[questionId] === question.answer;

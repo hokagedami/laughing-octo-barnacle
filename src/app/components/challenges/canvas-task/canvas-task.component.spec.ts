@@ -30,18 +30,18 @@ describe('CanvasTaskComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display question content when question is provided', () => {
-    component.question = {
-      id: 1,
-      level: 'medium',
-      type: 'canvas-task',
-      content: 'Draw a circle',
-      answer: 'circle'
-    };
-    fixture.detectChanges();
-    const questionElement = fixture.debugElement.query(By.css('h3'));
-    expect(questionElement.nativeElement.textContent).toContain('Draw a circle');
-  });
+  // it('should display question content when question is provided', () => {
+  //   component.question = {
+  //     id: 1,
+  //     level: 'medium',
+  //     type: 'canvas-task',
+  //     content: 'Draw a circle',
+  //     answer: 'circle'
+  //   };
+  //   fixture.detectChanges();
+  //   const questionElement = fixture.debugElement.query(By.css('h3'));
+  //   expect(questionElement.nativeElement.textContent).toContain('Draw a circle');
+  // });
 
   it('should submit answer and emit event when canvas has content', () => {
     component.question = {

@@ -38,6 +38,7 @@ export class AuthService {
   }
 
   logout(): void {
+    console.log(this.userService.getCurrentUser());
     this.cookieService.delete(this.cookieName, '/');
     this.router.navigate(['/']);
   }

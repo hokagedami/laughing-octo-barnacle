@@ -2,7 +2,7 @@
   <div class="content-wrap">
     <div class="challenge-container">
       <div class="challenge-content">
-        <div *ngIf="!challengeStarted" class="challenge-intro">
+        <div *ngIf="!challengeStarted && !challengeCompleted" class="challenge-intro">
           <h2>Current Level: {{ userCurrentLevel | titlecase }}</h2>
           <button (click)="startChallenge()" class="start-button">
             {{ hasProgress ? 'Continue Challenge' : 'Start Challenge' }}
@@ -33,7 +33,7 @@
         </div>
 
         <div *ngIf="showResult" class="level-completed">
-          <h2>You got {{correctTotal}} of {{currentLevelQuestions.length}}</h2>
+          <h2 *ngIf="!challengeCompleted">You got {{correctTotal}} of {{currentLevelQuestions.length}}</h2>
           <h2 *ngIf="correctTotal === currentLevelQuestions.length && userCurrentLevel !== 'hard'">Congratulations! You have completed the {{ userCurrentLevel | titlecase }} level.</h2>
           <button *ngIf="correctTotal === currentLevelQuestions.length && levelCompleted && userCurrentLevel !== 'hard'" (click)="goToNextLevel()" class="next-level-button">Go to Next Level</button>
           <button *ngIf="correctTotal < currentLevelQuestions.length" (click)="retakeLevel()" class="next-level-button">Retake Current Level</button>

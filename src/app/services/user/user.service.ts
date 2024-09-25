@@ -40,4 +40,20 @@ export class UserService {
       this.currentUser.questionsAnswered.push({ questionId, selectedOption, answerIsCorrect });
     }
   }
+
+  updateChallengeCompleted(): void {
+    if (this.currentUser) {
+      this.currentUser.challengeCompleted = true;
+    }
+  }
+
+  moveUserToNextLevel(): void {
+    if (this.currentUser) {
+      if (this.currentUser.level === 'easy') {
+        this.currentUser.level = 'medium';
+      } else if (this.currentUser.level === 'medium') {
+        this.currentUser.level = 'hard';
+      }
+    }
+  }
 }

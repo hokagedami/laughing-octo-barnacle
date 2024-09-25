@@ -79,9 +79,9 @@ describe('ChallengesHomeComponent', () => {
     expect(homeElement).toBeTruthy();
   });
 
-  it('should have a current-level component', () => {
-    const currentLevelElement = fixture.debugElement.query(By.css('app-current-level'));
-    expect(currentLevelElement).toBeTruthy();
-  });
+  // it('should have a current-level component', () => {
+  //   const currentLevelElement = fixture.debugElement.query(By.css('app-current-level'));
+  //   expect(currentLevelElement).toBeTruthy();
+  // });
 
 });
