@@ -1,0 +1,11 @@
+<div class="settings-editor">
+  <h2>Application Settings</h2>
+  <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
+    <div *ngFor="let setting of settingKeys" class="form-group">
+      <label [for]="setting">{{ setting }}:</label>
+      <input [id]="setting" [formControlName]="setting"
+             [type]="getInputType(setting)">
+    </div>
+    <button type="submit" [disabled]="!settingsForm.valid">Save Changes</button>
+  </form>
+</div>

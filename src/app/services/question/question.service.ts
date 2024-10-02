@@ -9,7 +9,7 @@ import {UserService} from "../user/user.service";
 export class QuestionService {
 
   private questionSize: number = parseInt(<string>process.env['QUESTION_SIZE']);
-  private questionsType: string[] = process.env['QUESTIONS_TYPE']?.split(',') || [/*'multiple-choice', 'text-answer', */'canvas-task'];
+  private questionsType: string[] = process.env['QUESTIONS_TYPE']?.split(',') || [];
   private questions: Question[] = [];
 
 
@@ -20,7 +20,6 @@ export class QuestionService {
   loadQuestions() {
     this.questions = questions as Question[];
     this.questions = this.questions.filter(q => this.questionsType.includes(q.type));
-    return;
   }
 
   getQuestions(): Question[] {

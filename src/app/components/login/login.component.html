@@ -1,9 +1,12 @@
 <div class="login-container">
-  <form [formGroup]="loginForm" (ngSubmit)="startChallenge()" class="login-form">
+  <form [formGroup]="loginForm" (ngSubmit)="login()" class="login-form">
     <h2>Login</h2>
     <div class="form-group">
       <label for="username">Username:</label>
       <input type="text" id="username" formControlName="username" required>
+
+      <label for="password" *ngIf="isAdmin">Password:</label>
+      <input *ngIf="isAdmin" type="password" id="password" formControlName="password" required>
     </div>
     <button type="submit" [disabled]="!loginForm.valid">Start Challenge</button>
   </form>
