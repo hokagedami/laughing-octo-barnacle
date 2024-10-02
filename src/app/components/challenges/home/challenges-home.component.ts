@@ -47,7 +47,7 @@ export class ChallengesHomeComponent implements OnInit, OnDestroy {
 
   loadQuestions(): void {
     if (this.user) {
-      this.questions = this.questionService.getQuestions(this.user.level);
+      this.questions = this.questionService.getQuestions();
       this.currentLevel = this.user.level;
     }
   }

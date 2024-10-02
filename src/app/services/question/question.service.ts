@@ -9,8 +9,8 @@ import {filter} from "rxjs/operators";
 })
 export class QuestionService {
 
-  private questionSize: number = parseInt(process.env['QUESTION_SIZE'] || '5');
-  private questionsType: string[] = process.env['QUESTIONS_TYPE']?.split(',') || ['multiple-choice'];
+  private questionSize: number = parseInt(<string>process.env['QUESTION_SIZE']);
+  private questionsType: string[] = process.env['QUESTIONS_TYPE']?.split(',') || [];
   private questions: Question[] = [];
 
 
@@ -21,9 +21,10 @@ export class QuestionService {
   loadQuestions() {
     this.questions = questions as Question[];
     this.questions = this.questions.filter(q => this.questionsType.includes(q.type));
+    return;
   }
 
-  getQuestions(level: 'easy' | 'medium' | 'hard'): Question[] {
+  getQuestions(): Question[] {
     this.loadQuestions();
     const currentUser = this.userService.getCurrentUser();
     if (currentUser) {
