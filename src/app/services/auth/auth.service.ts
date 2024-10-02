@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import {UserService} from "../user/user.service";
 import {LoginResponse} from "../../models/login-response.model";
+import {Subscription} from "rxjs";
+import {EventService} from "../event/event.service";
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +12,8 @@ import {LoginResponse} from "../../models/login-response.model";
 export class AuthService {
   private readonly cookieName = 'userLoggedIn';
 
-  constructor(private cookieService: CookieService, private userService: UserService, private router: Router) {}
+  constructor(private cookieService: CookieService, private userService: UserService,
+              private router: Router) { }
 
   login(username: string): LoginResponse {
     if (!username || username.trim().length === 0) {
@@ -41,5 +44,9 @@ export class AuthService {
     console.log(this.userService.getCurrentUser());
     this.cookieService.delete(this.cookieName, '/');
     this.router.navigate(['/']);
+  }
+
+  hasGivenConsentForFeedback() {
+    return this.cookieService.check('feedbackConsent');
   }
 }

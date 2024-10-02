@@ -1,0 +1,69 @@
+<div class="survey-container">
+  <div class="survey-header">
+    <h2>Logic Gate Simulator Survey</h2>
+  </div>
+
+  <div *ngIf="!loading && (!error && questions.length > 0) && !surveySubmitted">
+    <form [formGroup]="surveyForm" (ngSubmit)="onSubmit()">
+      <div class="survey-intro">
+        <p>Thank you for participating in this study. The purpose of this
+          questionnaire is to gather feedback on your experience using the Logic
+          Gate Simulator. Your responses will help us understand the usability and
+          effectiveness of the simulator for learning logic gates.</p>
+
+        <p>Before proceeding, please explore the Logic Gate Simulator by clicking
+          this link:
+          <a href="https://logic-pulse-project.vercel.app/" target="_blank">here</a>. Once
+          you've had a chance to engage with the tool, kindly complete the
+          questionnaire below.</p>
+
+        <p><strong>How to use:</strong></p>
+        <ul>
+          <li><strong>Explore and Create:</strong> Build different circuits using the simulator
+            environment and observe the outcomes.</li>
+          <li><strong>Access the Tutorial:</strong> Get a quick knowledge boost on logic gates
+            with our easy-to-follow guide.</li>
+          <li><strong>Challenge Yourself:</strong> Tackle fun tasks that will test your
+            understanding of logic gates.</li>
+        </ul>
+
+        <p>Please answer the questions based on your experience with the simulator
+          and share your honest opinions. Your insights will contribute
+          significantly to improving the tool for future learners.</p>
+      </div>
+
+      <div class="question-container" *ngFor="let question of questions">
+        <p class="question-text">{{ question.id }}. {{ question.text }}</p>
+
+        <div class="options">
+          <label class="radio-label" *ngFor="let option of question.options">
+            <input type="radio" [formControlName]="question.id.toString()" [value]="option">
+            <span class="radio-text">{{ option }}</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" (click)="clearForm()" class="btn-clear">Clear form</button>
+        <button type="submit" [disabled]="!surveyForm.valid" class="btn-submit">Submit</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="message-container" *ngIf="surveySubmitted">
+    <p class="question-text">Thank you for completing the survey!</p>
+
+    <div class="form-actions">
+      <button type="button" (click)="ReloadSurvey()" class="btn-clear">Submit another response</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading && !surveySubmitted" class="message-container">
+    <p class="message-text">Loading survey questions...</p>
+  </div>
+
+  <div *ngIf="(error || questions.length === 0) && !surveySubmitted" class="message-container error-container">
+    <h3 class="message-title">An error occurred</h3>
+    <p class="message-text">Please try refreshing the page or contact support if the problem persists.</p>
+  </div>
+</div>

@@ -11,6 +11,8 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'tutorials', component: TutorialHomeComponent },
   { path: 'challenges', component: ChallengesHomeComponent, canActivate: [AuthGuard] },
-  // { path: 'challenges', component: ChallengesHomeComponent},
-  {path: 'simulator', component: SimulatorHomeComponent }
+  { path: 'simulator', component: SimulatorHomeComponent },
+  { path: 'feedbacks', loadChildren: () => import('./components/feedback/feedbacks.module')
+      .then(m => m.FeedbacksModule) },
+  { path: '**', redirectTo: '' }
 ];

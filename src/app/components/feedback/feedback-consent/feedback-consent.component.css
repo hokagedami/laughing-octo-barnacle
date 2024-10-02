@@ -1,0 +1,66 @@
+.card {
+  border: none;
+  transition: all 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header {
+  border-radius: 10px 10px 0 0;
+}
+
+.consent-statements {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 15px;
+}
+
+.form-check-input {
+  cursor: pointer;
+}
+
+.form-check-label {
+  cursor: pointer;
+  user-select: none;
+}
+
+.btn {
+  transition: all 0.3s;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Custom scrollbar for webkit browsers */
+.consent-statements::-webkit-scrollbar {
+  width: 8px;
+}
+
+.consent-statements::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.consent-statements::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.consent-statements::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .card {
+    margin: 15px;
+  }
+
+  .consent-statements {
+    max-height: 50vh;
+  }
+}
