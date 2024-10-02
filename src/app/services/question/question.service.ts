@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Question } from '../../models/question.model';
 import questions from '../../../../public/questionss.json';
 import {UserService} from "../user/user.service";
-import {filter} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +9,7 @@ import {filter} from "rxjs/operators";
 export class QuestionService {
 
   private questionSize: number = parseInt(<string>process.env['QUESTION_SIZE']);
-  private questionsType: string[] = process.env['QUESTIONS_TYPE']?.split(',') || [];
+  private questionsType: string[] = process.env['QUESTIONS_TYPE']?.split(',') || [/*'multiple-choice', 'text-answer', */'canvas-task'];
   private questions: Question[] = [];
 
 
