@@ -1,10 +1,9 @@
 import {Component, inject, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Router, Event} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {AuthService} from "../../services/auth/auth.service";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgxToastAlertsService} from "ngx-toast-alerts";
 import {NgIf} from "@angular/common";
-import { filter } from 'rxjs/operators';
 import {Subscription} from "rxjs";
 
 @Component({
@@ -42,7 +41,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.currentRoute = this.route.snapshot.url.join('/');
-    console.log('Current route:', this.currentRoute);
     if (this.currentRoute === 'admin-login') {
       this.isAdmin = true;
       // make password required for admin login

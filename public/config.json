@@ -1,0 +1,11 @@
+[
+  { "name": "apiUrl", "value": "https://api.example.com", "type": "text" },
+  { "name": "theme", "value": "light", "type": "text" },
+  { "name": "itemsPerPage", "value": "10", "type": "number" },
+  { "name": "enableNotifications", "value": "true", "type": "boolean" },
+  { "name": "debugMode", "value": "false", "type": "boolean" },
+  { "name": "questionSize", "value": "2", "type": "number" },
+  { "name": "multiple-choice", "value": "true", "type": "boolean" },
+  { "name": "canvas-task", "value": "true", "type": "boolean" },
+  { "name": "text-answer", "value": "true", "type": "boolean" }
+]

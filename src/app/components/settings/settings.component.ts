@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {NgForOf} from "@angular/common";
-import {ConfigService} from "../../services/config/config.service";
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Config } from "../../models/config";
+import { ConfigService } from "../../services/config/config.service";
+import { NgxToastAlertsService } from "ngx-toast-alerts";
+import { NgForOf, NgSwitch, NgSwitchCase, NgSwitchDefault } from "@angular/common";
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-settings',
@@ -9,13 +12,18 @@ import {ConfigService} from "../../services/config/config.service";
   standalone: true,
   imports: [
     ReactiveFormsModule,
+    NgSwitch,
+    NgSwitchCase,
+    NgSwitchDefault,
     NgForOf
   ],
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
   settingsForm: FormGroup;
-  settingKeys: string[] = [];
+  configs: Config[] = [];
+
+  private toast = inject(NgxToastAlertsService);
 
   constructor(
     private fb: FormBuilder,
@@ -24,50 +32,75 @@ export class SettingsComponent implements OnInit {
     this.settingsForm = this.fb.group({});
   }
 
-  ngOnInit() {
-    this.loadSettings();
+  async ngOnInit() {
+    await this.loadSettings(); // Load settings asynchronously
   }
 
-  loadSettings() {
-    this.configService.getConfig().subscribe((config: any) => {
-      this.settingKeys = Object.keys(config);
-      const formConfig: {[key: string]: any} = {};
+  async loadSettings() {
+    try {
+      this.configs = await this.configService.getConfigs(); // Wait for configs to load
+      const formConfig: { [key: string]: any } = {};
 
-      this.settingKeys.forEach(key => {
-        formConfig[key] = [config[key], Validators.required];
+      this.configs.forEach(config => {
+        formConfig[config.name] = [config.value, Validators.required];
       });
 
-      this.settingsForm = this.fb.group(formConfig);
-    });
+      this.settingsForm = this.fb.group(formConfig); // Update form with configs
+
+    } catch (error) {
+      console.error('Error loading settings:', error);
+      this.toast.error('Failed to load settings');
+    }
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.settingsForm.valid) {
-      this.configService.updateConfig(this.settingsForm.value).subscribe(
-        () => {
-          console.log('Settings updated successfully');
-          // load the updated settings
-          this.loadSettings();
-          // You might want to show a success message to the user here
-        },
-        (error: any) => {
-          console.error('Error updating settings', error);
-          // You might want to show an error message to the user here
-        }
-      );
+      try {
+        this.configs = await this.configService.updateConfig(this.configs);  // Await the promise
+        this.toast.success('Settings updated successfully');
+      } catch (e: any) {
+        this.toast.error(`Failed to update settings.\n${e.error.message}`);
+      } finally {
+        await this.loadSettings();  // Reload settings after submission
+      }
     }
   }
 
-  getInputType(key: string): string {
-    if (key.toLowerCase().includes('password')) {
-      return 'password';
+  getInputType(config: Config): string {
+    switch (config.type.toLowerCase()) {
+      case 'boolean':
+        return 'checkbox';
+      case 'number':
+        return 'number';
+      case 'password':
+        return 'password';
+      default:
+        return 'text';
     }
-    if (typeof this.settingsForm.get(key)?.value === 'number') {
-      return 'number';
+  }
+
+  onConfigChange($event: Event, config: Config) {
+    const target = $event.target as HTMLInputElement;
+    let newValue: any;
+
+    switch (config.type.toLowerCase()) {
+      case 'boolean':
+        newValue = target.checked ? 'true' : 'false';
+        break;
+      default:
+        newValue = target.value;
     }
-    if (typeof this.settingsForm.get(key)?.value === 'boolean') {
-      return 'checkbox';
+
+    // Update the form control value and mark it as dirty and touched
+    const control = this.settingsForm.get(config.name);
+    if (control) {
+      control.setValue(newValue);
+      control.markAsDirty(); // Mark the control as dirty (indicating a change)
+      control.markAsTouched(); // Mark the control as touched (indicating user interaction)
     }
-    return 'text';
+
+    // Update the configs array
+    config.value = newValue;
+    this.configs = this.configs.map(c => c.name === config.name ? config : c);
   }
 }

@@ -15,5 +15,6 @@ export const routes: Routes = [
   { path: 'tutorials', component: TutorialHomeComponent },
   { path: 'challenges', component: ChallengesHomeComponent, canActivate: [AuthGuard] },
   { path: 'simulator', component: SimulatorHomeComponent },
-  { path: 'settings', component: SettingsComponent, canActivate: [SettingsGuard] }
+  { path: 'settings', component: SettingsComponent, canActivate: [SettingsGuard] },
+  { path: '**', redirectTo: '' }
 ];

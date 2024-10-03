@@ -10,7 +10,8 @@ import {LoginResponse} from "../../models/login-response.model";
 export class AuthService {
   private readonly cookieName = 'userLoggedIn';
 
-  constructor(private cookieService: CookieService, private userService: UserService, private router: Router) {}
+  constructor(private cookieService: CookieService, private userService: UserService,
+              private router: Router) {}
 
   login(username: string): LoginResponse {
     if (!username || username.trim().length === 0) {
@@ -25,7 +26,7 @@ export class AuthService {
     else {
       this.userService.setUser(username);
     }
-    this.cookieService.set(this.cookieName, username, 1, '/'); // Expires in 1 day
+    this.cookieService.set(this.cookieName, username, 1); // Expires in 1 day
     return { success: true, message: isNewUser ? 'Account creation and login successful': 'Login successful' };
   }
 
@@ -43,6 +44,6 @@ export class AuthService {
   }
 
   isAdmin() {
-    return this.getUsername() === 'admin';
+    return this.userService.getCurrentUser()?.username === 'admin';
   }
 }
