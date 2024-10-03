@@ -46,25 +46,25 @@ describe('QuestionService', () => {
 
   describe('getQuestions', () => {
     it('should return 2 easy canvas-task questions', () => {
-      const questions = service.getQuestions('easy');
+      const questions = service.getQuestions();
       expect(questions.length).toBe(2);
       expect(questions.every(q => q.level === 'easy' && q.type === 'canvas-task')).toBeTrue();
     });
 
     it('should return 2 medium canvas-task questions', () => {
-      const questions = service.getQuestions('medium');
+      const questions = service.getQuestions();
       expect(questions.length).toBe(2);
       expect(questions.every(q => q.level === 'medium' && q.type === 'canvas-task')).toBeTrue();
     });
 
     it('should return 2 hard canvas-task questions', () => {
-      const questions = service.getQuestions('hard');
+      const questions = service.getQuestions();
       expect(questions.length).toBe(2);
       expect(questions.every(q => q.level === 'hard' && q.type === 'canvas-task')).toBeTrue();
     });
 
     it('should call getQuestions with correct parameters', () => {
-      service.getQuestions('easy');
+      service.getQuestions();
       expect(service.getQuestions).toHaveBeenCalledWith('easy');
     });
   });

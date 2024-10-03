@@ -3,7 +3,7 @@ import {Question} from "../../../models/question.model";
 import {NgForOf, NgIf, NgStyle} from "@angular/common";
 import {SimulatorCanvasComponent} from "../../simulator/simulator-canvas/simulator-canvas.component";
 import {NgxToastAlertsService} from "ngx-toast-alerts";
-import {Subscription, window} from "rxjs";
+import {Subscription} from "rxjs";
 import {EventService} from "../../../services/event/event.service";
 
 @Component({

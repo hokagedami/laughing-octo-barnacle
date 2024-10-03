@@ -28,7 +28,7 @@ export class AuthService {
     else {
       this.userService.setUser(username);
     }
-    this.cookieService.set(this.cookieName, username, 1, '/'); // Expires in 1 day
+    this.cookieService.set(this.cookieName, username, 1); // Expires in 1 day
     return { success: true, message: isNewUser ? 'Account creation and login successful': 'Login successful' };
   }
 
@@ -48,5 +48,9 @@ export class AuthService {
 
   hasGivenConsentForFeedback() {
     return this.cookieService.check('feedbackConsent');
+  }
+
+  isAdmin() {
+    return this.userService.getCurrentUser()?.username === 'admin';
   }
 }

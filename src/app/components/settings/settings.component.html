@@ -1,0 +1,41 @@
+<form [formGroup]="settingsForm" (ngSubmit)="onSubmit()" class="settings-editor">
+  <h2>Application Settings</h2>
+
+  <div class="table-responsive">
+    <table class="settings-table">
+      <thead>
+      <tr>
+        <th>Setting</th>
+        <th>Value</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let config of configs">
+        <td>{{ config.name }}</td>
+        <td>
+          <ng-container [ngSwitch]="config.type.toLowerCase()">
+            <ng-container *ngSwitchCase="'boolean'">
+              <input
+                type="checkbox"
+                [checked]="config.value === 'true'"
+                (change)="onConfigChange($event, config)">
+            </ng-container>
+            <ng-container *ngSwitchCase="'number'">
+              <input type="number" [formControlName]="config.name" (change)="onConfigChange($event, config)">
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+              <input [type]="getInputType(config)" [formControlName]="config.name" (change)="onConfigChange($event, config)">
+            </ng-container>
+          </ng-container>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary" [disabled]="!settingsForm.valid || settingsForm.pristine">
+      Save All Changes
+    </button>
+  </div>
+</form>

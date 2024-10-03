@@ -9,6 +9,12 @@
           </button>
         </div>
 
+        <div *ngIf="challengeStarted && !levelCompleted" class="d-flex justify-content-between">
+          <h2 class="text-info-emphasis">Level: {{ userCurrentLevel | titlecase }}</h2>
+          <h2 class="text-primary-emphasis">{{ currentQuestionIndex + 1 }} of {{ currentLevelQuestions.length }}</h2>
+        </div>
+
+        <hr *ngIf="challengeStarted && !levelCompleted">
         <div *ngIf="challengeStarted && !levelCompleted" class="challenge-questions">
           <app-multiple-choice *ngIf="currentQuestionType === 'multiple-choice'"
                                [question]="currentLevelQuestions[currentQuestionIndex]"
